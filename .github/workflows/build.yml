@@ -37,8 +37,11 @@ jobs:
       - name: Run Test Suite
         run: |
           pytest
-      - name: Codecov
-        uses: codecov/codecov-action@v1.4.0
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+
   build-win:
     name: WIN Build (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -68,5 +71,7 @@ jobs:
       - name: Run Test Suite
         run: |
           python -m pytest
-      - name: Codecov
-        uses: codecov/codecov-action@v1.4.0
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
