@@ -36,10 +36,10 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          pytest --cov=./ --cov-report html
+          pytest --cov=./
       - name: Check Coverage Output
         run: |
-          ls
+          ls -a
           conda list
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
