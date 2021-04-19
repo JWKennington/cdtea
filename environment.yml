@@ -1,0 +1,16 @@
+name: cdtea-env
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - coverage
+  - matplotlib
+  - networkx
+  - numpy
+  - pandas
+  - plotly
+  - pytest
+  - pytest-cov
+  - scipy
