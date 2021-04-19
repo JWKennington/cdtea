@@ -36,15 +36,15 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          pytest --cov=./
+          pytest --cov=./ --cov-report=xml
       - name: Check Coverage Output
         run: |
           ls -a
-          conda list
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
           fail_ci_if_error: false
+          files: coverage.xml
 
   build-win:
     name: WIN Build (${{ matrix.python-version }}, ${{ matrix.os }})
