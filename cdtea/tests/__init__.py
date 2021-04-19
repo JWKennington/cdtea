@@ -1,3 +1,5 @@
+"""Test harness utilities"""
+
 import pathlib
 import pytest
 

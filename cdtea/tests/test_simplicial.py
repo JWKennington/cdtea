@@ -1,6 +1,6 @@
-"""Tests for the complex module"""
+"""Tests for the simplicial module"""
 
-from cdtea import complex
+from cdtea import simplicial
 
 
 class TestTriangulation:
@@ -8,4 +8,4 @@ class TestTriangulation:
 
     def test_stub(self):
         """Test stub"""
-        assert isinstance(complex.Triangulation, type)
+        assert isinstance(simplicial.Triangulation, type)
