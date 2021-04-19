@@ -36,7 +36,7 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          coverage run -m pytest
+          pytest --cov=./
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
@@ -70,7 +70,7 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          coverage run -m pytest
+          pytest --cov=./
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
