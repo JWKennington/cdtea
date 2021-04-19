@@ -4,8 +4,12 @@
 import setuptools
 import cdtea
 
+README_HEADER_LINES = 10
+
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    long_description = fh.readlines()
+    long_description = '\n'.join(long_description[README_HEADER_LINES:])
+    long_description = 'CDTea\n' + long_description
 
 setuptools.setup(name='cdtea',
                  version=cdtea.__version__,
