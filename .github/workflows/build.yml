@@ -37,6 +37,9 @@ jobs:
       - name: Run Test Suite
         run: |
           pytest --cov=./
+      - name: Check Coverage Output
+        run: |
+          ls
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
