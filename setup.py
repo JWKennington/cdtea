@@ -7,14 +7,14 @@ import cdtea
 README_HEADER_LINES = 10
 
 with open("README.md", "r") as fh:
-    long_description = fh.readlines()
-    long_description = '\n'.join(long_description[README_HEADER_LINES:])
-    long_description = 'CDTea\n' + long_description
+    LONG_DESCRIPTION = fh.readlines()
+    LONG_DESCRIPTION = '\n'.join(LONG_DESCRIPTION[README_HEADER_LINES:])
+    LONG_DESCRIPTION = 'CDTea\n' + LONG_DESCRIPTION
 
 setuptools.setup(name='cdtea',
                  version=cdtea.__version__,
                  description='CDTea',
-                 long_description=long_description,
+                 long_description=LONG_DESCRIPTION,
                  long_description_content_type="text/markdown",
                  python_requires='==3.7, ==3.8',
                  url=cdtea.__github_url__,
