@@ -37,6 +37,8 @@ jobs:
       - name: Run Test Suite
         run: |
           pytest
+      - name: Codecov
+        uses: codecov/codecov-action@v1.4.0
   build-win:
     name: WIN Build (${{ matrix.python-version }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
@@ -66,3 +68,5 @@ jobs:
       - name: Run Test Suite
         run: |
           python -m pytest
+      - name: Codecov
+        uses: codecov/codecov-action@v1.4.0
