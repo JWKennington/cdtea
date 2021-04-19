@@ -36,11 +36,11 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          pytest
+          coverage run -m pytest
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false
 
   build-win:
     name: WIN Build (${{ matrix.python-version }}, ${{ matrix.os }})
@@ -70,8 +70,8 @@ jobs:
           conda info
       - name: Run Test Suite
         run: |
-          python -m pytest
+          coverage run -m pytest
       - name: "Upload coverage to Codecov"
         uses: codecov/codecov-action@v1
         with:
-          fail_ci_if_error: true
+          fail_ci_if_error: false
