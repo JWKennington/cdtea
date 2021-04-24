@@ -44,4 +44,4 @@ class TestTriangulation:
         t.add_simplex(f1, dilaton=0.5)
         t.add_simplex(f2, dilaton=0.6)
 
-        print('oops')
+        assert isinstance(t, simplicial.Triangulation)
