@@ -27,7 +27,7 @@ class TestGenerateFlat:
             assert counts[b] == 6
 
     def test_6_super_triangles(self):
-        """Test that each 0-simplex is contained in 6 edges"""
+        """Test that each 0-simplex is contained in 6 triangles"""
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
         counts = defaultdict(int)
         for tri in t._simplices[2]:
@@ -58,6 +58,7 @@ class TestGenerateFlat:
             assert counts[b] == 4
 
     def test_correct_size(self):
+        """Test that generate_flat_2d_space_time(T,X) has T*X 0-simplices and 3*T*X 1-simplices"""
         space_sizes_to_test = [3, 4, 5, 6]
         time_sizes_to_test = [3, 4, 5, 6]
         for t_size in time_sizes_to_test:
@@ -66,7 +67,3 @@ class TestGenerateFlat:
                 t = generate_flat.generate_flat_2d_space_time(time_size=t_size, space_size=x_size)
                 assert len(t._simplices[0]) == n
                 assert len(t._simplices[1]) == 3 * n
-
-# test total
-
-# vertex/edge/triangle count
