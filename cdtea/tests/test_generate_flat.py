@@ -1,6 +1,7 @@
 from cdtea import simplicial
 from cdtea import generate_flat
 from collections import defaultdict
+from cdtea.tests.valid_triangulation import is_valid
 
 
 class TestGenerateFlat:
@@ -67,3 +68,7 @@ class TestGenerateFlat:
                 t = generate_flat.generate_flat_2d_space_time(time_size=t_size, space_size=x_size)
                 assert len(t._simplices[0]) == n
                 assert len(t._simplices[1]) == 3 * n
+
+    def test_validity(self):
+        t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
+        assert is_valid(t)
