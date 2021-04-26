@@ -17,9 +17,14 @@ class SimplexKey:
         self._dim = dim
 
     def __repr__(self):
-        if self._dim == 0:
-            return str(list(self._basis)[0])
-        return '{' + ','.join(str(b) for b in self._basis) + '}'
+        # the zero d case was causing me some debug confusion so i removed it.
+        # if self._dim == 0:
+        #     return str(list(self._basis)[0])
+        return 'basis {' + ','.join(str(b) for b in self._basis) + '}'
+
+    @property
+    def basis_list(self):
+        return(list(self._basis))
 
     @property
     def dim(self):
