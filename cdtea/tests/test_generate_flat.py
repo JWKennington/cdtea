@@ -48,7 +48,7 @@ class TestGenerateFlat:
         counts = defaultdict(int)
         for edge in t._simplices[1]:
             b = edge.basis_list
-            if t._simplex_meta[edge]["s_type"] == [1, 1]:
+            if t._simplex_meta[edge]["s_type"] == (1, 1):
                 counts[b[0]] += 1
                 counts[b[1]] += 1
         # solidify the dictionary
