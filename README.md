@@ -7,7 +7,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/jwkennington/cdtea/badge)](https://www.codefactor.io/repository/github/jwkennington/cdtea)
 [![License](https://img.shields.io/github/license/JWKennington/cdtea?color=magenta&label=License)](https://pypi.org/project/cdtea/)
 
-# <img alt="CDTea" src="/img/logo_alternate.svg" height="300" align="left">
+# <img alt="CDTea" src="/img/logo_alternate.svg" height="400" align="left">
 
 The `cdtea` package contains utilities for studying causal dynamical triangulations 
 in Python
