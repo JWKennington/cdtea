@@ -35,7 +35,7 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
         for x in range(space_size):
             # new vertex (one added per iteration )
             i = idx(x_idx=x, t_idx=t)
-            add_simplex({i}, t=t)
+            add_simplex({i}, t=t, x=x)
 
             # new edges (three added per vertex)
             spatial_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t)}
@@ -44,7 +44,7 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             past_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x, t_idx=t + 1)}
             add_simplex(past_edge_basis, s_type=(1, 1))
 
-            future_edge_basis = {idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 1, t_idx=t + 1)}
+            future_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x - 1, t_idx=t + 1)}
             add_simplex(future_edge_basis, s_type=(1, 1))
 
             # new triangles (two added per vertex)
@@ -52,6 +52,6 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             up_triangle_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 0, t_idx=t + 1)}
             add_simplex(up_triangle_basis, s_type=(2, 1), dilaton=random.Random())
 
-            down_triangle_basis = {idx(x_idx=x, t_idx=t+1), idx(x_idx=x + 1, t_idx=t+1), idx(x_idx=x +1, t_idx=t )}
+            down_triangle_basis = {idx(x_idx=x, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t)}
             add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.Random())
     return space_time
