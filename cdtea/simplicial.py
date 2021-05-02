@@ -22,9 +22,19 @@ class SimplexKey:
         #     return str(list(self._basis)[0])
         return 'basis {' + ','.join(str(b) for b in self._basis) + '}'
 
+    def __eq__(self, other):
+        if isinstance(other, SimplexKey):
+            return self._basis == other._basis
+        else:
+            print("Equality not defined between SimplexKey and " + str(type(other)))
+            return False
+
+    def __hash__(self):
+        return hash(self._basis)
+
     @property
     def basis_list(self):
-        return(list(self._basis))
+        return list(self._basis)
 
     @property
     def dim(self):
