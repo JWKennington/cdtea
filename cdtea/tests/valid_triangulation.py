@@ -42,6 +42,8 @@ def edges_imply_faces(triangulation: simplicial.Triangulation) -> bool:
         return True
     elif tris.issubset(faces):
         print("This test is inconclusive. It's possible that there is a space-like or time-like loop of only length three")
+    else:
+        return False
 
 
 def faces_imply_edges(triangulation: simplicial.Triangulation) -> bool:
@@ -53,6 +55,26 @@ def faces_imply_edges(triangulation: simplicial.Triangulation) -> bool:
         edges_implied = {frozenset(e) for e in edges_implied}
         connections = connections.union(edges_implied)
     return connections == edges
+    
+
+def edges_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
+    verts = set()
+    edges = {e._basis for e in triangulation._simplices[1]}
+    nodes = {n._basis for n in triangulation._simplices[0]}
+    for e in edges:
+        verts_implied = {frozenset([b]) for b in e}
+        verts = verts.union(verts_implied)
+    return verts == nodes
+
+def faces_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
+    verts = set()
+    faces = {f._basis for f in triangulation._simplices[2]}
+    nodes = {n._basis for n in triangulation._simplices[0]}
+    for f in faces:
+        verts_implied = {frozenset([b]) for b in f}
+        verts = verts.union(verts_implied)
+    return verts == nodes
+    
 
 
 
