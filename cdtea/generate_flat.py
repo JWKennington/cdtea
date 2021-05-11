@@ -21,9 +21,13 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
     """
     space_time = simplicial.Triangulation()
 
-    def add_simplex(basis: Union[Set, FrozenSet], **meta):
+    def add_simplex(basis: Union[Set, int], **meta):
         """shorthand for adding a simplex to the triangulation"""
-        space_time.add_simplex(simplicial.DimDSimplexKey(basis=basis), **meta)
+        if type(basis) is int:
+            space_time.add_simplex(simplicial.Dim0SimplexKey(key=basis), **meta)
+        else:
+            basis = {simplicial.Dim0SimplexKey(key=b) for b in basis}
+            space_time.add_simplex(simplicial.DimDSimplexKey(basis=basis), **meta)
 
     def idx(x_idx: int, t_idx: int):
         """shorthand for returning a unique index for a given space-time position.
@@ -35,7 +39,7 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
         for x in range(space_size):
             # new vertex (one added per iteration )
             i = idx(x_idx=x, t_idx=t)
-            add_simplex({i}, t=t, x=x)
+            add_simplex(i, t=t, x=x)
 
             # new edges (three added per vertex)
             spatial_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t)}
