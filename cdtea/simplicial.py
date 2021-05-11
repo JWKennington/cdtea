@@ -33,6 +33,10 @@ class SimplexKey:
         return hash(self._basis)
 
     @property
+    def basis(self):
+        self._basis
+
+    @property
     def basis_list(self):
         return list(self._basis)
 
@@ -65,3 +69,11 @@ class Triangulation:
     def add_simplex(self, key: SimplexKey, **meta):
         self._simplices[key.dim].add(key)
         self._simplex_meta[key] = meta
+
+    @property
+    def simplices(self):
+        return self._simplices
+
+    @property
+    def simplex_meta(self):
+        return self._simplex_meta
