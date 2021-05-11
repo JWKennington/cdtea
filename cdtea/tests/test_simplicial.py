@@ -11,7 +11,7 @@ class TestTriangulation:
         There are many intermediate steps that can be simplified and validity checks
         for simplices that can be added
         """
-        t = simplicial.Triangulation()
+        t = simplicial.Triangulation(time_size=2)
 
         # create some nodes
         n1 = simplicial.Dim0SimplexKey(1)

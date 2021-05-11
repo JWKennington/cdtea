@@ -19,7 +19,7 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
     space_size: an int specifying the resolution of each space-like slice
 
     """
-    space_time = simplicial.Triangulation()
+    space_time = simplicial.Triangulation(time_size=time_size)
 
     def add_simplex(basis: Union[Set, int], **meta):
         """shorthand for adding a simplex to the triangulation"""
