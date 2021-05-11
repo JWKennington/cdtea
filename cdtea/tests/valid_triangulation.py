@@ -25,8 +25,8 @@ def d_simplex_connects_2_dp1_simplices(triangulation: simplicial.Triangulation) 
 
 
 def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation) -> bool:
-    """This function checks that each d simplex has two and only two d+1 super simplices."""
-    return (triangulation._simplices[0] * 2 == triangulation._simplices[2])
+    """For toroidal topology in 1+1d there should be twice as many faces as vertices"""
+    assert len(triangulation._simplices[0]) * 2 == len(triangulation._simplices[2]), "The number of triangles was not twice the number of vertices"
 
 
 def edges_imply_faces(triangulation: simplicial.Triangulation) -> bool:
@@ -38,12 +38,8 @@ def edges_imply_faces(triangulation: simplicial.Triangulation) -> bool:
         possible_face = frozenset.union(*edge_set)
         if len(possible_face) == 3:
             faces.add(possible_face)
-    if tris == faces:
-        return True
-    elif tris.issubset(faces):
-        print("This test is inconclusive. It's possible that there is a space-like or time-like loop of only length three")
-    else:
-        return False
+    #They should be equal if there are no slices of length 3 
+    assert tris.issubset(faces), "The implied faces did not contain all the given faces"
 
 
 def faces_imply_edges(triangulation: simplicial.Triangulation) -> bool:
@@ -54,7 +50,7 @@ def faces_imply_edges(triangulation: simplicial.Triangulation) -> bool:
         edges_implied = combinations(f, 2)
         edges_implied = {frozenset(e) for e in edges_implied}
         connections = connections.union(edges_implied)
-    return connections == edges
+    assert connections == edges, "the set of edges implied by faces is not the same as the given edges"
     
 
 def edges_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
@@ -64,7 +60,7 @@ def edges_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
     for e in edges:
         verts_implied = {frozenset([b]) for b in e}
         verts = verts.union(verts_implied)
-    return verts == nodes
+    assert verts == nodes, "the set of vertices used in edges is not the same as the given vertices"
 
 def faces_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
     verts = set()
@@ -73,14 +69,16 @@ def faces_imply_nodes(triangulation: simplicial.Triangulation) -> bool:
     for f in faces:
         verts_implied = {frozenset([b]) for b in f}
         verts = verts.union(verts_implied)
-    return verts == nodes
-    
+    assert verts == nodes, "the set of vertices used in faces is not the same as the given vertices"
+
 
 
 
 
 def is_valid(triangulation: simplicial.Triangulation) -> bool:
-    res = True
-    res = res and d_simplex_connects_2_dp1_simplices(triangulation)
-    # res = res and twice_as_many_2d_as_0d(triangulation)
-    return res
+    twice_as_many_2d_as_0d(triangulation)
+    edges_imply_faces(triangulation)
+    faces_imply_edges(triangulation)
+    edges_imply_nodes(triangulation)
+    faces_imply_nodes(triangulation)
+    
