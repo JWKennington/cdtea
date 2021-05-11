@@ -69,7 +69,8 @@ def edges_dont_cross_time_slices(triangulation: simplicial.Triangulation):
         n1 = constituent_verts[1]
         t0 = triangulation.simplex_meta[n0]["t"]
         t1 = triangulation.simplex_meta[n1]["t"]
-        dt = abs(t1 - t0)
+        max_time_index = triangulation.time_size - 1
+        dt = abs(t1 - t0) % max_time_index
         assert dt <= 1, "The time separation between {n0} and {n1} is {dt}".format(n0=n0, n1=n1, dt=dt)
 
 
@@ -79,3 +80,4 @@ def is_valid(triangulation: simplicial.Triangulation):
     faces_imply_edges(triangulation)
     edges_imply_nodes(triangulation)
     faces_imply_nodes(triangulation)
+    edges_dont_cross_time_slices(triangulation)
