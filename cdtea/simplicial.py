@@ -34,7 +34,7 @@ class SimplexKey:
 
     @property
     def basis(self):
-        self._basis
+        return self._basis
 
     @property
     def basis_list(self):
@@ -61,10 +61,12 @@ class DimDSimplexKey(SimplexKey):
 
 class Triangulation:
     """Triangulation Class Stub"""
+    __slots__ = '_time_size'
 
-    def __init__(self):
+    def __init__(self, _time_size: int):
         self._simplices = collections.defaultdict(set)
         self._simplex_meta = collections.defaultdict(dict)
+        self._time_size = _time_size
 
     def add_simplex(self, key: SimplexKey, **meta):
         self._simplices[key.dim].add(key)
@@ -77,3 +79,7 @@ class Triangulation:
     @property
     def simplex_meta(self):
         return self._simplex_meta
+
+    @property
+    def time_size(self):
+        return self._time_size
