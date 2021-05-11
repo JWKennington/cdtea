@@ -69,9 +69,50 @@ def edges_dont_cross_time_slices(triangulation: simplicial.Triangulation):
         n1 = constituent_verts[1]
         t0 = triangulation.simplex_meta[n0]["t"]
         t1 = triangulation.simplex_meta[n1]["t"]
-        max_time_index = triangulation.time_size - 1
-        dt = abs(t1 - t0) % max_time_index
+        dt = abs(t1 - t0) % (triangulation.time_size - 2)
         assert dt <= 1, "The time separation between {n0} and {n1} is {dt}".format(n0=n0, n1=n1, dt=dt)
+
+
+def vertices_have_minimum_required_connections(triangulation: simplicial.Triangulation):
+    """check that every vertex has 2 spatial edges"""
+    edges = triangulation.simplices[1]
+    verts = triangulation.simplices[0]
+    counts_spatial = defaultdict(int)
+    counts_past = defaultdict(int)
+    counts_future = defaultdict(int)
+    time_size = triangulation.time_size
+    for e in edges:
+        s_type = triangulation.simplex_meta[e]["s_type"]
+        basis = e.basis_list
+
+        # if it is a spatial edge add one to the spatial connection for both consituent vertices
+        if s_type == (2, 0):
+            for v in basis:
+                counts_spatial[v] += 1
+
+        # if it is a temporal edge figure out past and future and augment the aproapriate lists
+        elif s_type == (1, 1):
+            t0 = triangulation.simplex_meta[basis[0]]["t"] % time_size
+            t1 = triangulation.simplex_meta[basis[1]]["t"] % time_size
+            t0_offset = (t0 + time_size / 2) % time_size
+            t1_offset = (t1 + time_size / 2) % time_size
+            if t1 - t0 == 1 or t1_offset - t0_offset == 1:
+                counts_future[basis[0]] += 1
+                counts_past[basis[1]] += 1
+            elif t0 - t1 == 1 or t0_offset - t1_offset == 1:
+                counts_future[basis[1]] += 1
+                counts_past[basis[0]] += 1
+            else:
+                raise Exception("s_type {type} does not match, both basis have the same time ".format(type=s_type))
+        else:
+            raise Exception("invalid s_type {type}".format(type=s_type))
+    counts_spatial = dict(counts_spatial)
+    counts_future = dict(counts_future)
+    counts_past = dict(counts_past)
+    for v in verts:
+        assert counts_spatial[v] == 2, "{v} has {c} spatial neighbors".format(v=v, c=counts_spatial[v])
+        assert counts_future[v] > 0, "{v} has {c} future connections".format(v=v, c=counts_future[v])
+        assert counts_past[v] > 0, "{v} has {c} past connections".format(v=v, c=counts_past[v])
 
 
 def is_valid(triangulation: simplicial.Triangulation):
@@ -81,3 +122,4 @@ def is_valid(triangulation: simplicial.Triangulation):
     edges_imply_nodes(triangulation)
     faces_imply_nodes(triangulation)
     edges_dont_cross_time_slices(triangulation)
+    vertices_have_minimum_required_connections(triangulation)
