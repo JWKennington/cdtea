@@ -17,13 +17,13 @@ class TestGenerateFlat:
         """Test that each 0-simplex is contained in 6 edges"""
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
         counts = defaultdict(int)
-        for edge in t._simplices[1]:
+        for edge in t.simplices[1]:
             b = edge.basis_list
             counts[b[0]] += 1
             counts[b[1]] += 1
         # solidify the dictionary
         counts = dict(counts)
-        for v in t._simplices[0]:
+        for v in t.simplices[0]:
             b = v.basis_list[0]
             assert counts[b] == 6
 
@@ -31,14 +31,14 @@ class TestGenerateFlat:
         """Test that each 0-simplex is contained in 6 triangles"""
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
         counts = defaultdict(int)
-        for tri in t._simplices[2]:
+        for tri in t.simplices[2]:
             b = tri.basis_list
             counts[b[0]] += 1
             counts[b[1]] += 1
             counts[b[2]] += 1
         # solidify the dictionary
         counts = dict(counts)
-        for v in t._simplices[0]:
+        for v in t.simplices[0]:
             b = v.basis_list[0]
             assert counts[b] == 6
 
@@ -47,14 +47,14 @@ class TestGenerateFlat:
         """Test that each 0-simplex is contained in 6 edges"""
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
         counts = defaultdict(int)
-        for edge in t._simplices[1]:
+        for edge in t.simplices[1]:
             b = edge.basis_list
-            if t._simplex_meta[edge]["s_type"] == (1, 1):
+            if t.simplex_meta[edge]["s_type"] == (1, 1):
                 counts[b[0]] += 1
                 counts[b[1]] += 1
         # solidify the dictionary
         counts = dict(counts)
-        for v in t._simplices[0]:
+        for v in t.simplices[0]:
             b = v.basis_list[0]
             assert counts[b] == 4
 
@@ -66,8 +66,8 @@ class TestGenerateFlat:
             for x_size in space_sizes_to_test:
                 n = t_size * x_size
                 t = generate_flat.generate_flat_2d_space_time(time_size=t_size, space_size=x_size)
-                assert len(t._simplices[0]) == n
-                assert len(t._simplices[1]) == 3 * n
+                assert len(t.simplices[0]) == n
+                assert len(t.simplices[1]) == 3 * n
 
     def test_validity(self):
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
