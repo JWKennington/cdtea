@@ -14,13 +14,13 @@ def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation) -> bool:
 
 def edges_imply_faces(triangulation: simplicial.Triangulation):
     """ Attempts to generate the set of faces from the set of edges"""
-    edges = {e.basis for e in triangulation.simplices[1]}
-    tris = {t.basis for t in triangulation.simplices[2]}
+    edges = triangulation.simplices[1]
+    tris = triangulation.simplices[2]
     sets_of_3_edges = combinations(edges, 3)
     faces = set()
     for edge_set in sets_of_3_edges:
-        possible_face = frozenset.union(*edge_set)
-        if len(possible_face) == 3:
+        possible_face = edge_set[0] | edge_set[1] | edge_set[2]
+        if possible_face.dim == 2:
             faces.add(possible_face)
     # They should be equal if there are no slices of length 3
     assert tris.issubset(faces), "The implied faces did not contain all the given faces"
@@ -42,22 +42,20 @@ def faces_imply_edges(triangulation: simplicial.Triangulation):
 def edges_imply_nodes(triangulation: simplicial.Triangulation):
     """ Generate the set of all nodes used in edges"""
     verts = set()
-    edges = {e.basis for e in triangulation.simplices[1]}
-    nodes = {n.basis for n in triangulation.simplices[0]}
-    for e in edges:
-        verts_implied = {b.basis for b in e}
-        verts = verts.union(verts_implied)
+    nodes = triangulation.simplices[0]
+    for e in triangulation.simplices[1]:
+        # union equals
+        verts |= e.basis
     assert verts == nodes, "the set of vertices used in edges is not the same as the given vertices"
 
 
 def faces_imply_nodes(triangulation: simplicial.Triangulation):
     """generate the set of nodes used in faces"""
     verts = set()
-    faces = {f.basis for f in triangulation.simplices[2]}
-    nodes = {n.basis for n in triangulation.simplices[0]}
-    for f in faces:
-        verts_implied = {b.basis for b in f}
-        verts = verts.union(verts_implied)
+    nodes = triangulation.simplices[0]
+    for f in triangulation.simplices[2]:
+        # union equals
+        verts |= f.basis
     assert verts == nodes, "the set of vertices used in faces is not the same as the given vertices"
 
 
