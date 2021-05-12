@@ -38,6 +38,7 @@ def faces_imply_edges(triangulation: simplicial.Triangulation):
     assert connections == edges, "the set of edges implied by faces is not the same as the given edges"
 
 
+# It may be redundant to have both of the following two and the previous 2
 def edges_imply_nodes(triangulation: simplicial.Triangulation):
     """ Generate the set of all nodes used in edges"""
     verts = set()
