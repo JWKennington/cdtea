@@ -24,8 +24,7 @@ class TestGenerateFlat:
         # solidify the dictionary
         counts = dict(counts)
         for v in t.simplices[0]:
-            b = v.basis_list[0]
-            assert counts[b] == 6
+            assert counts[v] == 6
 
     def test_6_super_triangles(self):
         """Test that each 0-simplex is contained in 6 triangles"""
@@ -39,8 +38,7 @@ class TestGenerateFlat:
         # solidify the dictionary
         counts = dict(counts)
         for v in t.simplices[0]:
-            b = v.basis_list[0]
-            assert counts[b] == 6
+            assert counts[v] == 6
 
     # split in to two for past and future edges?
     def test_4_temporal_edges(self):
@@ -55,8 +53,7 @@ class TestGenerateFlat:
         # solidify the dictionary
         counts = dict(counts)
         for v in t.simplices[0]:
-            b = v.basis_list[0]
-            assert counts[b] == 4
+            assert counts[v] == 4
 
     def test_correct_size(self):
         """Test that generate_flat_2d_space_time(T,X) has T*X 0-simplices and 3*T*X 1-simplices"""
@@ -70,5 +67,5 @@ class TestGenerateFlat:
                 assert len(t.simplices[1]) == 3 * n
 
     def test_validity(self):
-        t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
-        assert is_valid(t)
+        t = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
+        is_valid(t)
