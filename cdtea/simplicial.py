@@ -6,6 +6,19 @@ References:
 import collections
 from typing import Union, FrozenSet, Set
 from cdtea.util import equivdict
+from collections.abc import Iterable
+
+
+def simplex_key(basis):
+    if type(basis) == int:
+        return Dim0SimplexKey(basis)
+    elif isinstance(basis, Iterable):
+        fixed_basis = set()
+        for b in basis:
+            fixed_basis.add(Dim0SimplexKey(b))
+        return DimDSimplexKey(fixed_basis)
+    else:
+        raise ("given basis must be iterable or an int")
 
 
 class SimplexKey:
@@ -29,11 +42,28 @@ class SimplexKey:
             print("Equality not defined between SimplexKey and " + str(type(other)))
             return False
 
+    # this feels really dangerous, i'm just trying it out
+    # to define union
+    def __or__(self, other):
+        new_basis = self._basis | other._basis
+        if len(new_basis) == 1:
+            return Dim0SimplexKey(new_basis)
+        else:
+            return DimDSimplexKey(new_basis)
+
+    # to define intersection
+    def __and__(self, other):
+        new_basis = self._basis & other._basis
+        if len(new_basis) == 1:
+            return Dim0SimplexKey(new_basis)
+        else:
+            return DimDSimplexKey(new_basis)
+
     def __hash__(self):
         return hash(self._basis)
 
     @property
-    def basis(self):
+    def basis(self) :
         self._basis
 
     @property
@@ -69,6 +99,10 @@ class Triangulation:
     def add_simplex(self, key: SimplexKey, **meta):
         self._simplices[key.dim].add(key)
         self._simplex_meta[key] = meta
+
+    def remove_simplex(self, key: SimplexKey):
+        del self._simplices[key.dim][key]
+        del self._simplex_meta[key]
 
     @property
     def simplices(self):
