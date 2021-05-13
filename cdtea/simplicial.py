@@ -45,12 +45,16 @@ class SimplexKey:
             print("Equality not defined between SimplexKey and " + str(type(other)))
             return False
 
-    # this feels really dangerous, i'm just trying it out
+    # to speed up set style interactions with simplex keys
     # to define union
     def __or__(self, other):
-        new_basis = self._basis | other._basis
+        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
+        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+
+        new_basis = self_basis | other_basis
+
         if len(new_basis) == 1:
-            return Dim0SimplexKey(new_basis)
+            return list(new_basis)[0]
         else:
             return DimDSimplexKey(new_basis)
 
@@ -58,9 +62,21 @@ class SimplexKey:
     def __and__(self, other):
         new_basis = self._basis & other._basis
         if len(new_basis) == 1:
-            return Dim0SimplexKey(new_basis)
+            return list(new_basis)[0]
         else:
             return DimDSimplexKey(new_basis)
+
+    # set difference
+    def __sub__(self, other):
+        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
+        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+        new_basis = self_basis - other_basis
+        if len(new_basis) == 1:
+            return list(new_basis)[0]
+        else:
+            return DimDSimplexKey(new_basis)
+
+    # ------- end set operations-------
 
     def __iter__(self):  # we can return self here, because __next__ is implemented
         return iter(self._basis)
@@ -87,6 +103,9 @@ class Dim0SimplexKey(SimplexKey):
     def __init__(self, key: int):
         super().__init__(basis={key}, dim=0)
 
+    def __lt__(self, other):
+        return (self._basis < other._basis)
+
 
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
@@ -109,7 +128,7 @@ class Triangulation:
         self._simplex_meta[key] = meta
 
     def remove_simplex(self, key: SimplexKey):
-        del self._simplices[key.dim][key]
+        self._simplices[key.dim].remove(key)
         del self._simplex_meta[key]
 
     @property
