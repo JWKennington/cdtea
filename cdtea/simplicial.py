@@ -4,12 +4,13 @@ References:
     [1] R. Loll, Quantum Gravity from Causal Dynamical Triangulations: A Review, Class. Quantum Grav. 37, 013002 (2020).
 """
 import collections
-from typing import Union, FrozenSet, Set
+import typing
+from typing import Union, FrozenSet, Set, Iterable
 from cdtea.util import equivdict
 from collections.abc import Iterable
 
 
-def simplex_key(basis):
+def simplex_key(basis: typing.Union[int, Iterable]):
     if type(basis) == int:
         return Dim0SimplexKey(basis)
     elif isinstance(basis, Iterable):
@@ -19,6 +20,8 @@ def simplex_key(basis):
                 fixed_basis.add(b)
             else:
                 fixed_basis.add(Dim0SimplexKey(b))
+        if len(fixed_basis) == 1:
+            return list(fixed_basis)[0]
         return DimDSimplexKey(fixed_basis)
     else:
         raise Exception("given basis must be iterable or an int")
@@ -60,7 +63,10 @@ class SimplexKey:
 
     # to define intersection
     def __and__(self, other):
-        new_basis = self._basis & other._basis
+        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
+        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+
+        new_basis = self_basis & other_basis
         if len(new_basis) == 1:
             return list(new_basis)[0]
         else:
@@ -78,7 +84,7 @@ class SimplexKey:
 
     # ------- end set operations-------
 
-    def __iter__(self):  # we can return self here, because __next__ is implemented
+    def __iter__(self):
         return iter(self._basis)
 
     def __hash__(self):
@@ -102,9 +108,6 @@ class Dim0SimplexKey(SimplexKey):
 
     def __init__(self, key: int):
         super().__init__(basis={key}, dim=0)
-
-    def __lt__(self, other):
-        return (self._basis < other._basis)
 
 
 class DimDSimplexKey(SimplexKey):
@@ -130,6 +133,11 @@ class Triangulation:
     def remove_simplex(self, key: SimplexKey):
         self._simplices[key.dim].remove(key)
         del self._simplex_meta[key]
+
+    def __eq__(self, other):
+        if type(other) == Triangulation:
+            return (self._simplices == other._simplices) and (self._simplex_meta == other._simplex_meta) and (self._time_size == other._time_size)
+        return False
 
     @property
     def simplices(self):

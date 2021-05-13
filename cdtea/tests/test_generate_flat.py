@@ -13,6 +13,10 @@ class TestGenerateFlat:
 
         assert isinstance(t, simplicial.Triangulation)
 
+    def test_validity(self):
+        t = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
+        is_valid(t)
+
     def test_6_super_edges(self):
         """Test that each 0-simplex is contained in 6 edges"""
         t = generate_flat.generate_flat_2d_space_time(time_size=3, space_size=3)
@@ -66,6 +70,4 @@ class TestGenerateFlat:
                 assert len(t.simplices[0]) == n
                 assert len(t.simplices[1]) == 3 * n
 
-    def test_validity(self):
-        t = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
-        is_valid(t)
+

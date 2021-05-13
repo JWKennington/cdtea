@@ -45,3 +45,85 @@ class TestTriangulation:
         t.add_simplex(f2, dilaton=0.6)
 
         assert isinstance(t, simplicial.Triangulation)
+
+    def test_equality(self):
+        t = simplicial.Triangulation(time_size=2)
+        assert t == t
+        assert t != 7
+
+    def test_remove_simplex(self):
+        """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
+        t1 = simplicial.Triangulation(time_size=2)
+        t2 = simplicial.Triangulation(time_size=2)
+        t1.add_simplex(simplicial.simplex_key({1, 2, 3}), prop="test meta property")
+        t1.remove_simplex(simplicial.simplex_key({1, 2, 3}))
+        t2.add_simplex(simplicial.simplex_key({1, 4, 3}), prop="test meta property")
+        t2.remove_simplex(simplicial.simplex_key({1, 4, 3}))
+        assert t1 == t2
+
+
+class TestSimplexKey:
+
+    def test_create_0d(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(2)
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+
+    def test_create_Dd(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(2)
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+
+    def test_generator_function(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        assert simplicial.simplex_key({1, 2, 3}) == f
+        assert simplicial.simplex_key(1) == v1
+        assert simplicial.simplex_key(v1) == v1
+        assert simplicial.simplex_key([1]) == v1
+        assert simplicial.simplex_key({v1, v2, v3}) == f
+
+    def test_union(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        e = simplicial.DimDSimplexKey(basis={v1, v2})
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        assert v1 | v2 | v3 == f
+        assert e | v3 == f
+        assert v1 | v1 == v1
+
+    def test_intersections(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        e = simplicial.DimDSimplexKey(basis={v1, v2})
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        assert f & v1 == v1
+        assert e & f == e
+        assert v1 & v1 == v1
+        assert v1 & v2 == simplicial.DimDSimplexKey({})
+
+    def test_difference(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        e = simplicial.DimDSimplexKey(basis={v1, v2})
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        assert v1 - v1 == simplicial.DimDSimplexKey({})
+        assert f - e == v3
+        assert e - f == simplicial.DimDSimplexKey({})
+
+    def test_iter(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        e = simplicial.DimDSimplexKey(basis={v1, v2})
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        for b in f:
+            assert b in f
+        assert (e in f) is False
