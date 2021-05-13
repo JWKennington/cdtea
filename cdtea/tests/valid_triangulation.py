@@ -6,7 +6,7 @@ from itertools import combinations, permutations
 
 # These tests assume 1+1d with toroidal topology
 
-def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation) -> bool:
+def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation):
     """For toroidal topology in 1+1d there should be twice as many faces as vertices"""
     assert len(triangulation.simplices[0]) * 2 == len(
         triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
@@ -29,11 +29,10 @@ def edges_imply_faces(triangulation: simplicial.Triangulation):
 def faces_imply_edges(triangulation: simplicial.Triangulation):
     """ Attempts to generate the set of edges from the set of faces"""
     connections = set()
-    edges = {e.basis for e in triangulation.simplices[1]}
-    faces = {t.basis for t in triangulation.simplices[2]}
+    edges = triangulation.simplices[1]
+    faces = triangulation.simplices[2]
     for f in faces:
-        edges_implied = combinations(f, 2)
-        edges_implied = {frozenset(e) for e in edges_implied}
+        edges_implied = {simplicial.simplex_key(b) for b in combinations(f, 2)}
         connections = connections.union(edges_implied)
     assert connections == edges, "the set of edges implied by faces is not the same as the given edges"
 
