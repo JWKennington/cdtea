@@ -15,10 +15,13 @@ def simplex_key(basis):
     elif isinstance(basis, Iterable):
         fixed_basis = set()
         for b in basis:
-            fixed_basis.add(Dim0SimplexKey(b))
+            if type(b) == Dim0SimplexKey:
+                fixed_basis.add(b)
+            else:
+                fixed_basis.add(Dim0SimplexKey(b))
         return DimDSimplexKey(fixed_basis)
     else:
-        raise ("given basis must be iterable or an int")
+        raise Exception("given basis must be iterable or an int")
 
 
 class SimplexKey:
@@ -58,6 +61,9 @@ class SimplexKey:
             return Dim0SimplexKey(new_basis)
         else:
             return DimDSimplexKey(new_basis)
+
+    def __iter__(self):  # we can return self here, because __next__ is implemented
+        return iter(self._basis)
 
     def __hash__(self):
         return hash(self._basis)
