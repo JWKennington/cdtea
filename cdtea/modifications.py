@@ -1,6 +1,7 @@
 from cdtea.simplicial import Triangulation, SimplexKey, DimDSimplexKey, Dim0SimplexKey, simplex_key
 from cdtea.generate_flat import generate_flat_2d_space_time as gen
 from cdtea.tests import valid_triangulation as validity
+from cdtea.util.TimeIndex import time_sep
 
 tri = gen(space_size=5, time_size=5)
 
@@ -13,6 +14,7 @@ def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
     if overlap in triangulation.simplices[1]:
         s_type = triangulation.simplex_meta[overlap]["s_type"]
         if s_type == (1, 1):
+            meta = triangulation.simplex_meta
             # This is where we modify the triangulation
             # The dim 0 simplices remain unchanged.
 
@@ -23,11 +25,14 @@ def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
             # the dim 2 simplices, the two associated with the overlap are removed and the two new ones added
             triangulation.remove_simplex(k1)
             triangulation.remove_simplex(k2)
+
             overlap_list = overlap.basis_list
-            times = [triangulation.simplex_meta[b]['t'] for b in overlap_list]
-            overlap_list = [x for _, x in sorted(zip(times, overlap_list))]
-            triangulation.add_simplex(non_overlap | overlap_list[0], s_type=(1, 2))
-            triangulation.add_simplex(non_overlap | overlap_list[1], s_type=(2, 1))
+            times = [meta[b]['t'] for b in overlap_list]
+            times = {b: time_sep(min(times), meta[b]['t'], triangulation.time_size) for b in overlap_list}
+            overlap_list = sorted(overlap_list, key=lambda x: times[x])
+
+            triangulation.add_simplex(non_overlap | overlap_list[0], s_type=(2, 1))
+            triangulation.add_simplex(non_overlap | overlap_list[1], s_type=(1, 2))
 
             pass
         else:
