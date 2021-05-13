@@ -2,6 +2,7 @@
 from cdtea import simplicial
 from collections import defaultdict
 from itertools import combinations, permutations
+from cdtea.util.TimeIndex import time_sep
 
 
 # These tests assume 1+1d with toroidal topology
@@ -120,31 +121,23 @@ def check_s_type(triangulation: simplicial.Triangulation):
     # Checks the edges
     for e in triangulation.simplices[1]:
         basis_list = e.basis_list
-        if meta[basis_list[0]]['t'] == meta[basis_list[1]]['t']:
+        dt = time_sep(meta[basis_list[0]]['t'], meta[basis_list[1]]['t'], triangulation.time_size)
+        if dt == 0:
             assert meta[e]['s_type'] == (2, 0)
-        else:
+        elif abs(dt) == 1:
             assert meta[e]['s_type'] == (1, 1)
-    #checks the triangles
+        else:
+            raise Exception("invalid edge")
+    # checks the triangles
     for f in triangulation.simplices[2]:
-        # All of this jiggery pockery is to account for trinagles that span the max time slice to the min time slice
+
         times = [meta[b]['t'] for b in f]
+        times = [time_sep(min(times), meta[b]['t'], triangulation.time_size) for b in f]
         c1 = times.count(min(times))
-        T = triangulation.time_size
-        times = [(t + T / 2) % T for t in times]
-        c2 = times.count(min(times))
-        if c1 == c2 == 2:
+        if c1 == 2:
             assert meta[f]["s_type"] == (2, 1)
-        elif c1 == c2 == 1:
+        elif c1 == 1:
             assert meta[f]["s_type"] == (1, 2)
-        elif c1 != c2:
-            times = [(t + T / 3) % T for t in times]
-            c3 = times.count(min(times))
-            if c2 == c3 == 2 or c1 == c3 == 2:
-                assert meta[f]["s_type"] == (2, 1)
-            elif c2 == c3 == 1 or c1 == c3 == 1:
-                assert meta[f]["s_type"] == (1, 2)
-            else:
-                assert False
 
 
 def is_valid(triangulation: simplicial.Triangulation):
