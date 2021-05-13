@@ -113,6 +113,40 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
         assert counts_past[v] > 0, "{v} has {c} past connections".format(v=v, c=counts_past[v])
 
 
+def check_s_type(triangulation: simplicial.Triangulation):
+    """Cheks the s_type of all edges and triangles"""
+    meta = triangulation.simplex_meta
+
+    # Checks the edges
+    for e in triangulation.simplices[1]:
+        basis_list = e.basis_list
+        if meta[basis_list[0]]['t'] == meta[basis_list[1]]['t']:
+            assert meta[e]['s_type'] == (2, 0)
+        else:
+            assert meta[e]['s_type'] == (1, 1)
+    #checks the triangles
+    for f in triangulation.simplices[2]:
+        # All of this jiggery pockery is to account for trinagles that span the max time slice to the min time slice
+        times = [meta[b]['t'] for b in f]
+        c1 = times.count(min(times))
+        T = triangulation.time_size
+        times = [(t + T / 2) % T for t in times]
+        c2 = times.count(min(times))
+        if c1 == c2 == 2:
+            assert meta[f]["s_type"] == (2, 1)
+        elif c1 == c2 == 1:
+            assert meta[f]["s_type"] == (1, 2)
+        elif c1 != c2:
+            times = [(t + T / 3) % T for t in times]
+            c3 = times.count(min(times))
+            if c2 == c3 == 2 or c1 == c3 == 2:
+                assert meta[f]["s_type"] == (2, 1)
+            elif c2 == c3 == 1 or c1 == c3 == 1:
+                assert meta[f]["s_type"] == (1, 2)
+            else:
+                assert False
+
+
 def is_valid(triangulation: simplicial.Triangulation):
     twice_as_many_2d_as_0d(triangulation)
     edges_imply_faces(triangulation)
@@ -121,3 +155,4 @@ def is_valid(triangulation: simplicial.Triangulation):
     faces_imply_nodes(triangulation)
     edges_dont_cross_time_slices(triangulation)
     vertices_have_minimum_required_connections(triangulation)
+    check_s_type(triangulation)
