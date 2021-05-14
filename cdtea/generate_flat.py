@@ -39,7 +39,7 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
         for x in range(space_size):
             # new vertex (one added per iteration )
             i = idx(x_idx=x, t_idx=t)
-            add_simplex(i, t=t, x=x)
+            add_simplex(i, t=t, order=6)
 
             # new edges (three added per vertex)
             spatial_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t)}

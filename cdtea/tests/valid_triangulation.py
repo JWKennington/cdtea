@@ -9,8 +9,7 @@ from cdtea.util.TimeIndex import time_sep
 
 def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation):
     """For toroidal topology in 1+1d there should be twice as many faces as vertices"""
-    assert len(triangulation.simplices[0]) * 2 == len(
-        triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
+    assert len(triangulation.simplices[0]) * 2 == len(triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
 
 
 def edges_imply_faces(triangulation: simplicial.Triangulation):
@@ -138,6 +137,8 @@ def check_s_type(triangulation: simplicial.Triangulation):
             assert meta[f]["s_type"] == (2, 1)
         elif c1 == 1:
             assert meta[f]["s_type"] == (1, 2)
+
+    # Check if Dim0Simpplex order is correct
 
 
 def is_valid(triangulation: simplicial.Triangulation):
