@@ -2,14 +2,14 @@
 from cdtea import simplicial
 from collections import defaultdict
 from itertools import combinations, permutations
+from cdtea.util.TimeIndex import time_sep
 
 
 # These tests assume 1+1d with toroidal topology
 
 def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation):
     """For toroidal topology in 1+1d there should be twice as many faces as vertices"""
-    assert len(triangulation.simplices[0]) * 2 == len(
-        triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
+    assert len(triangulation.simplices[0]) * 2 == len(triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
 
 
 def edges_imply_faces(triangulation: simplicial.Triangulation):
@@ -113,6 +113,34 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
         assert counts_past[v] > 0, "{v} has {c} past connections".format(v=v, c=counts_past[v])
 
 
+def check_s_type(triangulation: simplicial.Triangulation):
+    """Cheks the s_type of all edges and triangles"""
+    meta = triangulation.simplex_meta
+
+    # Checks the edges
+    for e in triangulation.simplices[1]:
+        basis_list = e.basis_list
+        dt = time_sep(meta[basis_list[0]]['t'], meta[basis_list[1]]['t'], triangulation.time_size)
+        if dt == 0:
+            assert meta[e]['s_type'] == (2, 0)
+        elif abs(dt) == 1:
+            assert meta[e]['s_type'] == (1, 1)
+        else:
+            raise Exception("invalid edge")
+    # checks the triangles
+    for f in triangulation.simplices[2]:
+
+        times = [meta[b]['t'] for b in f]
+        times = [time_sep(min(times), meta[b]['t'], triangulation.time_size) for b in f]
+        c1 = times.count(min(times))
+        if c1 == 2:
+            assert meta[f]["s_type"] == (2, 1)
+        elif c1 == 1:
+            assert meta[f]["s_type"] == (1, 2)
+
+    # Check if Dim0Simpplex order is correct
+
+
 def is_valid(triangulation: simplicial.Triangulation):
     twice_as_many_2d_as_0d(triangulation)
     edges_imply_faces(triangulation)
@@ -121,3 +149,4 @@ def is_valid(triangulation: simplicial.Triangulation):
     faces_imply_nodes(triangulation)
     edges_dont_cross_time_slices(triangulation)
     vertices_have_minimum_required_connections(triangulation)
+    check_s_type(triangulation)
