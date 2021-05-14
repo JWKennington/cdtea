@@ -119,14 +119,17 @@ class DimDSimplexKey(SimplexKey):
 
 class Triangulation:
     """Triangulation Class Stub"""
-    __slots__ = ('_simplices', '_simplex_meta', '_time_size')
+    __slots__ = ('_simplices', '_simplex_meta', '_time_size','_max_index')
 
     def __init__(self, time_size: int):
         self._simplices = collections.defaultdict(set)
         self._simplex_meta = collections.defaultdict(dict)
         self._time_size = time_size
+        self._max_index = 0
 
     def add_simplex(self, key: SimplexKey, **meta):
+        if key.dim == 0:
+            self._max_index += 1
         self._simplices[key.dim].add(key)
         self._simplex_meta[key] = meta
 
@@ -142,6 +145,10 @@ class Triangulation:
     @property
     def simplices(self):
         return self._simplices
+
+    @property
+    def max_index(self):
+        return self._max_index
 
     @property
     def simplex_meta(self):
