@@ -3,6 +3,7 @@ from cdtea.generate_flat import generate_flat_2d_space_time as gen
 from cdtea.tests import valid_triangulation as validity
 from cdtea.util.TimeIndex import time_sep
 from functools import reduce
+import random
 
 tri = gen(space_size=5, time_size=5)
 
@@ -40,8 +41,8 @@ def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
             times = {b: time_sep(min(times), meta[b]['t'], triangulation.time_size) for b in overlap_list}
             overlap_list = sorted(overlap_list, key=lambda x: times[x])
 
-            triangulation.add_simplex(non_overlap | overlap_list[0], s_type=(2, 1))
-            triangulation.add_simplex(non_overlap | overlap_list[1], s_type=(1, 2))
+            triangulation.add_simplex(non_overlap | overlap_list[0], s_type=(2, 1), dilation = random.Random())
+            triangulation.add_simplex(non_overlap | overlap_list[1], s_type=(1, 2), dilation = random.Random())
 
             pass
         else:
@@ -90,11 +91,11 @@ def increase_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
             k1_s_type = meta[k1]["s_type"]
             k2_s_type = meta[k2]["s_type"]
 
-            triangulation.add_simplex(top | new_node | left, s_type=k1_s_type)
-            triangulation.add_simplex(top | new_node | right, s_type=k1_s_type)
+            triangulation.add_simplex(top | new_node | left, s_type=k1_s_type, dilation = random.Random())
+            triangulation.add_simplex(top | new_node | right, s_type=k1_s_type, dilation = random.Random())
 
-            triangulation.add_simplex(bottom | new_node | left, s_type=k2_s_type)
-            triangulation.add_simplex(bottom | new_node | right, s_type=k2_s_type)
+            triangulation.add_simplex(bottom | new_node | left, s_type=k2_s_type, dilation = random.Random())
+            triangulation.add_simplex(bottom | new_node | right, s_type=k2_s_type, dilation = random.Random())
 
             triangulation.remove_simplex(k1)
             triangulation.remove_simplex(k2)
@@ -129,7 +130,7 @@ def decrease_move(triangulation: Triangulation, k1: SimplexKey):
         triangulation.remove_simplex(k1)
         for f in faces:
             # THIS DOUBLE ADDS SIMPLEX but because its a set it shouldn't be double counted.
-            triangulation.add_simplex((f - k1) | spatial_edge, s_type=meta[f]["s_type"])
+            triangulation.add_simplex((f - k1) | spatial_edge, s_type=meta[f]["s_type"], dilation = random.Random())
             triangulation.remove_simplex(f)
 
         for v in union:
