@@ -138,12 +138,3 @@ def decrease_move(triangulation: Triangulation, k1: SimplexKey):
     else:
         raise Exception("vertex {} is not of order 4".format(k1))
 
-
-key1 = simplex_key({1, 21, 22})
-key2 = simplex_key({1, 2, 22})
-key1 = simplex_key({10, 6, 5})
-key2 = simplex_key({1, 6, 5})
-increase_move(tri, key1, key2)
-validity.is_valid(tri)
-decrease_move(tri, simplex_key(25))
-validity.is_valid(tri)
