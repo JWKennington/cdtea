@@ -37,15 +37,15 @@ class SimplexKey:
 
     def __repr__(self):
         # the zero d case was causing me some debug confusion so i removed it.
-        # if self._dim == 0:
-        #     return str(list(self._basis)[0])
-        return 'basis {' + ','.join(str(b) for b in self._basis) + '}'
+        if self._dim == 0:
+            return '<'+str(list(self._basis)[0])+'>'
+        return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
 
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
             return self._basis == other._basis
         else:
-            print("Equality not defined between SimplexKey and " + str(type(other)))
+            #print("Equality not defined between SimplexKey and " + str(type(other)))
             return False
 
     # to speed up set style interactions with simplex keys
