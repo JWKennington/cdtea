@@ -45,7 +45,7 @@ class SimplexKey:
         if isinstance(other, SimplexKey):
             return self._basis == other._basis
         else:
-            print("Equality not defined between SimplexKey and " + str(type(other)))
+            #print("Equality not defined between SimplexKey and " + str(type(other)))
             return False
 
     # to speed up set style interactions with simplex keys
