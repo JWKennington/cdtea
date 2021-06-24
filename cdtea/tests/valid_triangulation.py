@@ -72,7 +72,7 @@ def edges_dont_cross_time_slices(triangulation: simplicial.Triangulation):
         t0 = triangulation.simplex_meta[n0]["t"]
         t1 = triangulation.simplex_meta[n1]["t"]
         dt = abs(t1 - t0) % (triangulation.time_size - 2)
-        assert dt <= 1, "The time separation between {n0} and {n1} is {dt}".format(n0=n0, n1=n1, dt=dt)
+        assert dt <= 1, f"The time separation between {n0} and {n1} is {dt}"
 
 
 def vertices_have_minimum_required_connections(triangulation: simplicial.Triangulation):
