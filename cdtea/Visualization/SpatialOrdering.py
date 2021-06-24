@@ -1,7 +1,8 @@
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
+from typing import List
 
 
-def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: list[Dim0SimplexKey] = None):
+def spatial_ordering(st: Triangulation, layer: List[Dim0SimplexKey], indexed: List[Dim0SimplexKey] = None):
     """
     returns an ordered array of nodes
 
