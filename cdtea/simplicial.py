@@ -138,8 +138,12 @@ class Triangulation:
         del self._simplex_meta[key]
 
     def __eq__(self, other):
-        if type(other) == Triangulation:
-            return (self._simplices == other._simplices) and (self._simplex_meta == other._simplex_meta) and (self._time_size == other._time_size)
+        if type(other) is Triangulation:
+            same_simplices = self._simplices == other.simplices
+            same_meta = self._simplex_meta == other.simplex_meta
+            same_time_size = self.time_size == other.time_size
+            same_triangulation = same_simplices and same_meta and same_time_size
+            return same_triangulation
         return False
 
     @property
