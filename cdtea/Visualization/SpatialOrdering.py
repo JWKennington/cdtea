@@ -1,23 +1,28 @@
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
 
 
-def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], origin: Dim0SimplexKey = None):
+def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: Dim0SimplexKey = None):
     """
-    returns a dictionary where each Dim0SimplexKey in layer is mapped to an index.
+    returns an ordered array of nodes
 
     note that there are two valid orderings 01234 or 43210
     """
 
     # if origin is unspecified chose a random origin
-    if origin is None:
-        origin = layer[0]
-    index = {origin: 0}
+    if indexed is None:
+        indexed = [layer[0]]
+        origin = indexed[0]
+        # the current "edge" of the ordering
+        boundary = origin
+    else:
+        boundary = indexed[1]
 
-    # the current "edge" of the ordering
-    boundary = origin
+
+
+
 
     # all nodes that are not yet indexed
-    not_indexed = set(layer) - {origin}
+    not_indexed = set(layer) - set(indexed)
 
     # each iteration adds one new node to the index dict. therefore we need to loop once for each item in layer
     for i in range(len(layer)):
@@ -27,9 +32,9 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], origin: Dim
             if (f | boundary) in st.simplices[1]:
                 # remove f from not_indexed
                 not_indexed -= {f}
-                index[f] = index[boundary] + 1
+                indexed.append(f)
                 boundary = f
 
                 # once one has been found we can move on to the next loop
                 break
-    return index
+    return indexed
