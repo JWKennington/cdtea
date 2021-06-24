@@ -9,7 +9,10 @@ from cdtea.util.TimeIndex import time_sep
 
 def twice_as_many_2d_as_0d(triangulation: simplicial.Triangulation):
     """For toroidal topology in 1+1d there should be twice as many faces as vertices"""
-    assert len(triangulation.simplices[0]) * 2 == len(triangulation.simplices[2]), "The number of triangles was not twice the number of vertices"
+    number_of_vertices = len(triangulation.simplices[0])
+    number_of_faces = len(triangulation.simplices[2])
+    err_msg = "The number of triangles was not twice the number of vertices"
+    assert 2 * number_of_vertices == number_of_faces, err_msg
 
 
 def edges_imply_faces(triangulation: simplicial.Triangulation):
@@ -52,7 +55,8 @@ def faces_imply_nodes(triangulation: simplicial.Triangulation):
     """generate the set of nodes used in faces"""
     verts = set()
     nodes = triangulation.simplices[0]
-    for f in triangulation.simplices[2]:
+    tris = triangulation.simplices[2]
+    for f in tris:
         # union equals
         verts |= f.basis
     assert verts == nodes, "the set of vertices used in faces is not the same as the given vertices"
@@ -75,20 +79,20 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
     """check that every vertex has 2 spatial edges"""
     edges = triangulation.simplices[1]
     verts = triangulation.simplices[0]
-    counts_spatial = defaultdict(int)
-    counts_past = defaultdict(int)
-    counts_future = defaultdict(int)
     time_size = triangulation.time_size
+
+    counts_spatial, counts_past, counts_future = defaultdict(int), defaultdict(int), defaultdict(int)
+
     for e in edges:
         s_type = triangulation.simplex_meta[e]["s_type"]
         basis = e.basis_list
 
-        # if it is a spatial edge add one to the spatial connection for both consituent vertices
+        # if it is a spatial edge add one to the spatial connection for both constituent vertices
         if s_type == (2, 0):
             for v in basis:
                 counts_spatial[v] += 1
 
-        # if it is a temporal edge figure out past and future and augment the aproapriate lists
+        # if it is a temporal edge figure out past and future and augment the appropriate lists
         elif s_type == (1, 1):
             t0 = triangulation.simplex_meta[basis[0]]["t"] % time_size
             t1 = triangulation.simplex_meta[basis[1]]["t"] % time_size
@@ -104,13 +108,13 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
                 raise Exception("s_type {type} does not match, both basis have the same time ".format(type=s_type))
         else:
             raise Exception("invalid s_type {type}".format(type=s_type))
-    counts_spatial = dict(counts_spatial)
-    counts_future = dict(counts_future)
-    counts_past = dict(counts_past)
+
+    counts_spatial, counts_future, counts_past = dict(counts_spatial), dict(counts_future), dict(counts_past)
+
     for v in verts:
-        assert counts_spatial[v] == 2, "{v} has {c} spatial neighbors".format(v=v, c=counts_spatial[v])
-        assert counts_future[v] > 0, "{v} has {c} future connections".format(v=v, c=counts_future[v])
-        assert counts_past[v] > 0, "{v} has {c} past connections".format(v=v, c=counts_past[v])
+        assert counts_spatial[v] == 2, f"{v} has {counts_spatial[v]} spatial neighbors"
+        assert counts_future[v] > 0, f"{v} has {counts_spatial[v]} future connections"
+        assert counts_past[v] > 0, f"{v} has {counts_spatial[v]} past connections"
 
 
 def check_s_type(triangulation: simplicial.Triangulation):
