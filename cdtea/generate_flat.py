@@ -1,5 +1,5 @@
 from cdtea import simplicial
-from typing import Union, FrozenSet, Set
+from typing import Union, Set
 import random
 
 
