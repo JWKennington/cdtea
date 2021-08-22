@@ -5,7 +5,7 @@ References:
 """
 import collections
 import typing
-from typing import Union, FrozenSet, Set, Iterable
+from typing import Union, FrozenSet, Set
 from cdtea.util import equivdict
 from collections.abc import Iterable
 
