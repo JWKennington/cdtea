@@ -1,4 +1,5 @@
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
+from typing import List
 
 
 def get_layer(st: Triangulation, t: int):
