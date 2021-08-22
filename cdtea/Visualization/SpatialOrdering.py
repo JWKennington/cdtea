@@ -1,6 +1,12 @@
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
 
 
+def get_layer(st: Triangulation, t: int):
+    if 0 <= t < st.time_size:
+        return [n for n in st.nodes if st.simplex_meta[n]['t'] == t]
+    raise ValueError(f"t={t} must be between 0 and {st.time_size}")
+
+
 def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: list[Dim0SimplexKey] = None):
     """
     returns an ordered array of nodes
@@ -10,6 +16,9 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
     layer: a list constaining all the verts with the same time index
 
     indexed: if a first and second vertex are supplied then there is only a single valid ordering
+
+    an ordering is produced by starting at a particular vertex and finding the subsequent spatially adjacent vertex
+    until all vertices are indexed.
     """
 
     # if origin is unspecified chose a random origin
@@ -38,12 +47,6 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
                 # once one has been found we can move on to the next loop
                 break
     return indexed
-
-
-def get_layer(st: Triangulation, t: int):
-    if 0 <= t < st.time_size:
-        return [n for n in st.nodes if st.simplex_meta[n]['t'] == t]
-    raise ValueError(f"t={t} must be between 0 and {st.time_size}")
 
 
 def total_ordering(st: Triangulation):
