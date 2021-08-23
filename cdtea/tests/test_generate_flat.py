@@ -2,6 +2,7 @@ from cdtea import simplicial
 from cdtea import generate_flat
 from collections import defaultdict
 from cdtea.tests.valid_triangulation import is_valid
+from cdtea.util.TimeIndex import time_sep
 
 
 class TestGenerateFlat:
@@ -70,4 +71,20 @@ class TestGenerateFlat:
                 assert len(t.simplices[0]) == n
                 assert len(t.simplices[1]) == 3 * n
 
+    def test_time_index(self):
+        st = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
 
+        def get_type(simplex):
+            return st.simplex_meta[simplex]["s_type"]
+
+        def get_t(simplex):
+            return st.simplex_meta[simplex]["t"]
+
+        for edge in st.edges:
+            lst = edge.basis_list
+            if get_type(edge) == (1, 1):
+                assert abs(time_sep(get_t(lst[0]), get_t(lst[1]), st.time_size)) == 1
+            elif get_type(edge) == (2, 0):
+                assert get_t(lst[0]) == get_t(lst[1])
+            else:
+                raise Exception(f"edge {edge} has invalid type {get_type(edge)}")
