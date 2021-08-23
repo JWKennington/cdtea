@@ -11,14 +11,14 @@ class TestEquivDict:
         d = {'a': 1, 'b': 1, 'c': 2}
         e = equivdict.EquivDict(d)
         assert isinstance(e, equivdict.EquivDict)
-        assert isinstance(e._dict, dict)
-        assert isinstance(e._equiv_dict, collections.defaultdict)
+        assert isinstance(e.dict, dict)
+        assert isinstance(e.equiv_dict, collections.defaultdict)
 
     def test_equiv_class(self):
         d = {'a': 1, 'b': 1, 'c': 2}
         e = equivdict.EquivDict(d)
-        assert e._equiv_dict[1] == {'a', 'b'}
-        assert e._equiv_dict[2] == {'c'}
+        assert e.equiv_dict[1] == {'a', 'b'}
+        assert e.equiv_dict[2] == {'c'}
 
     def test_equivalence(self):
         d = {'a': 1, 'b': 1, 'c': 2}
@@ -44,5 +44,5 @@ class TestEquivDict:
         assert e == equivdict.EquivDict(dict2)
 
         with pytest.raises(Exception):
-            dual_equiv_dict = e.dual
-            dual_equiv_dict[3] = 'd'
+            dualequiv_dict = e.dual
+            dualequiv_dict[3] = 'd'

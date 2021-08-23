@@ -5,8 +5,7 @@ References:
 """
 from __future__ import annotations
 import collections
-from typing import Union
-from collections.abc import Iterable
+from typing import Union, Iterable
 
 
 def simplex_key(basis: Union[int, Iterable]):

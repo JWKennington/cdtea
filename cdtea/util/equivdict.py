@@ -32,6 +32,14 @@ class EquivDict:
             self._equiv_dict[v].add(k)
 
     @property
+    def dict(self):
+        return self._dict
+
+    @property
+    def equiv_dict(self):
+        return self._equiv_dict
+
+    @property
     def dual(self):
         """Return dual mapping"""
         return EquivDictDual(self)
