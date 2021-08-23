@@ -11,7 +11,7 @@ class TestEquivDict:
         d = {'a': 1, 'b': 1, 'c': 2}
         e = equivdict.EquivDict(d)
         assert isinstance(e, equivdict.EquivDict)
-        assert isinstance(e.dict, dict)
+        assert isinstance(e.dictionary, dict)
         assert isinstance(e.equiv_dict, collections.defaultdict)
 
     def test_equiv_class(self):

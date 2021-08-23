@@ -32,7 +32,7 @@ class EquivDict:
             self._equiv_dict[v].add(k)
 
     @property
-    def dict(self):
+    def dictionary(self):
         return self._dict
 
     @property
