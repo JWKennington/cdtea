@@ -119,7 +119,7 @@ class DimDSimplexKey(SimplexKey):
 
 
 class Triangulation:
-    """Triangulation Class Stub"""
+    """Triangulation Class, can represent simplicial manifolds."""
     __slots__ = ('_simplices', '_simplex_meta', '_time_size', '_max_index')
 
     def __init__(self, time_size: int):
