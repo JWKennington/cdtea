@@ -1,3 +1,4 @@
+"""Test triangulation utils"""
 import itertools
 from collections import defaultdict
 import numpy as np
@@ -9,7 +10,8 @@ from cdtea.simplicial import simplex_key
 my_list = [1, 2, 3, 4]
 
 
-class TestSpatialOrdering:
+class TestOrdering:
+    "test methods for ordering nodes in a triangulation"
 
     def test_get_layer(self):
         """
@@ -61,6 +63,7 @@ class TestSpatialOrdering:
             Ordering.get_layer_parity(l2, l1[0], l1[3], st)
 
     def test_total_ordering(self):
+        """ Test creating a complete ordering of a space_time"""
         st = generate_flat_2d_space_time(space_size=7, time_size=5)
         total_ordering = Ordering.total_ordering(st)
         T = st.time_size

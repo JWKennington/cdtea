@@ -26,7 +26,7 @@ def two_d_plot(st: Triangulation) -> type(plt.gca()):
 
 
 def plot_faces(ax, coordinates, meta, st):
-    # faces
+    """plot the faces"""
     for s in st.faces:
         # check that this face isnt in the cut region
         def t_param_difference(v1, v2):
@@ -45,7 +45,7 @@ def plot_faces(ax, coordinates, meta, st):
 
 
 def plot_points(ax, coordinates, st):
-    # plot the points
+    """plot the points"""
     X, Y, pnt_colors = [], [], []
     edge_color = collections.defaultdict(int)
     for e in st.edges:
@@ -60,7 +60,7 @@ def plot_points(ax, coordinates, st):
 
 
 def plot_edges(ax, coordinates, meta, st):
-    # plot all the edges
+    """plot the edges"""
     lines, line_colors = [], []
     for e in st.edges:
         b = e.basis_list

@@ -81,6 +81,7 @@ class TestSimplexKey:
         simplicial.DimDSimplexKey(basis={v1, v2, v3})
 
     def test_generator_function(self):
+        """test the simplex key generator"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)

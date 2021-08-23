@@ -8,6 +8,9 @@ from cdtea.simplicial import Dim0SimplexKey, Triangulation
 
 def time_sep(t1: int, t2: int, time_max: int):
     """ Calculate the separation amount and direction of two time slices"""
+    if not (isinstance(t1, int) and isinstance(t1, int)):
+        raise TypeError(f"t1={t1}and t2={t2}must be ints")
+
     i = (t1 - t2) % time_max
     j = (t2 - t1) % time_max
     if i < j:
@@ -65,7 +68,7 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
 
         # for each link in the chain we want to find an item which is connected to the boundary and not yet indexed
         for f in not_indexed:
-            if (f | boundary) in st.simplices[1]:
+            if f | boundary in st.edges:
                 # remove f from not_indexed
                 not_indexed -= {f}
                 indexed.append(f)
@@ -98,7 +101,7 @@ def get_layer_parity(layer, past_left_vert, past_right_vert, st):
                 left = vert
     if left and middle and right:
         return left, middle, right
-    raise ValueError(f"No parity found following the ordering of supplied past ordering")
+    raise ValueError("No parity found following the ordering of supplied past ordering")
 
 
 def total_ordering(st: Triangulation):
