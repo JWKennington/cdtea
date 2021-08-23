@@ -1,13 +1,17 @@
-from cdtea.simplicial import Triangulation, SimplexKey, DimDSimplexKey, Dim0SimplexKey, simplex_key
-from cdtea.generate_flat import generate_flat_2d_space_time as gen
-from cdtea.tests import valid_triangulation as validity
-from cdtea.util.triangulation_utils import time_sep
+"""
+Tools to modify a triangulation while preserving its validity.
+"""
+
+
 from functools import reduce
 import random
+from cdtea.simplicial import Triangulation, SimplexKey, simplex_key
+from cdtea.util.triangulation_utils import time_sep
+
 
 
 def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
-    """
+    r"""
     |k1/k2| -> |\|
 
     k1 and k2 are simplex keys for triangles. They should be spatialy adjacent. This function swaps their connecting edge.
@@ -52,13 +56,12 @@ def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
 
 
 def increase_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
-    """
+    r"""
         /__\  ->  /|\
         \ /       \|/
     """
     overlap = k1 & k2
     union = k1 | k2
-    non_overlap = union - overlap
     # print(union)
     if overlap in triangulation.edges:
         s_type = triangulation.simplex_meta[overlap]["s_type"]
@@ -108,7 +111,7 @@ def increase_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
 
 
 def decrease_move(triangulation: Triangulation, k1: SimplexKey):
-    """
+    r"""
              /|\   ->  /__\
              \|/       \ /
     """
@@ -133,6 +136,4 @@ def decrease_move(triangulation: Triangulation, k1: SimplexKey):
 
         for v in union:
             triangulation.remove_simplex(v | k1)
-        pass
-    else:
-        raise Exception("vertex {} is not of order 4".format(k1))
+    raise Exception(f"vertex {k1} is not of order 4")

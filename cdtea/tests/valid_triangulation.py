@@ -1,7 +1,8 @@
-# vertex/edge/triangle count
-from cdtea import simplicial
+""" Various tests that a triangulation must past to be a valid toroidal 1+1d simplicial manifold."""
+from itertools import combinations
 from collections import defaultdict
-from itertools import combinations, permutations
+
+from cdtea import simplicial
 from cdtea.util.triangulation_utils import time_sep
 
 

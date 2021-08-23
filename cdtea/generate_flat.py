@@ -1,6 +1,12 @@
-from cdtea import simplicial
-from typing import Union, Set
+"""
+Function to generate an initial simplicial manifold that is flat, with toroidal topology.
+"""
+
+from __future__ import annotations
 import random
+from typing import Union
+from cdtea import simplicial
+
 
 
 def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.Triangulation:
@@ -21,9 +27,9 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
     """
     space_time = simplicial.Triangulation(time_size=time_size)
 
-    def add_simplex(basis: Union[Set, int], **meta):
+    def add_simplex(basis: Union[set, int], **meta):
         """shorthand for adding a simplex to the triangulation"""
-        if type(basis) is int:
+        if isinstance(basis, int):
             space_time.add_simplex(simplicial.Dim0SimplexKey(key=basis), **meta)
         else:
             basis = {simplicial.Dim0SimplexKey(key=b) for b in basis}

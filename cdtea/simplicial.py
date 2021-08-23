@@ -3,35 +3,37 @@
 References:
     [1] R. Loll, Quantum Gravity from Causal Dynamical Triangulations: A Review, Class. Quantum Grav. 37, 013002 (2020).
 """
+from __future__ import annotations
 import collections
 import typing
-from typing import Union, FrozenSet, Set
-from cdtea.util import equivdict
+from typing import Union
 from collections.abc import Iterable
 
 
-def simplex_key(basis: typing.Union[int, Iterable]):
-    if type(basis) == int:
+def simplex_key(basis: Union[int, Iterable]):
+    """
+    Generates a simplex key from an int or an iterable of ints
+    """
+    if isinstance(basis, int):
         return Dim0SimplexKey(basis)
     elif isinstance(basis, Iterable):
         fixed_basis = set()
         for b in basis:
-            if type(b) == Dim0SimplexKey:
+            if isinstance(b, Dim0SimplexKey):
                 fixed_basis.add(b)
             else:
                 fixed_basis.add(Dim0SimplexKey(b))
         if len(fixed_basis) == 1:
             return list(fixed_basis)[0]
         return DimDSimplexKey(fixed_basis)
-    else:
-        raise Exception("given basis must be iterable or an int")
+    raise Exception("given basis must be iterable or an int")
 
 
 class SimplexKey:
     """A reference to a simplex"""
     __slots__ = ('_basis', '_dim')
 
-    def __init__(self, basis: Union[FrozenSet, set], dim: int = None):
+    def __init__(self, basis: Union[frozenset, set], dim: int = None):
         self._basis = frozenset(basis)
         self._dim = dim
 
@@ -43,15 +45,14 @@ class SimplexKey:
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
             return self._basis == other._basis
-        else:
-            # print("Equality not defined between SimplexKey and " + str(type(other)))
-            return False
+        # print("Equality not defined between SimplexKey and " + str(isinstance(other,
+        return False
 
     # to speed up set style interactions with simplex keys
     # to define union
     def __or__(self, other):
-        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
-        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+        self_basis = self._basis if isinstance(self, DimDSimplexKey) else {self}
+        other_basis = other._basis if isinstance(other, DimDSimplexKey) else {other}
 
         new_basis = self_basis | other_basis
 
@@ -62,24 +63,22 @@ class SimplexKey:
 
     # to define intersection
     def __and__(self, other):
-        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
-        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+        self_basis = self._basis if isinstance(self, DimDSimplexKey) else {self}
+        other_basis = other._basis if isinstance(other, DimDSimplexKey) else {other}
 
         new_basis = self_basis & other_basis
         if len(new_basis) == 1:
             return list(new_basis)[0]
-        else:
-            return DimDSimplexKey(new_basis)
+        return DimDSimplexKey(new_basis)
 
     # set difference
     def __sub__(self, other):
-        self_basis = self._basis if type(self) == DimDSimplexKey else {self}
-        other_basis = other._basis if type(other) == DimDSimplexKey else {other}
+        self_basis = self._basis if isinstance(self, DimDSimplexKey) else {self}
+        other_basis = other._basis if isinstance(other, DimDSimplexKey) else {other}
         new_basis = self_basis - other_basis
         if len(new_basis) == 1:
             return list(new_basis)[0]
-        else:
-            return DimDSimplexKey(new_basis)
+        return DimDSimplexKey(new_basis)
 
     # ------- end set operations-------
 
@@ -127,17 +126,19 @@ class Triangulation:
         self._max_index = 0
 
     def add_simplex(self, key: SimplexKey, **meta):
+        """adds a simplex to the triangulation"""
         if key.dim == 0:
             self._max_index += 1
         self._simplices[key.dim].add(key)
         self._simplex_meta[key] = meta
 
     def remove_simplex(self, key: SimplexKey):
+        """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
         del self._simplex_meta[key]
 
     def __eq__(self, other):
-        if type(other) is Triangulation:
+        if isinstance(other, Triangulation):
             same_simplices = self._simplices == other.simplices
             same_meta = self._simplex_meta == other.simplex_meta
             same_time_size = self.time_size == other.time_size
@@ -145,6 +146,7 @@ class Triangulation:
             return same_triangulation
         return False
 
+    # Safe access methods
     @property
     def simplices(self):
         return self._simplices

@@ -1,6 +1,6 @@
+from collections import defaultdict
 from cdtea import simplicial
 from cdtea import generate_flat
-from collections import defaultdict
 from cdtea.tests.valid_triangulation import is_valid
 from cdtea.util.triangulation_utils import time_sep
 

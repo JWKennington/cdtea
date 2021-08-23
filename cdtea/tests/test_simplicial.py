@@ -37,6 +37,7 @@ class TestTriangulation:
         t.add_simplex(n4)
 
         t.add_simplex(e12, edge_type='spatial')
+        t.add_simplex(e23, edge_type='spatial')
         t.add_simplex(e34, edge_type='spatial')
         t.add_simplex(e31, edge_type='temporal')
         t.add_simplex(e42, edge_type='temporal')
@@ -47,9 +48,11 @@ class TestTriangulation:
         assert isinstance(t, simplicial.Triangulation)
 
     def test_equality(self):
-        t = simplicial.Triangulation(time_size=2)
-        assert t == t
-        assert t != 7
+        t1, t2 = simplicial.Triangulation(time_size=2), simplicial.Triangulation(time_size=2)
+        t3 = simplicial.Triangulation(time_size=3)
+        assert t1 == t2
+        assert t1 != t3
+        assert t1 != 7
 
     def test_remove_simplex(self):
         """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
@@ -63,18 +66,18 @@ class TestTriangulation:
 
 
 class TestSimplexKey:
+    """Tests for the SimplexKey Classes"""
 
-    def test_create_0d(self):
+    def test_create_dim_0_simplex_key(self):
+        simplicial.Dim0SimplexKey(1)
+        simplicial.Dim0SimplexKey(2)
+        simplicial.Dim0SimplexKey(2)
+
+    def test_create_dim_d_simplex_key(self):
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(2)
-        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
-
-    def test_create_Dd(self):
-        v1 = simplicial.Dim0SimplexKey(1)
-        v2 = simplicial.Dim0SimplexKey(2)
-        v3 = simplicial.Dim0SimplexKey(2)
-        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        simplicial.DimDSimplexKey(basis={v1, v2, v3})
 
     def test_generator_function(self):
         v1 = simplicial.Dim0SimplexKey(1)
