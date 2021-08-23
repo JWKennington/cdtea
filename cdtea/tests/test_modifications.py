@@ -14,7 +14,7 @@ class TestModifications:
         tri = generate_flat_2d_space_time(space_size=5, time_size=5)
         key1 = simplex_key({1, 21, 22})
         key2 = simplex_key({1, 2, 22})
-        key3 = simplex_key({1, 8, 22})
+        key3 = simplex_key({32, 21, 22})
         key4 = simplex_key({8, 2, 7})
 
         modifications.parity_move(tri, key1, key2)
