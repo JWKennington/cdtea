@@ -17,7 +17,7 @@ def simplex_key(basis: Union[int, Iterable]):
     if isinstance(basis, int):
         return Dim0SimplexKey(basis)
 
-    elif not isinstance(basis, Iterable):
+    if not isinstance(basis, Iterable):
         raise Exception("given basis must be iterable of ints or an int")
 
     fixed_basis = set()

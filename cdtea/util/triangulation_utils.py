@@ -9,14 +9,13 @@ from cdtea.simplicial import Dim0SimplexKey, Triangulation
 def time_sep(t1: int, t2: int, time_max: int):
     """ Calculate the separation amount and direction of two time slices"""
     if not (isinstance(t1, int) and isinstance(t1, int)):
-        raise TypeError(f"t1={t1}and t2={t2}must be ints")
+        raise TypeError(f"t1={t1} and t2={t2} must be ints")
 
     i = (t1 - t2) % time_max
     j = (t2 - t1) % time_max
-    if i < j:
+    if j > i:
         return -i
-    elif j <= i:
-        return j
+    return j
 
 
 def nearest(ref, pnt):
