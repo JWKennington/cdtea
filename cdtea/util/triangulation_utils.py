@@ -1,3 +1,4 @@
+from __future__ import annotations
 import numpy as np
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
 
