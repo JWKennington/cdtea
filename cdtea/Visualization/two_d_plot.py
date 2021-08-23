@@ -1,5 +1,5 @@
-from cdtea.Visualization.coordinates import toroidal_coordinates, nearest
-from cdtea.generate_flat import generate_flat_2d_space_time
+from cdtea.Visualization.coordinates import toroidal_coordinates
+from cdtea.util.triangulation_utils import nearest
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon

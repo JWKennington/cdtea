@@ -1,11 +1,9 @@
 from cdtea.simplicial import Triangulation, SimplexKey, DimDSimplexKey, Dim0SimplexKey, simplex_key
 from cdtea.generate_flat import generate_flat_2d_space_time as gen
 from cdtea.tests import valid_triangulation as validity
-from cdtea.util.TimeIndex import time_sep
+from cdtea.util.triangulation_utils import time_sep
 from functools import reduce
 import random
-
-tri = gen(space_size=5, time_size=5)
 
 
 def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):

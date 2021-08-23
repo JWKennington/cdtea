@@ -1,4 +1,4 @@
-from cdtea.Visualization.SpatialOrdering import spatial_ordering, total_ordering
+from cdtea.util.triangulation_utils import total_ordering
 from cdtea.simplicial import Triangulation
 import numpy as np
 
@@ -18,15 +18,3 @@ def toroidal_coordinates(st: Triangulation):
             phi = t / st.time_size * 2 * np.pi
             coords[v] = (theta, phi)
     return coords
-
-
-def nearest(ref, pnt):
-    deltas = np.array([[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0], [-1, -1]]) * 2 * np.pi
-    sep = np.linalg.norm(pnt - ref)
-    final_delta = np.array([0, 0])
-    for delta in deltas:
-        test_sep = np.linalg.norm(pnt + delta - ref)
-        if test_sep < sep:
-            sep = test_sep
-            final_delta = delta
-    return pnt + final_delta

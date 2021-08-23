@@ -1,5 +1,27 @@
+import numpy as np
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
-from typing import List
+
+
+def time_sep(t1: int, t2: int, time_max: int):
+    """ Calculate the separation amount and direction of two time slices"""
+    i = (t1 - t2) % time_max
+    j = (t2 - t1) % time_max
+    if i < j:
+        return -i
+    if j <= i:
+        return j
+
+
+def nearest(ref, pnt):
+    deltas = np.array([[0, 1], [1, 0], [1, 1], [0, -1], [-1, 0], [-1, -1]]) * 2 * np.pi
+    sep = np.linalg.norm(pnt - ref)
+    final_delta = np.array([0, 0])
+    for delta in deltas:
+        test_sep = np.linalg.norm(pnt + delta - ref)
+        if test_sep < sep:
+            sep = test_sep
+            final_delta = delta
+    return pnt + final_delta
 
 
 def get_layer(st: Triangulation, t: int):

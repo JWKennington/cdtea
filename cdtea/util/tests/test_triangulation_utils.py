@@ -1,9 +1,9 @@
 from cdtea.generate_flat import generate_flat_2d_space_time
-from cdtea.Visualization import SpatialOrdering as Ordering
+from cdtea.util import triangulation_utils as Ordering
 from cdtea.simplicial import simplex_key
 import itertools
 from collections import defaultdict
-
+import numpy as np
 my_list = [1, 2, 3, 4]
 
 
@@ -58,3 +58,24 @@ class TestSpatialOrdering:
                 time_edge_2 = total_ordering[t][1] | total_ordering[(t + 1) % T][0]
             assert time_edge_2 in st.edges
             assert st.simplex_meta[time_edge_2]["s_type"] == (1, 1)
+
+    def test_time_sep(self):
+        assert Ordering.time_sep(2, 8, 10) == -4
+        assert Ordering.time_sep(8, 2, 10) == 4
+        assert Ordering.time_sep(8, 8, 10) == 0
+
+    def test_nearest(self):
+        """
+            for each layer test that it is the correct size
+            and that all nodes are contained within two edges.
+
+        """
+        ref = np.array([.8, .5]) * 2 * np.pi
+        pnt = np.array([.1, .6]) * 2 * np.pi
+        result = np.array([1.1, .6]) * 2 * np.pi
+        assert np.allclose(Ordering.nearest(ref, pnt), result)
+
+        ref = np.array([.2, .1]) * 2 * np.pi
+        pnt = np.array([.9, .8]) * 2 * np.pi
+        result = np.array([-.1, -.2]) * 2 * np.pi
+        assert np.allclose(Ordering.nearest(ref, pnt), result)

@@ -2,7 +2,7 @@
 from cdtea import simplicial
 from collections import defaultdict
 from itertools import combinations, permutations
-from cdtea.util.TimeIndex import time_sep
+from cdtea.util.triangulation_utils import time_sep
 
 
 # These tests assume 1+1d with toroidal topology
