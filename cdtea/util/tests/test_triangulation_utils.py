@@ -51,6 +51,15 @@ class TestSpatialOrdering:
                 assert potential_edge in st.edges
                 assert st.simplex_meta[potential_edge]["s_type"] == (2, 0)
 
+    def test_get_layer_parity(self):
+
+        st = generate_flat_2d_space_time(space_size=5, time_size=8)
+        l1, l2 = Ordering.get_layer(st, 3), Ordering.get_layer(st, 4)
+        l1 = Ordering.spatial_ordering(st, l1)
+        Ordering.get_layer_parity(l2, l1[0], l1[1], st)
+        with pytest.raises(Exception):
+            Ordering.get_layer_parity(l2, l1[0], l1[3], st)
+
     def test_total_ordering(self):
         st = generate_flat_2d_space_time(space_size=7, time_size=5)
         total_ordering = Ordering.total_ordering(st)
