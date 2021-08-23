@@ -59,8 +59,6 @@ def increase_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
         \ /       \|/
     """
     overlap = k1 & k2
-    union = k1 | k2
-    # print(union)
     if overlap in triangulation.edges:
         s_type = triangulation.simplex_meta[overlap]["s_type"]
         if s_type == (2, 0):

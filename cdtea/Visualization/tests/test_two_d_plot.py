@@ -1,4 +1,9 @@
+"""Test 2d plotting"""
+import matplotlib.pyplot as plt
+
+
 class TestTwoDPlot:
+    """Test 2d plotting"""
 
     def test_run(self):
         """This test makes sure that generate_flat creates a triangulation
@@ -8,4 +13,4 @@ class TestTwoDPlot:
         from cdtea.Visualization.two_d_plot import two_d_plot
 
         st = generate_flat_2d_space_time(7, 9)
-        two_d_plot(st, display=False)
+        two_d_plot(st)

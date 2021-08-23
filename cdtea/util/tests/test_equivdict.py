@@ -1,6 +1,6 @@
 """Tests for EquivDict utility"""
 import collections
-
+import pytest
 from cdtea.util import equivdict
 
 
@@ -36,3 +36,16 @@ class TestEquivDict:
 
         assert e['a'] == 1
         assert e.dual[1] == {'a', 'b'}
+
+    def test_setitem(selfself):
+        dict1 = {'a': 1, 'b': 1, 'c': 2}
+        dict2 = {'a': 1, 'b': 1, 'c': 2, 'd': 3}
+        e = equivdict.EquivDict(dict1)
+
+        e['d'] = 3
+        assert e == equivdict.EquivDict(dict2)
+
+        with pytest.raises(Exception):
+            dual_equiv_dict = e.dual
+            dual_equiv_dict[3] = 'd'
+

@@ -1,9 +1,11 @@
-from cdtea.generate_flat import generate_flat_2d_space_time
-from cdtea.util import triangulation_utils as Ordering
-from cdtea.simplicial import simplex_key
 import itertools
 from collections import defaultdict
 import numpy as np
+import pytest
+from cdtea.generate_flat import generate_flat_2d_space_time
+from cdtea.util import triangulation_utils as Ordering
+from cdtea.simplicial import simplex_key
+
 my_list = [1, 2, 3, 4]
 
 
@@ -31,6 +33,12 @@ class TestSpatialOrdering:
                         counts[n] += 1
 
             assert all(value == 2 for value in counts.values())
+        with pytest.raises(Exception):
+            Ordering.get_layer(st, 1230)
+        with pytest.raises(Exception):
+            Ordering.get_layer(st, -10)
+        with pytest.raises(Exception):
+            Ordering.get_layer(st, .74)
 
     def test_spatial_ordering(self):
         st = generate_flat_2d_space_time(space_size=5, time_size=8)

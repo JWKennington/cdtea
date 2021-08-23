@@ -1,6 +1,7 @@
 """Tests for the simplicial module"""
 
 from cdtea import simplicial
+import pytest
 
 
 class TestTriangulation:
@@ -89,6 +90,10 @@ class TestSimplexKey:
         assert simplicial.simplex_key(v1) == v1
         assert simplicial.simplex_key([1]) == v1
         assert simplicial.simplex_key({v1, v2, v3}) == f
+        with pytest.raises(Exception):
+            simplicial.simplex_key(1.124)
+        with pytest.raises(Exception):
+            simplicial.simplex_key("cats")
 
     def test_union(self):
         v1 = simplicial.Dim0SimplexKey(1)
@@ -130,3 +135,21 @@ class TestSimplexKey:
         for b in f:
             assert b in f
         assert (e in f) is False
+
+    def test_repr(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        e = simplicial.DimDSimplexKey(basis={v1, v2})
+        f = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        str(e)  # these cant be tested against values because they can change order.
+        str(f)
+        assert str(v1) == "<1>"
+
+    def test_eq(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(1)
+        v3 = simplicial.Dim0SimplexKey(3)
+        assert v1 == v2
+        assert v1 != v3
+        assert v1 != "cat"

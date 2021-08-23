@@ -1,3 +1,4 @@
+import pytest
 from cdtea import modifications
 from cdtea.simplicial import simplex_key
 from cdtea.generate_flat import generate_flat_2d_space_time
@@ -13,12 +14,36 @@ class TestModifications:
         modifications.parity_move(tri, key1, key2)
         validity.is_valid(tri)
 
+        with pytest.raises(Exception):
+            tri = generate_flat_2d_space_time(space_size=5, time_size=5)
+            key1 = simplex_key({1, 21, 22})
+            key2 = simplex_key({1, 8, 22})
+            modifications.parity_move(tri, key1, key2)
+
+        with pytest.raises(Exception):
+            tri = generate_flat_2d_space_time(space_size=5, time_size=5)
+            key1 = simplex_key({1, 21, 22})
+            key2 = simplex_key({8, 21, 22})
+            modifications.parity_move(tri, key1, key2)
+
     def test_increase(self):
         tri = generate_flat_2d_space_time(space_size=5, time_size=5)
         key1 = simplex_key({10, 6, 5})
         key2 = simplex_key({1, 6, 5})
         modifications.increase_move(tri, key1, key2)
         validity.is_valid(tri)
+
+        with pytest.raises(Exception):
+            tri = generate_flat_2d_space_time(space_size=5, time_size=5)
+            key1 = simplex_key({10, 6, 5})
+            key2 = simplex_key({10, 6, 5})
+            modifications.parity_move(tri, key1, key2)
+
+        with pytest.raises(Exception):
+            tri = generate_flat_2d_space_time(space_size=5, time_size=5)
+            key1 = simplex_key({10, 6, 5})
+            key2 = simplex_key({1, 7, 3})
+            modifications.parity_move(tri, key1, key2)
 
     def test_decrease(self):
         tri = generate_flat_2d_space_time(space_size=5, time_size=5)
@@ -27,3 +52,11 @@ class TestModifications:
         modifications.increase_move(tri, key1, key2)
         modifications.decrease_move(tri, simplex_key(25))
         validity.is_valid(tri)
+
+        with pytest.raises(Exception):
+            tri = generate_flat_2d_space_time(space_size=5, time_size=5)
+            key1 = simplex_key({10, 6, 5})
+            key2 = simplex_key({1, 6, 5})
+            modifications.increase_move(tri, key1, key2)
+            modifications.decrease_move(tri, simplex_key(20))
+            validity.is_valid(tri)

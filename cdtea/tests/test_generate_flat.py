@@ -1,3 +1,4 @@
+"""Tests for generating a flat toroidal 2d simplicial manifold"""
 from collections import defaultdict
 from cdtea import simplicial
 from cdtea import generate_flat
@@ -6,6 +7,7 @@ from cdtea.util.triangulation_utils import time_sep
 
 
 class TestGenerateFlat:
+    """Tests for generating a flat toroidal 2d simplicial manifold"""
 
     def test_create(self):
         """This test makes sure that generate_flat creates a triangulation

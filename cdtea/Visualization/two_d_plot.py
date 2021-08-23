@@ -1,3 +1,5 @@
+""" plotting functions for 2d space-times with toroidal topology"""
+
 from cdtea.Visualization.coordinates import toroidal_coordinates
 from cdtea.util.triangulation_utils import nearest
 import numpy as np
@@ -8,7 +10,8 @@ from cdtea.simplicial import Triangulation
 import collections
 
 
-def two_d_plot(st: Triangulation, display: bool = True):
+def two_d_plot(st: Triangulation) -> type(plt.gca()):
+    """create a matplotlib ax"""
     ax = plt.gca()
     meta = st.simplex_meta
     coordinates = toroidal_coordinates(st)
@@ -58,5 +61,4 @@ def two_d_plot(st: Triangulation, display: bool = True):
                 color = (1, 0, 0, .5)
             p = Polygon(pts, closed=False, color=color)
             ax.add_patch(p)
-    if display:
-        plt.show()
+    return ax

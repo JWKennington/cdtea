@@ -13,19 +13,25 @@ def simplex_key(basis: Union[int, Iterable]):
     """
     Generates a simplex key from an int or an iterable of ints
     """
+
     if isinstance(basis, int):
         return Dim0SimplexKey(basis)
-    elif isinstance(basis, Iterable):
-        fixed_basis = set()
-        for b in basis:
-            if isinstance(b, Dim0SimplexKey):
-                fixed_basis.add(b)
-            else:
-                fixed_basis.add(Dim0SimplexKey(b))
-        if len(fixed_basis) == 1:
-            return list(fixed_basis)[0]
-        return DimDSimplexKey(fixed_basis)
-    raise Exception("given basis must be iterable or an int")
+
+    elif not isinstance(basis, Iterable):
+        raise Exception("given basis must be iterable of ints or an int")
+
+    fixed_basis = set()
+    for b in basis:
+        if isinstance(b, Dim0SimplexKey):
+            fixed_basis.add(b)
+        elif isinstance(b, int):
+            fixed_basis.add(Dim0SimplexKey(b))
+        else:
+            raise Exception("given basis must be iterable of ints or an int")
+    # if basis is an iterable with a single item
+    if len(fixed_basis) == 1:
+        return list(fixed_basis)[0]
+    return DimDSimplexKey(fixed_basis)
 
 
 class SimplexKey:
