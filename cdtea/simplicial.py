@@ -5,7 +5,7 @@ References:
 """
 import collections
 import typing
-from typing import Union, FrozenSet, Set, Iterable
+from typing import Union, FrozenSet, Set
 from cdtea.util import equivdict
 from collections.abc import Iterable
 
@@ -36,16 +36,15 @@ class SimplexKey:
         self._dim = dim
 
     def __repr__(self):
-        # the zero d case was causing me some debug confusion so i removed it.
-        # if self._dim == 0:
-        #     return str(list(self._basis)[0])
-        return 'basis {' + ','.join(str(b) for b in self._basis) + '}'
+        if self._dim == 0:
+            return '<' + str(list(self._basis)[0]) + '>'
+        return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
 
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
             return self._basis == other._basis
         else:
-            print("Equality not defined between SimplexKey and " + str(type(other)))
+            # print("Equality not defined between SimplexKey and " + str(type(other)))
             return False
 
     # to speed up set style interactions with simplex keys
@@ -119,7 +118,7 @@ class DimDSimplexKey(SimplexKey):
 
 class Triangulation:
     """Triangulation Class Stub"""
-    __slots__ = ('_simplices', '_simplex_meta', '_time_size','_max_index')
+    __slots__ = ('_simplices', '_simplex_meta', '_time_size', '_max_index')
 
     def __init__(self, time_size: int):
         self._simplices = collections.defaultdict(set)
@@ -138,8 +137,12 @@ class Triangulation:
         del self._simplex_meta[key]
 
     def __eq__(self, other):
-        if type(other) == Triangulation:
-            return (self._simplices == other._simplices) and (self._simplex_meta == other._simplex_meta) and (self._time_size == other._time_size)
+        if type(other) is Triangulation:
+            same_simplices = self._simplices == other.simplices
+            same_meta = self._simplex_meta == other.simplex_meta
+            same_time_size = self.time_size == other.time_size
+            same_triangulation = same_simplices and same_meta and same_time_size
+            return same_triangulation
         return False
 
     @property
@@ -157,3 +160,16 @@ class Triangulation:
     @property
     def time_size(self):
         return self._time_size
+
+    # quick semantic access to triangulation elements and properties
+    @property
+    def nodes(self):
+        return self._simplices[0]
+
+    @property
+    def edges(self):
+        return self._simplices[1]
+
+    @property
+    def faces(self):
+        return self._simplices[2]
