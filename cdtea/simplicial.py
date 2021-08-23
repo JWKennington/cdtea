@@ -5,7 +5,6 @@ References:
 """
 from __future__ import annotations
 import collections
-import typing
 from typing import Union
 from collections.abc import Iterable
 
@@ -58,8 +57,7 @@ class SimplexKey:
 
         if len(new_basis) == 1:
             return list(new_basis)[0]
-        else:
-            return DimDSimplexKey(new_basis)
+        return DimDSimplexKey(new_basis)
 
     # to define intersection
     def __and__(self, other):
@@ -111,7 +109,7 @@ class Dim0SimplexKey(SimplexKey):
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
 
-    def __init__(self, basis: Union[Set[SimplexKey], FrozenSet[SimplexKey]]):
+    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]]):
         super().__init__(basis=basis, dim=len(basis) - 1)
 
 

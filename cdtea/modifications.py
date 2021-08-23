@@ -2,12 +2,10 @@
 Tools to modify a triangulation while preserving its validity.
 """
 
-
 from functools import reduce
 import random
 from cdtea.simplicial import Triangulation, SimplexKey, simplex_key
 from cdtea.util.triangulation_utils import time_sep
-
 
 
 def parity_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
@@ -103,7 +101,6 @@ def increase_move(triangulation: Triangulation, k1: SimplexKey, k2: SimplexKey):
             triangulation.remove_simplex(k1)
             triangulation.remove_simplex(k2)
 
-
         else:
             raise Exception("Faces are spatial neighbors not temporal neighbors")
     else:
@@ -117,23 +114,23 @@ def decrease_move(triangulation: Triangulation, k1: SimplexKey):
     """
     meta = triangulation.simplex_meta
 
-    if meta[k1]["order"] == 4:
-        t_index = meta[k1]["t"]
-        faces = [f for f in triangulation.simplices[2] if k1 in f]
-        union = reduce(lambda x, y: x | y, faces) - k1
-        space_neighbors = [b for b in union if meta[b]["t"] == t_index]
-        spatial_edge = space_neighbors[0] | space_neighbors[1]
+    if meta[k1]["order"] != 4:
+        raise Exception(f"vertex {k1} is not of order 4")
+    t_index = meta[k1]["t"]
+    faces = [f for f in triangulation.simplices[2] if k1 in f]
+    union = reduce(lambda x, y: x | y, faces) - k1
+    space_neighbors = [b for b in union if meta[b]["t"] == t_index]
+    spatial_edge = space_neighbors[0] | space_neighbors[1]
 
-        triangulation.add_simplex(spatial_edge, s_type=(2, 0))
+    triangulation.add_simplex(spatial_edge, s_type=(2, 0))
 
-        for b in union - spatial_edge:
-            meta[b]["order"] -= 1
-        triangulation.remove_simplex(k1)
-        for f in faces:
-            # THIS DOUBLE ADDS SIMPLEX but because its a set it shouldn't be double counted.
-            triangulation.add_simplex((f - k1) | spatial_edge, s_type=meta[f]["s_type"], dilation=random.Random())
-            triangulation.remove_simplex(f)
+    for b in union - spatial_edge:
+        meta[b]["order"] -= 1
+    triangulation.remove_simplex(k1)
+    for f in faces:
+        # THIS DOUBLE ADDS SIMPLEX but because its a set it shouldn't be double counted.
+        triangulation.add_simplex((f - k1) | spatial_edge, s_type=meta[f]["s_type"], dilation=random.Random())
+        triangulation.remove_simplex(f)
 
-        for v in union:
-            triangulation.remove_simplex(v | k1)
-    raise Exception(f"vertex {k1} is not of order 4")
+    for v in union:
+        triangulation.remove_simplex(v | k1)

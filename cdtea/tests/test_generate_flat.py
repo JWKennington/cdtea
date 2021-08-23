@@ -72,6 +72,9 @@ class TestGenerateFlat:
                 assert len(t.simplices[1]) == 3 * n
 
     def test_time_index(self):
+        """
+        Make sure all spatial adjacent nodes have the same t and all time adjacent node have t's that differ by one
+        """
         st = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
 
         def get_type(simplex):
