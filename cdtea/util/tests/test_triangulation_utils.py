@@ -83,6 +83,8 @@ class TestOrdering:
         assert Ordering.time_sep(2, 8, 10) == -4
         assert Ordering.time_sep(8, 2, 10) == 4
         assert Ordering.time_sep(8, 8, 10) == 0
+        with pytest.raises(Exception):
+            Ordering.time_sep(.1, .4, 10)
 
     def test_nearest(self):
         """

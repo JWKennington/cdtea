@@ -15,7 +15,7 @@ class TestModifications:
         key1 = simplex_key({1, 21, 22})
         key2 = simplex_key({1, 2, 22})
         key3 = simplex_key({1, 8, 22})
-        key4 = simplex_key({8, 21, 22})
+        key4 = simplex_key({8, 2, 7})
 
         modifications.parity_move(tri, key1, key2)
         validity.is_valid(tri)
@@ -37,7 +37,8 @@ class TestModifications:
         tri = generate_flat_2d_space_time(space_size=5, time_size=5)
 
         with pytest.raises(Exception):
-            modifications.increase_move(tri, key1, key1)
+            key2 = simplex_key({10, 4, 5})
+            modifications.increase_move(tri, key1, key2)
 
         with pytest.raises(Exception):
             key2 = simplex_key({1, 7, 3})
