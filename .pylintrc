@@ -12,6 +12,9 @@ disable=no-self-use,too-few-public-methods
 [FORMAT]
 max-line-length=200
 
+#dont require docstrings for small functions
+docstring-min-length=10
+
 [MISCELLANEOUS]
 
 # List of note tags to take in consideration, separated by a comma.
