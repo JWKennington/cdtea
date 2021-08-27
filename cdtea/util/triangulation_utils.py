@@ -32,7 +32,7 @@ def nearest(ref, pnt):
 
 def get_layer(st: Triangulation, t: int):
     if 0 <= t < st.time_size and isinstance(t, int):
-        return [n for n in st.nodes if st.simplex_meta[n]['t'] == t]
+        return list(st.simplex_meta['t'].dual[t])
     raise ValueError(f"t={t} must be between 0 and {st.time_size} and be an int")
 
 

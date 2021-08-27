@@ -54,7 +54,7 @@ class TestGenerateFlat:
         counts = defaultdict(int)
         for edge in t.simplices[1]:
             b = edge.basis_list
-            if t.simplex_meta[edge]["s_type"] == (1, 1):
+            if t.simplex_meta["s_type"][edge] == (1, 1):
                 counts[b[0]] += 1
                 counts[b[1]] += 1
         # solidify the dictionary
@@ -80,10 +80,10 @@ class TestGenerateFlat:
         st = generate_flat.generate_flat_2d_space_time(time_size=5, space_size=5)
 
         def get_type(simplex):
-            return st.simplex_meta[simplex]["s_type"]
+            return st.simplex_meta["s_type"][simplex]
 
         def get_t(simplex):
-            return st.simplex_meta[simplex]["t"]
+            return st.simplex_meta["t"][simplex]
 
         for edge in st.edges:
             lst = edge.basis_list

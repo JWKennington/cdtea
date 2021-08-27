@@ -51,7 +51,7 @@ class TestOrdering:
             for i, node in enumerate(spatial_order):
                 potential_edge = node | spatial_order[(i + 1) % X]
                 assert potential_edge in st.edges
-                assert st.simplex_meta[potential_edge]["s_type"] == (2, 0)
+                assert st.simplex_meta["s_type"][potential_edge] == (2, 0)
 
     def test_get_layer_parity(self):
 
@@ -70,14 +70,14 @@ class TestOrdering:
         for t in range(T - 1):
             time_edge_1 = total_ordering[t][0] | total_ordering[(t + 1) % T][0]
             assert time_edge_1 in st.edges
-            assert st.simplex_meta[time_edge_1]["s_type"] == (1, 1)
+            assert st.simplex_meta["s_type"][time_edge_1] == (1, 1)
 
             if t % 2 == 0:
                 time_edge_2 = total_ordering[t][1] | total_ordering[(t + 1) % T][2]
             else:
                 time_edge_2 = total_ordering[t][1] | total_ordering[(t + 1) % T][0]
             assert time_edge_2 in st.edges
-            assert st.simplex_meta[time_edge_2]["s_type"] == (1, 1)
+            assert st.simplex_meta["s_type"][time_edge_2] == (1, 1)
 
     def test_time_sep(self):
         assert Ordering.time_sep(2, 8, 10) == -4
