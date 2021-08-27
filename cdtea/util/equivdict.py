@@ -55,7 +55,7 @@ class EquivDict:
     @property
     def keys(self):
         """Return dual mapping"""
-        return self._dict.keys()
+        return list(self._dict)
 
 
 class EquivDictDual:

@@ -54,3 +54,9 @@ class TestEquivDict:
         del e2['d']
 
         assert e1 == e2
+
+    def test_key(self):
+        dict1 = {'a': 1, 'b': 1, 'c': 2}
+        e1 = equivdict.EquivDict(dict1)
+
+        assert e1.keys == ['a', 'b', 'c']
