@@ -30,6 +30,8 @@ class EquivDict:
         """Pass thru to dict and update equiv dict"""
         value = self._dict.get(instance)
         self._equiv_dict[value].discard(instance)
+        if self._equiv_dict[value] == set():
+            del self._equiv_dict[value]
         self._dict.pop(instance)
 
     def _update_equiv_dict(self):
