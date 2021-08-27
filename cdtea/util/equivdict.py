@@ -26,6 +26,12 @@ class EquivDict:
         self._equiv_dict[value].add(key)
         return self._dict.__setitem__(key, value)
 
+    def __delitem__(self, instance):
+        """Pass thru to dict and update equiv dict"""
+        value = self._dict.get(instance)
+        self._equiv_dict[value].discard(instance)
+        self._dict.pop(instance)
+
     def _update_equiv_dict(self):
         self._equiv_dict = collections.defaultdict(set)
         for k, v in self._dict.items():
@@ -43,6 +49,11 @@ class EquivDict:
     def dual(self):
         """Return dual mapping"""
         return EquivDictDual(self)
+
+    @property
+    def keys(self):
+        """Return dual mapping"""
+        return self._dict.keys()
 
 
 class EquivDictDual:
