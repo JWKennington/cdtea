@@ -46,3 +46,17 @@ class TestEquivDict:
         with pytest.raises(Exception):
             dualequiv_dict = e.dual
             dualequiv_dict[3] = 'd'
+
+    def test_del_item(self):
+        dict1, dict2 = {'a': 1, 'b': 1, 'c': 2}, {'a': 1, 'b': 1, 'c': 2, 'd': 3}
+        e1, e2 = equivdict.EquivDict(dict1), equivdict.EquivDict(dict2)
+
+        del e2['d']
+
+        assert e1 == e2
+
+    def test_key(self):
+        dict1 = {'a': 1, 'b': 1, 'c': 2}
+        e1 = equivdict.EquivDict(dict1)
+
+        assert e1.keys == ['a', 'b', 'c']

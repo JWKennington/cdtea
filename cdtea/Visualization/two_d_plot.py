@@ -30,7 +30,7 @@ def plot_faces(ax, coordinates, meta, st):
     for s in st.faces:
         # check that this face isnt in the cut region
         def t_param_difference(v1, v2):
-            return abs(meta[v1]["t"] - meta[v2]["t"])
+            return abs(meta["t"][v1] - meta["t"][v2])
 
         if all(all(t_param_difference(v1, v2) < 2 for v2 in s) for v1 in s):
             pts = np.array([coordinates[v] for v in s])
@@ -38,7 +38,7 @@ def plot_faces(ax, coordinates, meta, st):
             center = np.mean(pts, 0)
             pts = (pts - center) / 1.8 + center
             color = (0, 0, 1, .5)
-            if meta[s]["s_type"] == (2, 1):
+            if meta["s_type"][s] == (2, 1):
                 color = (1, 0, 0, .5)
             p = Polygon(pts, closed=False, color=color)
             ax.add_patch(p)
@@ -64,7 +64,7 @@ def plot_edges(ax, coordinates, meta, st):
     lines, line_colors = [], []
     for e in st.edges:
         b = e.basis_list
-        delta_t = abs(meta[b[0]]["t"] - meta[b[1]]["t"])
+        delta_t = abs(meta["t"][b[0]] - meta["t"][b[1]])
         if delta_t in (0, 1):
             pts = np.array([coordinates[v] for v in e])
             pts = np.array([nearest(np.max(pts, 0), p) for p in pts])
@@ -72,7 +72,7 @@ def plot_edges(ax, coordinates, meta, st):
             pts = (pts - center) / 1.8 + center
             lines.append(pts)
             color = 'b'
-            if meta[e]['s_type'] == (2, 0):
+            if meta['s_type'][e] == (2, 0):
                 color = 'r'
             line_colors.append(color)
     lc = LineCollection(lines, colors=line_colors)

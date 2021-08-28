@@ -6,6 +6,7 @@ References:
 from __future__ import annotations
 import collections
 from typing import Union, Iterable
+from cdtea.util import equivdict
 
 
 def simplex_key(basis: Union[int, Iterable]):
@@ -124,7 +125,7 @@ class Triangulation:
 
     def __init__(self, time_size: int):
         self._simplices = collections.defaultdict(set)
-        self._simplex_meta = collections.defaultdict(dict)
+        self._simplex_meta = collections.defaultdict(equivdict.EquivDict)
         self._time_size = time_size
         self._max_index = 0
 
@@ -133,12 +134,16 @@ class Triangulation:
         if key.dim == 0:
             self._max_index += 1
         self._simplices[key.dim].add(key)
-        self._simplex_meta[key] = meta
+        meta['contains'] = key.basis_list
+        for k, v in meta.items():
+            self._simplex_meta[k][key] = v
 
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
-        del self._simplex_meta[key]
+        for _, meta_k in self._simplex_meta.items():
+            if key in meta_k.keys:
+                del meta_k[key]
 
     def __eq__(self, other):
         if isinstance(other, Triangulation):

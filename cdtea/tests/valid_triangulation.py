@@ -70,8 +70,8 @@ def edges_dont_cross_time_slices(triangulation: simplicial.Triangulation):
         constituent_verts = e.basis_list
         n0 = constituent_verts[0]
         n1 = constituent_verts[1]
-        t0 = triangulation.simplex_meta[n0]["t"]
-        t1 = triangulation.simplex_meta[n1]["t"]
+        t0 = triangulation.simplex_meta["t"][n0]
+        t1 = triangulation.simplex_meta["t"][n1]
         dt = abs(t1 - t0) % (triangulation.time_size - 2)
         assert dt <= 1, f"The time separation between {n0} and {n1} is {dt}"
 
@@ -85,7 +85,7 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
     counts_spatial, counts_past, counts_future = defaultdict(int), defaultdict(int), defaultdict(int)
 
     for e in edges:
-        s_type = triangulation.simplex_meta[e]["s_type"]
+        s_type = triangulation.simplex_meta["s_type"][e]
         basis = e.basis_list
 
         # if it is a spatial edge add one to the spatial connection for both constituent vertices
@@ -95,8 +95,8 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
 
         # if it is a temporal edge figure out past and future and augment the appropriate lists
         elif s_type == (1, 1):
-            t0 = triangulation.simplex_meta[basis[0]]["t"] % time_size
-            t1 = triangulation.simplex_meta[basis[1]]["t"] % time_size
+            t0 = triangulation.simplex_meta["t"][basis[0]] % time_size
+            t1 = triangulation.simplex_meta["t"][basis[1]] % time_size
             t0_offset = (t0 + time_size / 2) % time_size
             t1_offset = (t1 + time_size / 2) % time_size
             if t1 - t0 == 1 or t1_offset - t0_offset == 1:
@@ -122,26 +122,28 @@ def check_s_type(triangulation: simplicial.Triangulation):
     """Cheks the s_type of all edges and triangles"""
     meta = triangulation.simplex_meta
 
+    time_index = meta['t']
+
     # Checks the edges
     for e in triangulation.simplices[1]:
         basis_list = e.basis_list
-        dt = time_sep(meta[basis_list[0]]['t'], meta[basis_list[1]]['t'], triangulation.time_size)
+        dt = time_sep(time_index[basis_list[0]], time_index[basis_list[1]], triangulation.time_size)
         if dt == 0:
-            assert meta[e]['s_type'] == (2, 0)
+            assert meta['s_type'][e] == (2, 0)
         elif abs(dt) == 1:
-            assert meta[e]['s_type'] == (1, 1)
+            assert meta['s_type'][e] == (1, 1)
         else:
             raise Exception("invalid edge")
     # checks the triangles
     for f in triangulation.simplices[2]:
 
-        times = [meta[b]['t'] for b in f]
-        times = [time_sep(min(times), meta[b]['t'], triangulation.time_size) for b in f]
+        times = [time_index[b] for b in f]
+        times = [time_sep(min(times), time_index[b], triangulation.time_size) for b in f]
         c1 = times.count(min(times))
         if c1 == 2:
-            assert meta[f]["s_type"] == (2, 1)
+            assert meta["s_type"][f] == (2, 1)
         elif c1 == 1:
-            assert meta[f]["s_type"] == (1, 2)
+            assert meta["s_type"][f] == (1, 2)
 
     # Check if Dim0Simpplex order is correct
 
