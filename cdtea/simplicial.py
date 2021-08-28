@@ -141,7 +141,7 @@ class Triangulation:
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
-        for k, meta_k in self._simplex_meta.items():
+        for _, meta_k in self._simplex_meta.items():
             if key in meta_k.keys:
                 del meta_k[key]
 
