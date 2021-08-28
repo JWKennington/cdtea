@@ -134,6 +134,7 @@ class Triangulation:
         if key.dim == 0:
             self._max_index += 1
         self._simplices[key.dim].add(key)
+        meta['contains'] = key.basis_list
         for k, v in meta.items():
             self._simplex_meta[k][key] = v
 
