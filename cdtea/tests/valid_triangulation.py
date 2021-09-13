@@ -145,7 +145,13 @@ def check_s_type(triangulation: simplicial.Triangulation):
         elif c1 == 1:
             assert meta["s_type"][f] == (1, 2)
 
-    # Check if Dim0Simpplex order is correct
+# Check if Dim0Simpplex order is correct
+def test_order(triangulation: simplicial.Triangulation):
+    """Cheks the s_type of all edges and triangles"""
+    meta = triangulation.simplex_meta
+
+    for n in triangulation.nodes:
+        assert meta['order'][n] == len([e for e in triangulation.edges if n in e])
 
 
 def is_valid(triangulation: simplicial.Triangulation):
@@ -157,3 +163,4 @@ def is_valid(triangulation: simplicial.Triangulation):
     edges_dont_cross_time_slices(triangulation)
     vertices_have_minimum_required_connections(triangulation)
     check_s_type(triangulation)
+    test_order(triangulation)
