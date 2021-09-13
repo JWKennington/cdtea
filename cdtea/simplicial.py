@@ -6,7 +6,9 @@ References:
 from __future__ import annotations
 import collections
 from typing import Union, Iterable
+from itertools import combinations
 from cdtea.util import equivdict
+
 
 
 def simplex_key(basis: Union[int, Iterable]):
@@ -36,11 +38,12 @@ def simplex_key(basis: Union[int, Iterable]):
 
 class SimplexKey:
     """A reference to a simplex"""
-    __slots__ = ('_basis', '_dim')
+    __slots__ = ('_basis', '_dim', '_sub_keys')
 
     def __init__(self, basis: Union[frozenset, set], dim: int = None):
         self._basis = frozenset(basis)
         self._dim = dim
+        self._sub_keys = None
 
     def __repr__(self):
         if self._dim == 0:
@@ -104,6 +107,16 @@ class SimplexKey:
     def dim(self):
         return self._dim
 
+    @property
+    def sub_keys(self):
+        """get all sub-simplices of self. (excluding self)"""
+        if self._sub_keys is None:
+            self._sub_keys = set({})
+            for d in range(1, self.dim + 1):
+                combs = {simplex_key(x) for x in combinations(self.basis, d)}
+                self._sub_keys = self._sub_keys.union(combs)
+        return self._sub_keys
+
 
 class Dim0SimplexKey(SimplexKey):
     """A zero dimensional simplex key - reference to a node"""
@@ -134,7 +147,9 @@ class Triangulation:
         if key.dim == 0:
             self._max_index += 1
         self._simplices[key.dim].add(key)
-        meta['contains'] = key.basis_list
+
+        if key.dim != 0:
+            meta['contains'] = key.sub_keys
         for k, v in meta.items():
             self._simplex_meta[k][key] = v
 
