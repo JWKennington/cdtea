@@ -198,3 +198,11 @@ class Triangulation:
     @property
     def faces(self):
         return self._simplices[2]
+
+    @property
+    def spatial_edges(self):
+        return self._simplex_meta.dual["s_type"][(2, 0)]
+
+    @property
+    def rank_4_nodes(self):
+        return self._simplex_meta.dual["order"][4]
