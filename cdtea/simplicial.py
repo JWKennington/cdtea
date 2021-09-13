@@ -6,8 +6,9 @@ References:
 from __future__ import annotations
 import collections
 from typing import Union, Iterable
-from cdtea.util import equivdict
 from itertools import combinations
+from cdtea.util import equivdict
+
 
 
 def simplex_key(basis: Union[int, Iterable]):
