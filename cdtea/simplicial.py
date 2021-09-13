@@ -201,8 +201,8 @@ class Triangulation:
 
     @property
     def spatial_edges(self):
-        return self._simplex_meta.dual["s_type"][(2, 0)]
+        return self._simplex_meta["s_type"].dual[(2, 0)]
 
     @property
     def rank_4_nodes(self):
-        return self._simplex_meta.dual["order"][4]
+        return self._simplex_meta["order"].dual[4]

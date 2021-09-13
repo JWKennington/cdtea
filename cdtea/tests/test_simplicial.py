@@ -73,6 +73,31 @@ class TestTriangulation:
         k = simplicial.simplex_key
         assert tri.simplex_meta['contains'][s] == {k({1}), k({2}), k({3}), k({1, 2}), k({1, 3}), k({2, 3})}
 
+    def test_rank_4(self):
+        """test that the rank_4_nodes method gives the correct output"""
+        n1 = simplicial.simplex_key({1})
+        n2 = simplicial.simplex_key({2})
+
+        tri = simplicial.Triangulation(time_size=2)
+
+        tri.add_simplex(n1, order=4)
+        tri.add_simplex(n2, order=2)
+
+        assert tri.rank_4_nodes == {n1}
+
+    def test_spatial_edges(self):
+        """test that the spatial_edges method gives the correct output"""
+
+        e1 = simplicial.simplex_key({1, 2})
+        e2 = simplicial.simplex_key({1, 10})
+
+        tri = simplicial.Triangulation(time_size=2)
+
+        tri.add_simplex(e1, s_type=(2, 0))
+        tri.add_simplex(e2, s_type=(1, 1))
+
+        assert tri.spatial_edges == {e1}
+
 
 class TestSimplexKey:
     """Tests for the SimplexKey Classes"""
