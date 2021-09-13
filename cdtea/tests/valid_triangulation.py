@@ -145,6 +145,7 @@ def check_s_type(triangulation: simplicial.Triangulation):
         elif c1 == 1:
             assert meta["s_type"][f] == (1, 2)
 
+
 # Check if Dim0Simpplex order is correct
 def test_order(triangulation: simplicial.Triangulation):
     """Cheks the s_type of all edges and triangles"""
