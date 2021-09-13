@@ -66,7 +66,7 @@ class TestTriangulation:
         assert t1 == t2
 
     def test_sub_simplex(self):
-        """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
+        """test that the sub_simplex method returns the correct simplices"""
         s = simplicial.simplex_key({1, 2, 3})
         tri = simplicial.Triangulation(time_size=2)
         tri.add_simplex(s, prop="test meta property")
