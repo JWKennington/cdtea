@@ -65,6 +65,14 @@ class TestTriangulation:
         t2.remove_simplex(simplicial.simplex_key({1, 4, 3}))
         assert t1 == t2
 
+    def test_sub_simplex(self):
+        """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
+        s = simplicial.simplex_key({1, 2, 3})
+        tri = simplicial.Triangulation(time_size=2)
+        tri.add_simplex(s, prop="test meta property")
+        k = simplicial.simplex_key
+        assert tri.simplex_meta['contains'][s] == {k({1}), k({2}), k({3}), k({1, 2}), k({1, 3}), k({2, 3})}
+
 
 class TestSimplexKey:
     """Tests for the SimplexKey Classes"""
