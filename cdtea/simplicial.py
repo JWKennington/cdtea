@@ -5,6 +5,7 @@ References:
 """
 from __future__ import annotations
 import collections
+import random
 from typing import Union, Iterable
 from itertools import combinations
 from cdtea.util import equivdict
@@ -38,17 +39,21 @@ def simplex_key(basis: Union[int, Iterable]):
 
 class SimplexKey:
     """A reference to a simplex"""
-    __slots__ = ('_basis', '_dim', '_sub_keys')
+    __slots__ = ('_basis', '_dim', '_sub_keys', '_unique_salt')
 
     def __init__(self, basis: Union[frozenset, set], dim: int = None):
         self._basis = frozenset(basis)
         self._dim = dim
         self._sub_keys = None
+        self._unique_salt = None if dim  == 0 else 'ASDHUIGY&T@!*EDIOJ' + str(random.randint(0, 1000000))
 
     def __repr__(self):
         if self._dim == 0:
             return '<' + str(list(self._basis)[0]) + '>'
         return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
+
+    def __hash__(self):
+        return hash((self._unique_salt, self._basis))
 
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
@@ -91,9 +96,6 @@ class SimplexKey:
 
     def __iter__(self):
         return iter(self._basis)
-
-    def __hash__(self):
-        return hash(self._basis)
 
     @property
     def basis(self):

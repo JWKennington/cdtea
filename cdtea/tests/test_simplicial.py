@@ -180,10 +180,32 @@ class TestSimplexKey:
         str(f)
         assert str(v1) == "<1>"
 
-    def test_eq(self):
+    def test_equality(self):
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(1)
         v3 = simplicial.Dim0SimplexKey(3)
         assert v1 == v2
         assert v1 != v3
         assert v1 != "cat"
+
+    def test_equivalence(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(1)
+        assert v1 is v1
+        assert v1 is not v2
+        assert hash(v1) == hash(v2) # Hashes are equivalent for 0-simplices
+
+        v3 = simplicial.Dim0SimplexKey(3)
+        l1 = simplicial.simplex_key({v1, v3})
+        l2 = simplicial.simplex_key({v1, v3})
+        assert l1 is l1
+        assert hash(l1) == hash(l1)
+        assert hash(l1) != hash(l2)
+
+    def test_compound_equality(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        compound = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        direct = simplicial.simplex_key({1, 2, 3})
+        assert compound == direct
