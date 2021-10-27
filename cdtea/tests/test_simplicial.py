@@ -71,7 +71,9 @@ class TestTriangulation:
         tri = simplicial.Triangulation(time_size=2)
         tri.add_simplex(s, prop="test meta property")
         k = simplicial.simplex_key
-        assert tri.simplex_meta['contains'][s] == {k({1}), k({2}), k({3}), k({1, 2}), k({1, 3}), k({2, 3})}
+        v1, v2, v3 = s.basis_list
+        expected = {v1, v2, v3, k({v1, v2}), k({v1, v3}), k({v2, v3})}
+        assert tri.simplex_meta['contains'][s] == expected
 
     def test_rank_4(self):
         """test that the rank_4_nodes method gives the correct output"""
@@ -193,13 +195,14 @@ class TestSimplexKey:
         v2 = simplicial.Dim0SimplexKey(1)
         assert v1 is v1
         assert v1 is not v2
-        assert hash(v1) == hash(v2) # Hashes are equivalent for 0-simplices
+        assert hash(v1) == hash(v2)  # Hashes are equivalent for 0-simplices
 
         v3 = simplicial.Dim0SimplexKey(3)
         l1 = simplicial.simplex_key({v1, v3})
         l2 = simplicial.simplex_key({v1, v3})
         assert l1 is l1
         assert hash(l1) == hash(l1)
+        assert l1 == l2
         assert hash(l1) != hash(l2)
 
     def test_compound_equality(self):
@@ -209,3 +212,7 @@ class TestSimplexKey:
         compound = simplicial.DimDSimplexKey(basis={v1, v2, v3})
         direct = simplicial.simplex_key({1, 2, 3})
         assert compound == direct
+
+    def test_recursive_equality(self):
+        f = simplicial.Dim0SimplexKey({1, 2, 3})
+        assert f.sub_keys == f.sub_keys
