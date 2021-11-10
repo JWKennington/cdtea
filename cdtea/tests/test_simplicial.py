@@ -132,6 +132,7 @@ class TestSimplexKey:
             simplicial.simplex_key("cats")
 
     def test_union(self):
+        """test union"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -142,6 +143,7 @@ class TestSimplexKey:
         assert v1 | v1 == v1
 
     def test_intersections(self):
+        """test intersections"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -153,6 +155,7 @@ class TestSimplexKey:
         assert v1 & v2 == simplicial.DimDSimplexKey({})
 
     def test_difference(self):
+        """test difference"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -163,6 +166,7 @@ class TestSimplexKey:
         assert e - f == simplicial.DimDSimplexKey({})
 
     def test_iter(self):
+        """test iter"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -173,6 +177,7 @@ class TestSimplexKey:
         assert (e in f) is False
 
     def test_repr(self):
+        """test repr"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -183,6 +188,7 @@ class TestSimplexKey:
         assert str(v1) == "<1>"
 
     def test_equality(self):
+        """test equality"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(1)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -191,9 +197,9 @@ class TestSimplexKey:
         assert v1 != "cat"
 
     def test_equivalence(self):
+        """test union"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(1)
-        assert v1 is v1
         assert v1 is not v2
         assert hash(v1) == hash(v2)  # Hashes are equivalent for 0-simplices
 
@@ -201,12 +207,12 @@ class TestSimplexKey:
         # Assume you want to reference existing edge
         l1 = simplicial.simplex_key({v1, v3})
         l2 = simplicial.simplex_key({v1, v3})
-        assert l1 is l1
         assert hash(l1) == hash(l1)
         assert l1 == l2
         assert hash(l1) == hash(l2)
 
     def test_compound_equality(self):
+        """test compound equality"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -215,6 +221,7 @@ class TestSimplexKey:
         assert compound == direct
 
     def test_recursive_equality(self):
+        """test recursive equality"""
         v1 = simplicial.Dim0SimplexKey(10)
         v2 = simplicial.Dim0SimplexKey(20)
         v3 = simplicial.Dim0SimplexKey(30)
@@ -226,6 +233,7 @@ class TestMultiSimplices:
     """Test group for multi simplices"""
 
     def test_multi_edge_equivalence(self):
+        """test multi edge"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
@@ -233,6 +241,7 @@ class TestMultiSimplices:
         assert l1 != l2
 
     def test_reference_multi(self):
+        """test union"""
         v1 = simplicial.Dim0SimplexKey(3)
         v2 = simplicial.Dim0SimplexKey(4)
         l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
