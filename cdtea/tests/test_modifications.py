@@ -3,10 +3,10 @@ import pytest
 from cdtea import modifications
 from cdtea.simplicial import simplex_key
 from cdtea.generate_flat import generate_flat_2d_space_time
-from cdtea.tests import valid_triangulation as validity
+from cdtea.tests import valid_triangulation as validity, admin
 
 
-class TestModifications:
+class TestModifications(admin.CleanScope):
     """Tests the different moves that can be done to a triangulation"""
 
     def test_parity(self):

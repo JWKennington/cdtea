@@ -1,10 +1,12 @@
 """Tests for the simplicial module"""
 
-from cdtea import simplicial
 import pytest
 
+from cdtea import simplicial
+from cdtea.tests import admin
 
-class TestTriangulation:
+
+class TestTriangulation(admin.CleanScope):
     """Tests for the Triangulation Class"""
 
     def test_create(self):
@@ -71,7 +73,9 @@ class TestTriangulation:
         tri = simplicial.Triangulation(time_size=2)
         tri.add_simplex(s, prop="test meta property")
         k = simplicial.simplex_key
-        assert tri.simplex_meta['contains'][s] == {k({1}), k({2}), k({3}), k({1, 2}), k({1, 3}), k({2, 3})}
+        v1, v2, v3 = s.basis_list
+        expected = {v1, v2, v3, k({v1, v2}), k({v1, v3}), k({v2, v3})}
+        assert tri.simplex_meta['contains'][s] == expected
 
     def test_rank_4(self):
         """test that the rank_4_nodes method gives the correct output"""
@@ -99,7 +103,7 @@ class TestTriangulation:
         assert tri.spatial_edges == {e1}
 
 
-class TestSimplexKey:
+class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""
 
     def test_create_dim_0_simplex_key(self):
@@ -130,6 +134,7 @@ class TestSimplexKey:
             simplicial.simplex_key("cats")
 
     def test_union(self):
+        """test union"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -140,6 +145,7 @@ class TestSimplexKey:
         assert v1 | v1 == v1
 
     def test_intersections(self):
+        """test intersections"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -151,6 +157,7 @@ class TestSimplexKey:
         assert v1 & v2 == simplicial.DimDSimplexKey({})
 
     def test_difference(self):
+        """test difference"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -161,6 +168,7 @@ class TestSimplexKey:
         assert e - f == simplicial.DimDSimplexKey({})
 
     def test_iter(self):
+        """test iter"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -171,6 +179,7 @@ class TestSimplexKey:
         assert (e in f) is False
 
     def test_repr(self):
+        """test repr"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(3)
@@ -180,10 +189,70 @@ class TestSimplexKey:
         str(f)
         assert str(v1) == "<1>"
 
-    def test_eq(self):
+    def test_equality(self):
+        """test equality"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(1)
         v3 = simplicial.Dim0SimplexKey(3)
         assert v1 == v2
         assert v1 != v3
         assert v1 != "cat"
+
+    def test_equivalence(self):
+        """test union"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(1)
+        assert v1 is not v2
+        assert hash(v1) == hash(v2)  # Hashes are equivalent for 0-simplices
+
+        v3 = simplicial.Dim0SimplexKey(3)
+        # Assume you want to reference existing edge
+        l1 = simplicial.simplex_key({v1, v3})
+        l2 = simplicial.simplex_key({v1, v3})
+        assert hash(l1) == hash(l1)
+        assert l1 == l2
+        assert hash(l1) == hash(l2)
+
+    def test_compound_equality(self):
+        """test compound equality"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        compound = simplicial.DimDSimplexKey(basis={v1, v2, v3})
+        direct = simplicial.simplex_key({1, 2, 3})
+        assert compound == direct
+
+    def test_recursive_equality(self):
+        """test recursive equality"""
+        v1 = simplicial.Dim0SimplexKey(10)
+        v2 = simplicial.Dim0SimplexKey(20)
+        v3 = simplicial.Dim0SimplexKey(30)
+        f = simplicial.DimDSimplexKey({v1, v2, v3})
+        assert f.sub_keys == f.sub_keys
+
+
+class TestMultiSimplices(admin.CleanScope):
+    """Test group for multi simplices"""
+
+    def test_multi_edge_equivalence(self):
+        """test multi edge"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
+        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+        assert l1 != l2
+
+    def test_reference_multi(self):
+        """test union"""
+        v1 = simplicial.Dim0SimplexKey(3)
+        v2 = simplicial.Dim0SimplexKey(4)
+        simplicial.DimDSimplexKey({v1, v2}, multi=False)
+        simplicial.DimDSimplexKey({v1, v2}, multi=True)
+
+        # New reference to existing edge
+        with pytest.raises(ValueError):
+            simplicial.DimDSimplexKey({v1, v2})
+
+        # Properly reference to existing edge
+        l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
+        assert isinstance(l2_prime, simplicial.SimplexKey)
