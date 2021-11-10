@@ -254,4 +254,3 @@ class TestMultiSimplices:
         # Properly reference to existing edge
         l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
         assert isinstance(l2_prime, simplicial.SimplexKey)
-
