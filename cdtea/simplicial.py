@@ -131,6 +131,11 @@ class SimplexKey:
     def dim(self):
         return self._dim
 
+    @classmethod
+    def flush_counts(cls):
+        """Flush Counts"""
+        cls._COUNTS = collections.defaultdict(int)
+
     @property
     def sub_keys(self):
         """get all sub-simplices of self. (excluding self)"""

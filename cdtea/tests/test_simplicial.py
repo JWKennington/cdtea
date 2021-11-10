@@ -3,8 +3,10 @@
 from cdtea import simplicial
 import pytest
 
+from cdtea.tests import admin
 
-class TestTriangulation:
+
+class TestTriangulation(admin.CleanScope):
     """Tests for the Triangulation Class"""
 
     def test_create(self):
@@ -101,7 +103,7 @@ class TestTriangulation:
         assert tri.spatial_edges == {e1}
 
 
-class TestSimplexKey:
+class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""
 
     def test_create_dim_0_simplex_key(self):
@@ -229,7 +231,7 @@ class TestSimplexKey:
         assert f.sub_keys == f.sub_keys
 
 
-class TestMultiSimplices:
+class TestMultiSimplices(admin.CleanScope):
     """Test group for multi simplices"""
 
     def test_multi_edge_equivalence(self):
