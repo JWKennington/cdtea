@@ -198,12 +198,13 @@ class TestSimplexKey:
         assert hash(v1) == hash(v2)  # Hashes are equivalent for 0-simplices
 
         v3 = simplicial.Dim0SimplexKey(3)
+        # Assume you want to reference existing edge
         l1 = simplicial.simplex_key({v1, v3})
         l2 = simplicial.simplex_key({v1, v3})
         assert l1 is l1
         assert hash(l1) == hash(l1)
         assert l1 == l2
-        assert hash(l1) != hash(l2)
+        assert hash(l1) == hash(l2)
 
     def test_compound_equality(self):
         v1 = simplicial.Dim0SimplexKey(1)
@@ -214,5 +215,34 @@ class TestSimplexKey:
         assert compound == direct
 
     def test_recursive_equality(self):
-        f = simplicial.Dim0SimplexKey({1, 2, 3})
+        v1 = simplicial.Dim0SimplexKey(10)
+        v2 = simplicial.Dim0SimplexKey(20)
+        v3 = simplicial.Dim0SimplexKey(30)
+        f = simplicial.DimDSimplexKey({v1, v2, v3})
         assert f.sub_keys == f.sub_keys
+
+
+class TestMultiSimplices:
+    """Test group for multi simplices"""
+
+    def test_multi_edge_equivalence(self):
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
+        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+        assert l1 != l2
+
+    def test_reference_multi(self):
+        v1 = simplicial.Dim0SimplexKey(3)
+        v2 = simplicial.Dim0SimplexKey(4)
+        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
+        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+
+        # New reference to existing edge
+        with pytest.raises(ValueError):
+            l2_prime = simplicial.DimDSimplexKey({v1, v2})
+
+        # Properly reference to existing edge
+        l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
+        assert isinstance(l2_prime, simplicial.SimplexKey)
+

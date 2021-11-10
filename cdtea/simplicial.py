@@ -39,13 +39,35 @@ def simplex_key(basis: Union[int, Iterable]):
 
 class SimplexKey:
     """A reference to a simplex"""
-    __slots__ = ('_basis', '_dim', '_sub_keys', '_unique_salt')
+    _COUNTS = collections.defaultdict(int)
+    __slots__ = ('_basis', '_dim', '_sub_keys', '_count_id')
 
-    def __init__(self, basis: Union[frozenset, set], dim: int = None):
+    def __init__(self, basis: Union[frozenset, set], dim: int = None, multi: bool = False, count_id: int = None):
+        """Create a Simplex Key
+
+        Args:
+            basis:
+                frozenset or set, the basis 0simplices
+            dim:
+                int, default None, the dimension of the new simplex
+            multi:
+                bool, default False, if True create a new copy of the simplex corresponding to the given basis. Example
+                usage is creating a multi edge, for the second edge set "multi=True".
+            count_id:
+                int, default None, used to distinguish multisimplices. Must be passed if creating a reference to a multi
+                simplex (at which point the "multi" argument will be True)
+        """
         self._basis = frozenset(basis)
         self._dim = dim
         self._sub_keys = None
-        self._unique_salt = None if dim  == 0 else 'ASDHUIGY&T@!*EDIOJ' + str(random.randint(0, 1000000))
+
+        if multi:
+            self._COUNTS[self._basis] += 1
+            self._count_id = self._COUNTS[self._basis]
+        else:
+            if self._COUNTS[self._basis] > 0 and count_id is None:
+                raise ValueError('Cannot create reference to multi simplex without a count_id.')
+            self._count_id = count_id
 
     def __repr__(self):
         if self._dim == 0:
@@ -53,11 +75,11 @@ class SimplexKey:
         return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
 
     def __hash__(self):
-        return hash((self._unique_salt, self._basis))
+        return hash((self._count_id, self._basis))
 
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
-            return self._basis == other._basis
+            return self._basis == other._basis and self._count_id == other._count_id
         # print("Equality not defined between SimplexKey and " + str(isinstance(other,
         return False
 
@@ -130,8 +152,8 @@ class Dim0SimplexKey(SimplexKey):
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
 
-    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]]):
-        super().__init__(basis=basis, dim=len(basis) - 1)
+    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], multi: bool = False, count_id: int = None):
+        super().__init__(basis=basis, dim=len(basis) - 1, multi=multi, count_id=count_id)
 
 
 class Triangulation:
