@@ -244,12 +244,12 @@ class TestMultiSimplices:
         """test union"""
         v1 = simplicial.Dim0SimplexKey(3)
         v2 = simplicial.Dim0SimplexKey(4)
-        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
-        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+        simplicial.DimDSimplexKey({v1, v2}, multi=False)
+        simplicial.DimDSimplexKey({v1, v2}, multi=True)
 
         # New reference to existing edge
         with pytest.raises(ValueError):
-            l2_prime = simplicial.DimDSimplexKey({v1, v2})
+            simplicial.DimDSimplexKey({v1, v2})
 
         # Properly reference to existing edge
         l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
