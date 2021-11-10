@@ -1,7 +1,6 @@
 """Test harness utilities
 """
 import functools
-import inspect
 
 from cdtea import simplicial
 

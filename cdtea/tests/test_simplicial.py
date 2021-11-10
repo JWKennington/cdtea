@@ -1,8 +1,8 @@
 """Tests for the simplicial module"""
 
-from cdtea import simplicial
 import pytest
 
+from cdtea import simplicial
 from cdtea.tests import admin
 
 
