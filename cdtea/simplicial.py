@@ -235,3 +235,26 @@ class Triangulation:
     @property
     def rank_4_nodes(self):
         return self._simplex_meta["order"].dual[4]
+
+    def contains(self, simplex: SimplexKey, dim: int):
+        """
+
+        Args:
+            simplex:
+            dim:
+
+        Returns:
+
+        """
+        if dim == simplex.dim:
+            # TODO this assumes simplex belongs to triangulation
+            return simplex
+        elif dim < simplex.dim:
+            return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
+        else:  # dim > simplex.dim
+            dual_contains = self.simplex_meta['contains'].dual[simplex]
+            return filter_simplices(dual_contains, dim=dim)
+
+def filter_simplices(simplices, dim: int = None):
+    return set([s for s in simplices if s.dim == dim])
+
