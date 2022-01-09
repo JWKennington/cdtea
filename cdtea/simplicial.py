@@ -259,7 +259,7 @@ class Triangulation:
     def flatten(self, simplices: Iterable[SimplexKey]):
         res = set()
         for s in simplices:
-            res.union(self.contains(s, dim=0))
+            res = res.union(self.contains(s, dim=0))
         return res
 
 def filter_simplices(simplices, dim: int = None):
