@@ -175,10 +175,22 @@ class Triangulation:
         """adds a simplex to the triangulation"""
         if key.dim == 0:
             self._max_index += 1
+
+        # if the key is not a node make sure all subkeys are already in the triangulation
+        if key.dim != 0:
+            for sub_key in key.sub_keys:
+                assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
+
         self._simplices[key.dim].add(key)
 
         if key.dim != 0:
             meta['contains'] = key.sub_keys
+
+        # if a new edge is being added, update the order of all attached nodes.
+        if key.dim == 1 and key not in self._simplices[key.dim]:
+            for sub_key in key:
+                meta['order'][sub_key] += 1
+
         for k, v in meta.items():
             self._simplex_meta[k][key] = v
 
@@ -262,8 +274,6 @@ class Triangulation:
             res = res.union(self.contains(s, dim=0))
         return res
 
+
 def filter_simplices(simplices, dim: int = None):
     return set([s for s in simplices if s.dim == dim])
-
-
-

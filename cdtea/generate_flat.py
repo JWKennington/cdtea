@@ -47,6 +47,8 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             i = idx(x_idx=x, t_idx=t)
             add_simplex(i, t=t, order=6)
 
+    for t in range(time_size):
+        for x in range(space_size):
             # new edges (three added per vertex)
             spatial_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t)}
             add_simplex(spatial_edge_basis, s_type=(2, 0))
@@ -56,7 +58,8 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
 
             future_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x - 1, t_idx=t + 1)}
             add_simplex(future_edge_basis, s_type=(1, 1))
-
+    for t in range(time_size):
+        for x in range(space_size):
             # new triangles (two added per vertex)
             # each triangle is instantiated with a random dilaton value between zero and 1 using random.Random()
             up_triangle_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 0, t_idx=t + 1)}
