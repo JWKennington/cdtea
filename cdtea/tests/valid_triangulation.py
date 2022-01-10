@@ -141,9 +141,9 @@ def check_s_type(triangulation: simplicial.Triangulation):
         times = [time_sep(min(times), time_index[b], triangulation.time_size) for b in f]
         c1 = times.count(min(times))
         if c1 == 2:
-            assert meta["s_type"][f] == (2, 1)
+            assert meta["s_type"][f] == (2, 1), f"{f} is of type {meta['s_type'][f]} instead of the expected (2,1) "
         elif c1 == 1:
-            assert meta["s_type"][f] == (1, 2)
+            assert meta["s_type"][f] == (1, 2), f"{f} is of type {meta['s_type'][f]} instead of the expected (1,2) "
 
 
 # Check if Dim0Simpplex order is correct
