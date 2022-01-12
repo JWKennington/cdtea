@@ -52,3 +52,47 @@ def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     trg.simplex_meta['order'][new_vertex] = 4
     trg.simplex_meta['order'][fut_orig] += 1
     trg.simplex_meta['order'][past_orig] += 1
+
+
+def rem_2D(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
+    """
+
+    Args:
+        trg:
+        edge:
+
+    Returns:
+
+    """
+    # Discovery
+    edges = trg.contains(node, dim=1)
+    spacelike_edges = [e for e in edges if trg.simplex_meta['s_type'][e] == (2, 0)]
+    timelike_edges = [e for e in edges if trg.simplex_meta['s_type'][e] == (1, 1)]
+    spacelike_neighbors = trg.contains(spacelike_edges[0], dim=0).union(trg.contains(spacelike_edges[1], dim=0)).difference({node})
+    fut_orig, past_orig = trg.contains(timelike_edges[0], dim=0).union(trg.contains(timelike_edges[1], dim=0)).difference({node})
+    if trg.simplex_meta['t'][past_orig] > trg.simplex_meta['t'][fut_orig]:
+        fut_orig, past_orig = past_orig, fut_orig
+
+    # Remove # TODO simplify this step to not require two loops
+    to_remove = {node}
+    for edge in edges:
+        to_remove = to_remove.union({edge})
+        for k in range(edge.dim + 1, 2 + 1):  # TODO add a 'dim' attribute to Triangulation
+            to_remove = to_remove.union(trg.contains(edge, dim=k))
+
+    for r in to_remove:
+        trg.remove_simplex(r)
+
+    # Add
+    new_simplices = [
+        (simplicial.DimDSimplexKey(spacelike_neighbors), {'s_type': (2, 0)}),
+        (simplicial.DimDSimplexKey(spacelike_neighbors.union({fut_orig})), {'s_type': (2, 1)}),
+        (simplicial.DimDSimplexKey(spacelike_neighbors.union({past_orig})), {'s_type': (1, 2)}),
+    ]
+
+    for new, kwargs in new_simplices:
+        trg.add_simplex(new, **kwargs)
+
+    # Meta
+    trg.simplex_meta['order'][fut_orig] -= 1
+    trg.simplex_meta['order'][past_orig] -= 1
