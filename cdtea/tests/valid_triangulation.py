@@ -130,7 +130,7 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
                 counts_future[basis[1]] += 1
                 counts_past[basis[0]] += 1
             else:
-                raise Exception("s_type {type} does not match, both basis have the same time ".format(type=s_type))
+                raise Exception("s_type {type} does not match for edge {edge}, both basis have the same time ".format(type=s_type, edge=str(e)))
         else:
             raise Exception("invalid s_type {type}".format(type=s_type))
 
