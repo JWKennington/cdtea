@@ -22,8 +22,6 @@ Implementation Specific:
     - 't': time slice of vertices
     - 's_type': simplex types
     - 'contains' subsimplex relations
-
-
 """
 from itertools import combinations
 from collections import defaultdict
