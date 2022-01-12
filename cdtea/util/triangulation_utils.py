@@ -2,8 +2,19 @@
 A set of utility functions for extracting information about triangulations
 """
 from __future__ import annotations
+
+from typing import Tuple
+
 import numpy as np
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
+
+
+def time_order(node1: Dim0SimplexKey, node2: Dim0SimplexKey, trg: Triangulation) -> Tuple[Dim0SimplexKey, Dim0SimplexKey]:
+    t1, t2 = trg.simplex_meta['t'][node1], trg.simplex_meta['t'][node2]
+    dt = time_sep(t1, t2, time_max=trg.time_size)
+    if dt < 0:
+        return (node2, node1)
+    return (node1, node2)
 
 
 def time_sep(t1: int, t2: int, time_max: int):
