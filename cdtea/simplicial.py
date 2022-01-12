@@ -70,9 +70,10 @@ class SimplexKey:
             self._count_id = count_id
 
     def __repr__(self):
+        # TODO make easier access to int in Dim0 Simplex Key
         if self._dim == 0:
             return '<' + str(list(self._basis)[0]) + '>'
-        return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
+        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>'
 
     def __hash__(self):
         return hash((self._count_id, self._basis))

@@ -39,8 +39,8 @@ def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     new_vertex = simplicial.Dim0SimplexKey(trg.max_index + 1)
     new_simplices = []
     new_simplices.append((new_vertex, {'t': orig_layer}))  # TODO test the new number
-    new_simplices = ([(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (2, 0)}) for old in orig_nodes] +
-                     [(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (1, 1)}) for old in nodes.difference(orig_nodes)])
+    new_simplices.extend(([(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (2, 0)}) for old in orig_nodes] +
+                          [(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (1, 1)}) for old in nodes.difference(orig_nodes)]))
 
     new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, fut_orig}), {'s_type': (2, 1)}) for old in orig_nodes])
     new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, past_orig}), {'s_type': (1, 2)}) for old in orig_nodes])
