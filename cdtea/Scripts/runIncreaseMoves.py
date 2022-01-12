@@ -16,10 +16,22 @@ for _ in range(10):
 	# edge = np.random.choice(edges)
 	idx = np.random.randint(0, len(edges))
 	edge = edges[idx]
-	print(idx, edge)
+	print('Add', idx, edge)
 	moves.add_2D(f, edge)
 
-# is_valid(f)
+
+for _ in range(10):
+	# TODO make simplex key sortable directly and remove str coercion
+	order_4_vertices = list(sorted(f.simplex_meta['order'].dual[4], key=lambda x: str(x)))
+
+	# edge = np.random.choice(edges)
+	idx = np.random.randint(0, len(order_4_vertices))
+	vertex = order_4_vertices[idx]
+	print('Remove', idx, vertex)
+	moves.rem_2D(f, vertex)
+
+
+is_valid(f)
 print('valid')
 
 # print('valid')
