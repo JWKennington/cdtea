@@ -1,4 +1,30 @@
-""" Various tests that a triangulation must past to be a valid toroidal 1+1d simplicial manifold."""
+""" Various tests that a triangulation must past to be a valid toroidal 1+1d simplicial manifold.
+
+Specification for valid CDT
+
+Triangulation Features: T
+- If a simplex S belongs to T, then all subsimplices of S should belong to T
+- If all subsimplices of S belong to T, then S should belong to T
+- If a simplex S belongs to T, it should be triangular (N-dim triangle)
+
+Topological Features: (Toroidal)
+- Each vertex V has two spacelike edges
+- Each vertex V has at least one future timelike edge
+- Each vertex V has at least one past timelike edge
+
+Causal Features:
+- Timelike edges should only connect adjacent spacelike slabs
+- Local causal structure forms a local partial order
+
+Implementation Specific:
+- meta data is accurate
+    - 'order': of vertices
+    - 't': time slice of vertices
+    - 's_type': simplex types
+    - 'contains' subsimplex relations
+
+
+"""
 from itertools import combinations
 from collections import defaultdict
 
