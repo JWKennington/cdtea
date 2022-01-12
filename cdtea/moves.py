@@ -48,6 +48,7 @@ def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     for new, kwargs in new_simplices:
         trg.add_simplex(new, **kwargs)
 
+    # Meta
     trg.simplex_meta['order'][new_vertex] = 4
     trg.simplex_meta['order'][fut_orig] += 1
     trg.simplex_meta['order'][past_orig] += 1
