@@ -16,11 +16,15 @@ def two_d_plot(st: Triangulation) -> type(plt.gca()):
     meta = st.simplex_meta
     coordinates = toroidal_coordinates(st)
 
-    plot_points(ax, coordinates, st)
+    plt.xlim([-1, 2*np.pi+1])
+    plt.ylim([-1, 2*np.pi+1])
+    plt.axis('off')
+
+    plot_faces(ax, coordinates, meta, st)
 
     plot_edges(ax, coordinates, meta, st)
 
-    plot_faces(ax, coordinates, meta, st)
+    plot_points(ax, coordinates, st)
 
     return ax
 
@@ -36,7 +40,7 @@ def plot_faces(ax, coordinates, meta, st):
             pts = np.array([coordinates[v] for v in s])
             pts = np.array([nearest(np.max(pts, 0), p) for p in pts])
             center = np.mean(pts, 0)
-            pts = (pts - center) / 1.8 + center
+            pts = (pts - center) / 1.3 + center
             color = (0, 0, 1, .5)
             if meta["s_type"][s] == (2, 1):
                 color = (1, 0, 0, .5)
@@ -51,12 +55,12 @@ def plot_points(ax, coordinates, st):
     for e in st.edges:
         for v in e:
             edge_color[v] += 1
-    for v,c in coordinates.items():
+    for v, c in coordinates.items():
         X.append(c[0])
         Y.append(c[1])
-        c_index = (edge_color[v] - 2.) / 7.
+        c_index = (edge_color[v] - 2.) / 100.
         pnt_colors.append((c_index, 0, 1 - c_index, 1))
-    ax.scatter(X, Y, c=pnt_colors, s=100)
+    ax.scatter(X, Y, c=pnt_colors, s=3)
 
 
 def plot_edges(ax, coordinates, meta, st):
@@ -69,11 +73,11 @@ def plot_edges(ax, coordinates, meta, st):
             pts = np.array([coordinates[v] for v in e])
             pts = np.array([nearest(np.max(pts, 0), p) for p in pts])
             center = np.mean(pts, 0)
-            pts = (pts - center) / 1.8 + center
+            pts = (pts - center) / 1.3 + center
             lines.append(pts)
             color = 'b'
             if meta['s_type'][e] == (2, 0):
                 color = 'r'
             line_colors.append(color)
-    lc = LineCollection(lines, colors=line_colors)
+    lc = LineCollection(lines, colors=line_colors,linewidths=.8)
     ax.add_collection(lc)
