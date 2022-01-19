@@ -3,9 +3,11 @@ A set of utility functions for extracting information about triangulations
 """
 from __future__ import annotations
 
+import math
 from typing import Tuple
 
 import numpy as np
+
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
 
 
@@ -22,8 +24,13 @@ def time_sep(t1: int, t2: int, time_max: int):
     if not (isinstance(t1, int) and isinstance(t1, int)):
         raise TypeError(f"t1={t1} and t2={t2} must be ints")
 
-    i = (t1 - t2) % time_max
-    j = (t2 - t1) % time_max
+    i = (t1 - t2)
+    j = (t2 - t1)
+
+    if time_max is not None:
+        i = i % time_max
+        j = j % time_max
+
     if j > i:
         return -i
     return j
