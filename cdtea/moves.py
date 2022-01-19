@@ -1,12 +1,9 @@
 """Moves
 
 """
-import numpy as np
-from scipy.stats import mode
 
 from cdtea import simplicial
 from cdtea.util import triangulation_utils
-from cdtea.util.triangulation_utils import time_sep
 
 
 def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
@@ -36,7 +33,7 @@ def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
         trg.remove_simplex(r)
 
     # Add
-    new_vertex = simplicial.Dim0SimplexKey(trg.max_index + 1)
+    new_vertex = simplicial.Dim0SimplexKey(trg.max_index)
     new_simplices = []
     new_simplices.append((new_vertex, {'t': orig_layer}))  # TODO test the new number
     new_simplices.extend(([(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (2, 0)}) for old in orig_nodes] +
@@ -69,7 +66,6 @@ def rem_2D(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
     spacelike_edges = [e for e in edges if trg.simplex_meta['s_type'][e] == (2, 0)]
     timelike_edges = [e for e in edges if trg.simplex_meta['s_type'][e] == (1, 1)]
     spacelike_neighbors = trg.contains(spacelike_edges[0], dim=0).union(trg.contains(spacelike_edges[1], dim=0)).difference({node})
-
 
     fut_orig, past_orig = trg.contains(timelike_edges[0], dim=0).union(trg.contains(timelike_edges[1], dim=0)).difference({node})
     past_orig, fut_orig = triangulation_utils.time_order(past_orig, fut_orig, trg)
@@ -142,5 +138,3 @@ def parity_2D(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
     trg.simplex_meta['order'][past_edge] -= 1
     trg.simplex_meta['order'][fut_orig] += 1
     trg.simplex_meta['order'][past_orig] += 1
-
-
