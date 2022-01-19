@@ -4,7 +4,7 @@ Function to generate an initial simplicial manifold that is flat, with toroidal 
 
 from __future__ import annotations
 import random
-from typing import Union
+from typing import Union, List, Tuple
 from cdtea import simplicial
 
 
@@ -68,3 +68,26 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             down_triangle_basis = {idx(x_idx=x, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t)}
             add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.Random())
     return space_time
+
+
+def generate(nodes: List[int], simplices: List[Tuple[int, ...]], node_layers: List[int]) -> simplicial.Triangulation:
+    """General CDT generation utility. Given a set of nodes, the corresponding time indices,
+    and the edges connecting them, create a Triangulation instance with all meta data
+    properly inferred from the given DOT compliant graph structure.
+
+    Args:
+        nodes:
+            List[int], list of node labels
+        simplices:
+            List[Tuple[int, ...]], list of dim = k > 0 simplices specified by a tuple of (node1, ..., nodek), where
+            the tuple of nodes represents the basis of the simplex
+        node_layers:
+            List[int], a list of the time indices of the nodes. Must have the same size as the
+            nodes argument, and the order must correspond to the order in the nodes argument.
+
+    Returns:
+        Triangulation
+    """
+    raise NotImplementedError
+
+
