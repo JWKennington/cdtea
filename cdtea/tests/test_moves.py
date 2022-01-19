@@ -206,7 +206,7 @@ class TestMoves2D(admin.CleanScope):
         ################################################################################
         #               CREATE TRIANGULATION - TODO SIMPLIFY WITH UTILITIES            #
         ################################################################################
-        trg = simplicial.Triangulation(time_size=None) # None time size for cylindrical topology
+        trg = simplicial.Triangulation(time_size=None)  # None time size for cylindrical topology
 
         # Vertices
         vertices = [simplicial.Dim0SimplexKey(key=i) for i in range(4)]
@@ -253,7 +253,7 @@ class TestMoves2D(admin.CleanScope):
         ################################################################################
         #              COMPARE TRIANGULATION - TODO SIMPLIFY WITH UTILITIES            #
         ################################################################################
-        trg_exp = simplicial.Triangulation(time_size=None) # None time size for cylindrical topology
+        trg_exp = simplicial.Triangulation(time_size=None)  # None time size for cylindrical topology
 
         # Vertices
         vertices = [simplicial.Dim0SimplexKey(key=i) for i in range(4)]
@@ -291,4 +291,3 @@ class TestMoves2D(admin.CleanScope):
             trg_exp.add_simplex(f, s_type=s_type)
 
         assert trg == trg_exp
-
