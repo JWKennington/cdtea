@@ -24,6 +24,8 @@ class EquivDict:
 
     def __setitem__(self, key, value):
         """Pass thru to dict and update equiv dict"""
+        if key in self._dict:
+            del self[key]
 
         if isinstance(value, set):
             for v in value:
