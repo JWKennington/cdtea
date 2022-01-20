@@ -103,7 +103,6 @@ def get_layer_parity(layer, past_left_vert, past_right_vert, st):
     - find spacelike edges of common future point
     - find two additional vertices of the spacelike edges (for a total of three vertices)
     - check if new vertex in future(past_right), then (common, new) is the right order, else (new, common)
-    
     """
     middle, left, right = None, None, None
     for vert in layer:
