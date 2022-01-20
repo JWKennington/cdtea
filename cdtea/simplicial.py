@@ -269,9 +269,9 @@ class Triangulation:
             return simplex
         elif dim < simplex.dim:
             return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
-        else:  # dim > simplex.dim
-            dual_contains = self.simplex_meta['contains'].dual[simplex]
-            return filter_simplices(dual_contains, dim=dim)
+        
+        dual_contains = self.simplex_meta['contains'].dual[simplex]
+        return filter_simplices(dual_contains, dim=dim)
 
     def flatten(self, simplices: Iterable[SimplexKey]):
         res = set()
