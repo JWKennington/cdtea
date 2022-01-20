@@ -10,7 +10,7 @@ np.random.seed(1)
 
 def is_mixed_face_edge(edge, trg):
     faces = trg.contains(edge, dim=2)
-    face_types = set([trg.simplex_meta['s_type'][f] for f in faces])
+    face_types = {trg.simplex_meta['s_type'][f] for f in faces}
     return len(face_types) == 2
 
 

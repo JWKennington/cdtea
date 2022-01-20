@@ -281,4 +281,4 @@ class Triangulation:
 
 
 def filter_simplices(simplices, dim: int = None):
-    return set([s for s in simplices if s.dim == dim])
+    return {s for s in simplices if s.dim == dim}
