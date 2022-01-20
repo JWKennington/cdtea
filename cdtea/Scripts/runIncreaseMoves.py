@@ -24,7 +24,7 @@ for _ in range(10):
     idx = np.random.randint(0, len(edges))
     edge = edges[idx]
     print('Add', idx, edge)
-    moves.add_2D(trg, edge)
+    moves.add_2d(trg, edge)
 
 for _ in range(10):
     # TODO make simplex key sortable directly and remove str coercion
@@ -34,7 +34,7 @@ for _ in range(10):
     idx = np.random.randint(0, len(order_4_vertices))
     vertex = order_4_vertices[idx]
     print('Remove', idx, vertex)
-    moves.rem_2D(trg, vertex)
+    moves.rem_2d(trg, vertex)
 
 for _ in range(10):
     # TODO make simplex key sortable directly and remove str coercion
@@ -46,7 +46,7 @@ for _ in range(10):
     idx = np.random.randint(0, len(mixed_face_edges))
     edge = mixed_face_edges[idx]
     print('Parity', idx, edge)
-    moves.parity_2D(trg, edge)
+    moves.parity_2d(trg, edge)
 
 is_valid(trg)
 print('valid')

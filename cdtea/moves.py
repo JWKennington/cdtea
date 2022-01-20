@@ -6,7 +6,7 @@ from cdtea import simplicial
 from cdtea.util import triangulation_utils
 
 
-def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
+def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     """
 
     Args:
@@ -51,7 +51,7 @@ def add_2D(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     trg.simplex_meta['order'][past_orig] += 1
 
 
-def rem_2D(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
+def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
     """
 
     Args:
@@ -95,7 +95,7 @@ def rem_2D(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
     trg.simplex_meta['order'][past_orig] -= 1
 
 
-def parity_2D(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
+def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
     """
 
     Args:

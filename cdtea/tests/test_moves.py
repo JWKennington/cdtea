@@ -56,7 +56,7 @@ class TestMoves2D(admin.CleanScope):
         #                               Perform move                                   #
         ################################################################################
 
-        moves.add_2D(trg, edge=edges[2])
+        moves.add_2d(trg, edge=edges[2])
 
         ################################################################################
         #              COMPARE TRIANGULATION - TODO SIMPLIFY WITH UTILITIES            #
@@ -157,7 +157,7 @@ class TestMoves2D(admin.CleanScope):
         #                               Perform move                                   #
         ################################################################################
 
-        moves.rem_2D(trg, node=v4)
+        moves.rem_2d(trg, node=v4)
 
         ################################################################################
         #              COMPARE TRIANGULATION - TODO SIMPLIFY WITH UTILITIES            #
@@ -248,7 +248,7 @@ class TestMoves2D(admin.CleanScope):
         #                               Perform move                                   #
         ################################################################################
 
-        moves.parity_2D(trg, edge=edges[-1])
+        moves.parity_2d(trg, edge=edges[-1])
 
         ################################################################################
         #              COMPARE TRIANGULATION - TODO SIMPLIFY WITH UTILITIES            #
