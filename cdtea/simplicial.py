@@ -267,7 +267,8 @@ class Triangulation:
         if dim == simplex.dim:
             # TODO this assumes simplex belongs to triangulation
             return simplex
-        elif dim < simplex.dim:
+
+        if dim < simplex.dim:
             return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
 
         dual_contains = self.simplex_meta['contains'].dual[simplex]
