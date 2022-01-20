@@ -60,7 +60,7 @@ class TestTriangulation(admin.CleanScope):
     def test_remove_simplex(self):
         """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
         t1 = simplicial.Triangulation(time_size=None)
-        v1, v2, v3= [simplicial.Dim0SimplexKey(i) for i in range(1, 4)]
+        v1, v2, v3 = [simplicial.Dim0SimplexKey(i) for i in range(1, 4)]
         s1 = simplicial.simplex_key({v1, v2, v3})
         t1.add_simplex(v1)
         t1.add_simplex(v2)
@@ -74,7 +74,7 @@ class TestTriangulation(admin.CleanScope):
         t1.add_simplex(e3)
         t1.add_simplex(s1)
         t1.remove_simplex(s1)
-        
+
         t2 = simplicial.Triangulation(time_size=None)
         t2.add_simplex(v1)
         t2.add_simplex(v2)
@@ -178,7 +178,7 @@ class TestTriangulation(admin.CleanScope):
 
         assert tri.contains(v1, dim=0) == v1
 
-    
+
 class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""
 

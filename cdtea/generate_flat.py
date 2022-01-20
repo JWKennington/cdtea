@@ -3,10 +3,11 @@ Function to generate an initial simplicial manifold that is flat, with toroidal 
 """
 
 from __future__ import annotations
+
 import random
 from typing import Union, List, Tuple
-from cdtea import simplicial
 
+from cdtea import simplicial
 
 
 def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.Triangulation:
@@ -89,5 +90,3 @@ def generate(nodes: List[int], simplices: List[Tuple[int, ...]], node_layers: Li
         Triangulation
     """
     raise NotImplementedError
-
-

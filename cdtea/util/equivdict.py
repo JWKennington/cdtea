@@ -2,7 +2,6 @@
 
 """
 import collections
-from collections.abc import Iterable
 
 
 class EquivDict:

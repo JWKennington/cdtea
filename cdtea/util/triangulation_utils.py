@@ -3,7 +3,6 @@ A set of utility functions for extracting information about triangulations
 """
 from __future__ import annotations
 
-import math
 from typing import Tuple
 
 import numpy as np

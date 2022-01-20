@@ -1,7 +1,4 @@
 """Tests for the simplicial module"""
-import math
-
-import pytest
 
 from cdtea import simplicial, moves
 from cdtea.tests import admin

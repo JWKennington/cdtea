@@ -198,7 +198,7 @@ class Triangulation:
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
-        if not self._simplices[key.dim]: # if removing the last simplex of a certain dim then remove the empty set
+        if not self._simplices[key.dim]:  # if removing the last simplex of a certain dim then remove the empty set
             del self._simplices[key.dim]
 
         for _, meta_k in self._simplex_meta.items():
@@ -269,7 +269,7 @@ class Triangulation:
             return simplex
         elif dim < simplex.dim:
             return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
-        
+
         dual_contains = self.simplex_meta['contains'].dual[simplex]
         return filter_simplices(dual_contains, dim=dim)
 
