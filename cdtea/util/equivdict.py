@@ -23,29 +23,32 @@ class EquivDict:
 
     def __setitem__(self, key, value):
         """Pass thru to dict and update equiv dict"""
-        try:
-            self._equiv_dict[value].add(key)
-        except TypeError:
+        if key in self._dict:
+            del self[key]
+
+        if isinstance(value, set):
             for v in value:
                 self._equiv_dict[v].add(key)
+        else:
+            self._equiv_dict[value].add(key)
 
         return self._dict.__setitem__(key, value)
 
     def __delitem__(self, instance):
         """Pass thru to dict and update equiv dict"""
         value = self._dict.get(instance)
-        try:
-            self._equiv_dict[value].discard(instance)
-            if self._equiv_dict[value] == set():
-                del self._equiv_dict[value]
-        except TypeError:
+
+        if isinstance(value, set):
             for v in value:
                 self._equiv_dict[v].discard(instance)
                 if self._equiv_dict[v] == set():
                     del self._equiv_dict[v]
+        else:
+            self._equiv_dict[value].discard(instance)
+            if self._equiv_dict[value] == set():
+                del self._equiv_dict[value]
 
         self._dict.pop(instance)
-
 
     def _update_equiv_dict(self):
         self._equiv_dict = collections.defaultdict(set)

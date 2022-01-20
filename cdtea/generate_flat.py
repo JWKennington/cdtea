@@ -3,10 +3,11 @@ Function to generate an initial simplicial manifold that is flat, with toroidal 
 """
 
 from __future__ import annotations
-import random
-from typing import Union
-from cdtea import simplicial
 
+import random
+from typing import Union, List, Tuple
+
+from cdtea import simplicial
 
 
 def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.Triangulation:
@@ -47,6 +48,8 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             i = idx(x_idx=x, t_idx=t)
             add_simplex(i, t=t, order=6)
 
+    for t in range(time_size):
+        for x in range(space_size):
             # new edges (three added per vertex)
             spatial_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t)}
             add_simplex(spatial_edge_basis, s_type=(2, 0))
@@ -56,7 +59,8 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
 
             future_edge_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x - 1, t_idx=t + 1)}
             add_simplex(future_edge_basis, s_type=(1, 1))
-
+    for t in range(time_size):
+        for x in range(space_size):
             # new triangles (two added per vertex)
             # each triangle is instantiated with a random dilaton value between zero and 1 using random.Random()
             up_triangle_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 0, t_idx=t + 1)}
@@ -65,3 +69,24 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             down_triangle_basis = {idx(x_idx=x, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t)}
             add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.Random())
     return space_time
+
+
+def generate(nodes: List[int], simplices: List[Tuple[int, ...]], node_layers: List[int]) -> simplicial.Triangulation:
+    """General CDT generation utility. Given a set of nodes, the corresponding time indices,
+    and the edges connecting them, create a Triangulation instance with all meta data
+    properly inferred from the given DOT compliant graph structure.
+
+    Args:
+        nodes:
+            List[int], list of node labels
+        simplices:
+            List[Tuple[int, ...]], list of dim = k > 0 simplices specified by a tuple of (node1, ..., nodek), where
+            the tuple of nodes represents the basis of the simplex
+        node_layers:
+            List[int], a list of the time indices of the nodes. Must have the same size as the
+            nodes argument, and the order must correspond to the order in the nodes argument.
+
+    Returns:
+        Triangulation
+    """
+    raise NotImplementedError

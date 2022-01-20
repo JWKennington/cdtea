@@ -2,8 +2,20 @@
 A set of utility functions for extracting information about triangulations
 """
 from __future__ import annotations
+
+from typing import Tuple
+
 import numpy as np
+
 from cdtea.simplicial import Dim0SimplexKey, Triangulation
+
+
+def time_order(node1: Dim0SimplexKey, node2: Dim0SimplexKey, trg: Triangulation) -> Tuple[Dim0SimplexKey, Dim0SimplexKey]:
+    t1, t2 = trg.simplex_meta['t'][node1], trg.simplex_meta['t'][node2]
+    dt = time_sep(t1, t2, time_max=trg.time_size)
+    if dt < 0:
+        return (node2, node1)
+    return (node1, node2)
 
 
 def time_sep(t1: int, t2: int, time_max: int):
@@ -11,8 +23,13 @@ def time_sep(t1: int, t2: int, time_max: int):
     if not (isinstance(t1, int) and isinstance(t1, int)):
         raise TypeError(f"t1={t1} and t2={t2} must be ints")
 
-    i = (t1 - t2) % time_max
-    j = (t2 - t1) % time_max
+    i = (t1 - t2)
+    j = (t2 - t1)
+
+    if time_max is not None:
+        i = i % time_max
+        j = j % time_max
+
     if j > i:
         return -i
     return j
@@ -79,7 +96,14 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
 
 
 def get_layer_parity(layer, past_left_vert, past_right_vert, st):
-    """ Given the orientation of the previous layer gives an orientation for layer that is aligned."""
+    """ Given the orientation of the previous layer gives an orientation for layer that is aligned.
+
+    New Plan:
+    - find common future point of past left and past right
+    - find spacelike edges of common future point
+    - find two additional vertices of the spacelike edges (for a total of three vertices)
+    - check if new vertex in future(past_right), then (common, new) is the right order, else (new, common)
+    """
     middle, left, right = None, None, None
     for vert in layer:
 

@@ -2,8 +2,9 @@
 Tools to modify a triangulation while preserving its validity.
 """
 
-from functools import reduce
 import random
+from functools import reduce
+
 from cdtea.simplicial import Triangulation, SimplexKey, simplex_key
 from cdtea.util.triangulation_utils import time_sep
 

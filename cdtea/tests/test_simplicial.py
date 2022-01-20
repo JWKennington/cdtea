@@ -59,22 +59,50 @@ class TestTriangulation(admin.CleanScope):
 
     def test_remove_simplex(self):
         """we cant compare to a fresh triangulation becouse we are using default dict and once a value is added it remembers that there is a category for that dimension"""
-        t1 = simplicial.Triangulation(time_size=2)
-        t2 = simplicial.Triangulation(time_size=2)
-        t1.add_simplex(simplicial.simplex_key({1, 2, 3}), prop="test meta property")
-        t1.remove_simplex(simplicial.simplex_key({1, 2, 3}))
-        t2.add_simplex(simplicial.simplex_key({1, 4, 3}), prop="test meta property")
-        t2.remove_simplex(simplicial.simplex_key({1, 4, 3}))
+        t1 = simplicial.Triangulation(time_size=None)
+        v1, v2, v3 = [simplicial.Dim0SimplexKey(i) for i in range(1, 4)]
+        s1 = simplicial.simplex_key({v1, v2, v3})
+        t1.add_simplex(v1)
+        t1.add_simplex(v2)
+        t1.add_simplex(v3)
+
+        e1 = simplicial.DimDSimplexKey({v1, v2})
+        e2 = simplicial.DimDSimplexKey({v1, v3})
+        e3 = simplicial.DimDSimplexKey({v2, v3})
+        t1.add_simplex(e1)
+        t1.add_simplex(e2)
+        t1.add_simplex(e3)
+        t1.add_simplex(s1)
+        t1.remove_simplex(s1)
+
+        t2 = simplicial.Triangulation(time_size=None)
+        t2.add_simplex(v1)
+        t2.add_simplex(v2)
+        t2.add_simplex(v3)
+        t2.add_simplex(e1)
+        t2.add_simplex(e2)
+        t2.add_simplex(e3)
+
         assert t1 == t2
 
     def test_sub_simplex(self):
         """test that the sub_simplex method returns the correct simplices"""
-        s = simplicial.simplex_key({1, 2, 3})
+        v1, v2, v3 = [simplicial.Dim0SimplexKey(i) for i in range(1, 4)]
+        s = simplicial.simplex_key({v1, v2, v3})
         tri = simplicial.Triangulation(time_size=2)
+        tri.add_simplex(v1)
+        tri.add_simplex(v2)
+        tri.add_simplex(v3)
+
+        e1 = simplicial.DimDSimplexKey({v1, v2})
+        e2 = simplicial.DimDSimplexKey({v1, v3})
+        e3 = simplicial.DimDSimplexKey({v2, v3})
+        tri.add_simplex(e1)
+        tri.add_simplex(e2)
+        tri.add_simplex(e3)
         tri.add_simplex(s, prop="test meta property")
-        k = simplicial.simplex_key
-        v1, v2, v3 = s.basis_list
-        expected = {v1, v2, v3, k({v1, v2}), k({v1, v3}), k({v2, v3})}
+
+        expected = {v1, v2, v3, e1, e2, e3}
         assert tri.simplex_meta['contains'][s] == expected
 
     def test_rank_4(self):
@@ -92,26 +120,77 @@ class TestTriangulation(admin.CleanScope):
     def test_spatial_edges(self):
         """test that the spatial_edges method gives the correct output"""
 
-        e1 = simplicial.simplex_key({1, 2})
-        e2 = simplicial.simplex_key({1, 10})
+        v1, v2, v10 = [simplicial.Dim0SimplexKey(x) for x in (1, 2, 10)]
+
+        e1 = simplicial.simplex_key({v1, v2})
+        e2 = simplicial.simplex_key({v1, v10})
 
         tri = simplicial.Triangulation(time_size=2)
 
+        tri.add_simplex(v1)
+        tri.add_simplex(v2)
+        tri.add_simplex(v10)
         tri.add_simplex(e1, s_type=(2, 0))
         tri.add_simplex(e2, s_type=(1, 1))
 
         assert tri.spatial_edges == {e1}
+
+    def test_contains(self):
+        """test"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+
+        e1 = simplicial.simplex_key({1, 2})
+        e2 = simplicial.simplex_key({1, 3})
+        e3 = simplicial.simplex_key({2, 3})
+
+        t1 = simplicial.simplex_key({1, 2, 3})
+
+        tri = simplicial.Triangulation(time_size=2)
+
+        tri.add_simplex(v1)
+        tri.add_simplex(v2)
+        tri.add_simplex(v3)
+        tri.add_simplex(e1)
+        tri.add_simplex(e2)
+        tri.add_simplex(e3)
+        tri.add_simplex(t1)
+
+        assert tri.contains(v1, dim=0) == v1
+        assert tri.contains(v1, dim=1) == {e1, e2}
+        assert tri.contains(v1, dim=2) == {t1, }
+        assert tri.contains(v2, dim=0) == v2
+        assert tri.contains(v2, dim=1) == {e1, e3}
+        assert tri.contains(v2, dim=2) == {t1, }
+        assert tri.contains(v3, dim=0) == v3
+        assert tri.contains(v3, dim=1) == {e2, e3}
+        assert tri.contains(v3, dim=2) == {t1, }
+
+        assert tri.contains(e1, dim=0) == {v1, v2}
+        assert tri.contains(e1, dim=1) == e1
+        assert tri.contains(e1, dim=2) == {t1, }
+        assert tri.contains(e2, dim=0) == {v1, v3}
+        assert tri.contains(e2, dim=1) == e2
+        assert tri.contains(e2, dim=2) == {t1, }
+        assert tri.contains(e3, dim=0) == {v2, v3}
+        assert tri.contains(e3, dim=1) == e3
+        assert tri.contains(e3, dim=2) == {t1, }
+
+        assert tri.contains(v1, dim=0) == v1
 
 
 class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""
 
     def test_create_dim_0_simplex_key(self):
+        """test"""
         simplicial.Dim0SimplexKey(1)
         simplicial.Dim0SimplexKey(2)
         simplicial.Dim0SimplexKey(2)
 
     def test_create_dim_d_simplex_key(self):
+        """test"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
         v3 = simplicial.Dim0SimplexKey(2)

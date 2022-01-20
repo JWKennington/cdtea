@@ -1,4 +1,28 @@
-""" Various tests that a triangulation must past to be a valid toroidal 1+1d simplicial manifold."""
+""" Various tests that a triangulation must past to be a valid toroidal 1+1d simplicial manifold.
+
+Specification for valid CDT
+
+Triangulation Features: T
+- If a simplex S belongs to T, then all subsimplices of S should belong to T
+- If all subsimplices of S belong to T, then S should belong to T
+- If a simplex S belongs to T, it should be triangular (N-dim triangle)
+
+Topological Features: (Toroidal)
+- Each vertex V has two spacelike edges
+- Each vertex V has at least one future timelike edge
+- Each vertex V has at least one past timelike edge
+
+Causal Features:
+- Timelike edges should only connect adjacent spacelike slabs
+- Local causal structure forms a local partial order
+
+Implementation Specific:
+- meta data is accurate
+    - 'order': of vertices
+    - 't': time slice of vertices
+    - 's_type': simplex types
+    - 'contains' subsimplex relations
+"""
 from itertools import combinations
 from collections import defaultdict
 
@@ -106,7 +130,7 @@ def vertices_have_minimum_required_connections(triangulation: simplicial.Triangu
                 counts_future[basis[1]] += 1
                 counts_past[basis[0]] += 1
             else:
-                raise Exception("s_type {type} does not match, both basis have the same time ".format(type=s_type))
+                raise Exception("s_type {type} does not match for edge {edge}, both basis have the same time ".format(type=s_type, edge=str(e)))
         else:
             raise Exception("invalid s_type {type}".format(type=s_type))
 
@@ -141,9 +165,9 @@ def check_s_type(triangulation: simplicial.Triangulation):
         times = [time_sep(min(times), time_index[b], triangulation.time_size) for b in f]
         c1 = times.count(min(times))
         if c1 == 2:
-            assert meta["s_type"][f] == (2, 1)
+            assert meta["s_type"][f] == (2, 1), f"{f} is of type {meta['s_type'][f]} instead of the expected (2,1) "
         elif c1 == 1:
-            assert meta["s_type"][f] == (1, 2)
+            assert meta["s_type"][f] == (1, 2), f"{f} is of type {meta['s_type'][f]} instead of the expected (1,2) "
 
 
 # Check if Dim0Simpplex order is correct

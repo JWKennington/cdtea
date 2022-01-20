@@ -70,9 +70,10 @@ class SimplexKey:
             self._count_id = count_id
 
     def __repr__(self):
+        # TODO make easier access to int in Dim0 Simplex Key
         if self._dim == 0:
             return '<' + str(list(self._basis)[0]) + '>'
-        return '<' + ' '.join(str(list(b._basis)[0]) for b in self._basis) + '>'
+        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>'
 
     def __hash__(self):
         return hash((self._count_id, self._basis))
@@ -175,25 +176,42 @@ class Triangulation:
         """adds a simplex to the triangulation"""
         if key.dim == 0:
             self._max_index += 1
+
+        # if the key is not a node make sure all subkeys are already in the triangulation
+        if key.dim != 0:
+            for sub_key in key.sub_keys:
+                assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
+
         self._simplices[key.dim].add(key)
 
         if key.dim != 0:
             meta['contains'] = key.sub_keys
+
+        # if a new edge is being added, update the order of all attached nodes.
+        if key.dim == 1 and key not in self._simplices[key.dim]:
+            for sub_key in key:
+                meta['order'][sub_key] += 1
+
         for k, v in meta.items():
             self._simplex_meta[k][key] = v
 
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
+        if not self._simplices[key.dim]:  # if removing the last simplex of a certain dim then remove the empty set
+            del self._simplices[key.dim]
+
         for _, meta_k in self._simplex_meta.items():
             if key in meta_k.keys:
                 del meta_k[key]
 
+        # TODO remove the given key as a valid dict VALUE as well
+
     def __eq__(self, other):
         if isinstance(other, Triangulation):
-            same_simplices = self._simplices == other.simplices
-            same_meta = self._simplex_meta == other.simplex_meta
-            same_time_size = self.time_size == other.time_size
+            same_simplices = self._simplices == other._simplices
+            same_meta = self._simplex_meta == other._simplex_meta
+            same_time_size = self._time_size == other._time_size
             same_triangulation = same_simplices and same_meta and same_time_size
             return same_triangulation
         return False
@@ -235,3 +253,33 @@ class Triangulation:
     @property
     def rank_4_nodes(self):
         return self._simplex_meta["order"].dual[4]
+
+    def contains(self, simplex: SimplexKey, dim: int):
+        """
+
+        Args:
+            simplex:
+            dim:
+
+        Returns:
+
+        """
+        if dim == simplex.dim:
+            # TODO this assumes simplex belongs to triangulation
+            return simplex
+
+        if dim < simplex.dim:
+            return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
+
+        dual_contains = self.simplex_meta['contains'].dual[simplex]
+        return filter_simplices(dual_contains, dim=dim)
+
+    def flatten(self, simplices: Iterable[SimplexKey]):
+        res = set()
+        for s in simplices:
+            res = res.union(self.contains(s, dim=0))
+        return res
+
+
+def filter_simplices(simplices, dim: int = None):
+    return {s for s in simplices if s.dim == dim}

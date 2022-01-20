@@ -60,3 +60,13 @@ class TestEquivDict:
         e1 = equivdict.EquivDict(dict1)
 
         assert e1.keys == ['a', 'b', 'c']
+
+    def test_update_dict_curate_equiv(self):
+        """Test that on update of dict value the corresponding equivalence classes are updated"""
+        dict1, dict2 = {'a': 1, 'b': 1, 'c': 2}, {'a': 1, 'b': 1, 'c': 3}
+        e1, e2 = equivdict.EquivDict(dict1), equivdict.EquivDict(dict2)
+
+        # Change value of existing key
+        e1['c'] = 3
+
+        assert e1 == e2
