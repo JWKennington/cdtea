@@ -7,7 +7,7 @@ from cdtea.tests import admin
 class TestMoves2D(admin.CleanScope):
     """Tests for the 2-Dimensional Moves"""
 
-    def test_add_2D(self):
+    def test_add_2d(self):
         """Test 2d add"""
 
         ################################################################################
@@ -102,7 +102,7 @@ class TestMoves2D(admin.CleanScope):
 
         assert trg == trg_exp
 
-    def test_rem_2D(self):
+    def test_rem_2d(self):
         """Test 2d remove"""
 
         ################################################################################
@@ -197,7 +197,7 @@ class TestMoves2D(admin.CleanScope):
 
         assert trg == trg_exp
 
-    def test_parity_2D(self):
+    def test_parity_2d(self):
         """Test 2d parity"""
 
         ################################################################################
