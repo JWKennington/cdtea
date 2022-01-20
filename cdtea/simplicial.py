@@ -198,16 +198,20 @@ class Triangulation:
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
+        if not self._simplices[key.dim]: # if removing the last simplex of a certain dim then remove the empty set
+            del self._simplices[key.dim]
+
         for _, meta_k in self._simplex_meta.items():
             if key in meta_k.keys:
                 del meta_k[key]
+
         # TODO remove the given key as a valid dict VALUE as well
 
     def __eq__(self, other):
         if isinstance(other, Triangulation):
-            same_simplices = self._simplices == other.simplices
-            same_meta = self._simplex_meta == other.simplex_meta
-            same_time_size = self.time_size == other.time_size
+            same_simplices = self._simplices == other._simplices
+            same_meta = self._simplex_meta == other._simplex_meta
+            same_time_size = self._time_size == other._time_size
             same_triangulation = same_simplices and same_meta and same_time_size
             return same_triangulation
         return False
