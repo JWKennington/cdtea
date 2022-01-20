@@ -1,15 +1,15 @@
-from cdtea import generate_flat
-from cdtea import moves, simplicial
-from cdtea.Visualization.two_d_plot import two_d_plot
-import numpy as np
-from cdtea.tests.valid_triangulation import is_valid
 import matplotlib.pyplot as plt
+import numpy as np
+
+from cdtea import generate_flat
+from cdtea import moves
+from cdtea.tests.valid_triangulation import is_valid
 
 np.random.seed(1)
 
 
-def is_mixed_face_edge(edge, trg):
-    faces = trg.contains(edge, dim=2)
+def is_mixed_face_edge(e, trg):
+    faces = trg.contains(e, dim=2)
     face_types = {trg.simplex_meta['s_type'][f] for f in faces}
     return len(face_types) == 2
 
