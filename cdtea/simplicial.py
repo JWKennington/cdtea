@@ -235,6 +235,10 @@ class Triangulation:
 
     # quick semantic access to triangulation elements and properties
     @property
+    def num_nodes(self):
+        return len(self.nodes)
+
+    @property
     def nodes(self):
         return self._simplices[0]
 
