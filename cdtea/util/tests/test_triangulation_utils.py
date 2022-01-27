@@ -59,7 +59,7 @@ class TestOrdering(admin.CleanScope):
         st = generate_flat_2d_space_time(space_size=5, time_size=8)
         l1, l2 = Ordering.get_layer(st, 3), Ordering.get_layer(st, 4)
         l1 = Ordering.spatial_ordering(st, l1)
-        Ordering.get_layer_parity(l2, l1[0], l1[1], st)
+        Ordering.get_layer_parity(l1, l1[0], l1[1], st)
         with pytest.raises(Exception):
             Ordering.get_layer_parity(l2, l1[0], l1[3], st)
 

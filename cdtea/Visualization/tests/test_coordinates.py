@@ -6,6 +6,7 @@ from cdtea.Visualization.coordinates import toroidal_coordinates
 
 class TestCoordinates:
     """tests for the generation of coordinates for triangulations"""
+
     def test_toroidal_coordinates(self):
         """
             Test that toroidal_coordinates is properly outputting tuples of floats.

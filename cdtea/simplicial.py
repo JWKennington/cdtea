@@ -204,6 +204,7 @@ class Triangulation:
         for _, meta_k in self._simplex_meta.items():
             if key in meta_k.keys:
                 del meta_k[key]
+        # TODO remove the given key as a valid dict VALUE as well
 
         # TODO remove the given key as a valid dict VALUE as well
 
@@ -273,6 +274,7 @@ class Triangulation:
 
         dual_contains = self.simplex_meta['contains'].dual[simplex]
         return filter_simplices(dual_contains, dim=dim)
+
 
     def flatten(self, simplices: Iterable[SimplexKey]):
         res = set()

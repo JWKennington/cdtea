@@ -2,6 +2,7 @@
 
 """
 
+
 from cdtea import simplicial
 from cdtea.util import triangulation_utils
 
@@ -33,6 +34,7 @@ def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
         trg.remove_simplex(r)
 
     # Add
+
     new_vertex = simplicial.Dim0SimplexKey(trg.max_index)
     new_simplices = []
     new_simplices.append((new_vertex, {'t': orig_layer}))  # TODO test the new number
@@ -49,6 +51,7 @@ def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     trg.simplex_meta['order'][new_vertex] = 4
     trg.simplex_meta['order'][fut_orig] += 1
     trg.simplex_meta['order'][past_orig] += 1
+
 
 
 def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
@@ -96,6 +99,7 @@ def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
 
 
 def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
+
     """
 
     Args:
