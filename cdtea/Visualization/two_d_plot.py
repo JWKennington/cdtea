@@ -64,7 +64,7 @@ def plot_faces(ax, coordinates, meta, st):
                 color = (0, 0, 1, .5)
                 if meta["s_type"][s] == (2, 1):
                     color = (1, 0, 0, .5)
-                p = Polygon(pts, closed=True, color=color, zorder=0, linewidth=None,fill=None)
+                p = Polygon(pts, closed=True, color=color, zorder=0, linewidth=None, fill=None)
                 ax.add_patch(p)
 
 

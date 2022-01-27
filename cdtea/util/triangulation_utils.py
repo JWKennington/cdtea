@@ -106,7 +106,6 @@ def get_shared_future(v1, v2, st: Triangulation):
         return vt_1
 
 
-
 def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
     """ Given the orientation of the previous layer gives an orientation for layer that is aligned.
 
