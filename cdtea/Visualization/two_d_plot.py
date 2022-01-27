@@ -2,13 +2,12 @@
 
 import collections
 from cdtea.Visualization.coordinates import toroidal_coordinates
-from cdtea.util.triangulation_utils import nearest
 from cdtea.simplicial import Triangulation
+from cdtea.Visualization.torus_utils import torus_sep
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon
 from matplotlib.collections import LineCollection
-from cdtea.Visualization.torus_utils import torus_sep
 
 
 def relative_point(pnt_a, pnt_b):
@@ -54,7 +53,7 @@ def plot_faces(ax, coordinates, meta, st):
                 # if all(all(t_param_difference(v1, v2) < 2 for v2 in s) for v1 in s):
                 pts = np.array([coordinates[v] for v in s])
                 # pts = np.array([nearest(np.max(pts, 0), p) for p in pts])
-                center = np.mean(pts, 0)
+                # center = np.mean(pts, 0)
 
                 pts[1] = relative_point(pts[0], pts[1])
                 pts[2] = relative_point(pts[0], pts[2])
@@ -91,7 +90,7 @@ def plot_edges(ax, coordinates, meta, st):
         for dy in [-1, 0, 1]:
             for e in st.edges:
                 pts = np.array([coordinates[v] for v in e])
-                center = np.mean(pts, 0)
+                # center = np.mean(pts, 0)
                 # pts = (pts - center) / 1.3 + center
                 pts[1] = relative_point(pts[0], pts[1])
                 pts = pts + np.array([dx, dy])

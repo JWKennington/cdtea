@@ -4,7 +4,6 @@ functions for generating coordinates for each 0d vertex in a triangulation
 
 from cdtea.util.triangulation_utils import total_ordering
 from cdtea.simplicial import Triangulation
-import numpy as np
 
 
 def toroidal_coordinates(st: Triangulation):

@@ -136,7 +136,6 @@ class TestTriangulation(admin.CleanScope):
         assert tri.spatial_edges == {e1}
 
     def test_contains(self):
-
         """test"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
@@ -150,7 +149,6 @@ class TestTriangulation(admin.CleanScope):
 
         tri = simplicial.Triangulation(time_size=2)
 
-
         tri.add_simplex(v1)
         tri.add_simplex(v2)
         tri.add_simplex(v3)
@@ -211,7 +209,7 @@ class TestTriangulation(admin.CleanScope):
 
         assert tri.contains(v1, dim=0) == v1
 
-    
+
 class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""
 
