@@ -79,6 +79,7 @@ def plot_points(ax, coordinates, st):
         X.append(c[0])
         Y.append(c[1])
         c_index = (edge_color[v] - 2.) / 100.
+
         pnt_colors.append((c_index, 0, 1 - c_index, 1))
     ax.scatter(X, Y, c='k', s=10, zorder=2)
 

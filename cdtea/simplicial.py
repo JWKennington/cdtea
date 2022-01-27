@@ -198,16 +198,21 @@ class Triangulation:
     def remove_simplex(self, key: SimplexKey):
         """removes a simplex from the triangulation"""
         self._simplices[key.dim].remove(key)
+        if not self._simplices[key.dim]:  # if removing the last simplex of a certain dim then remove the empty set
+            del self._simplices[key.dim]
+
         for _, meta_k in self._simplex_meta.items():
             if key in meta_k.keys:
                 del meta_k[key]
         # TODO remove the given key as a valid dict VALUE as well
 
+        # TODO remove the given key as a valid dict VALUE as well
+
     def __eq__(self, other):
         if isinstance(other, Triangulation):
-            same_simplices = self._simplices == other.simplices
-            same_meta = self._simplex_meta == other.simplex_meta
-            same_time_size = self.time_size == other.time_size
+            same_simplices = self._simplices == other._simplices
+            same_meta = self._simplex_meta == other._simplex_meta
+            same_time_size = self._time_size == other._time_size
             same_triangulation = same_simplices and same_meta and same_time_size
             return same_triangulation
         return False
@@ -263,11 +268,13 @@ class Triangulation:
         if dim == simplex.dim:
             # TODO this assumes simplex belongs to triangulation
             return simplex
-        elif dim < simplex.dim:
+
+        if dim < simplex.dim:
             return filter_simplices(self.simplex_meta['contains'][simplex], dim=dim)
-        else:  # dim > simplex.dim
-            dual_contains = self.simplex_meta['contains'].dual[simplex]
-            return filter_simplices(dual_contains, dim=dim)
+
+        dual_contains = self.simplex_meta['contains'].dual[simplex]
+        return filter_simplices(dual_contains, dim=dim)
+
 
     def flatten(self, simplices: Iterable[SimplexKey]):
         res = set()
@@ -277,4 +284,4 @@ class Triangulation:
 
 
 def filter_simplices(simplices, dim: int = None):
-    return set([s for s in simplices if s.dim == dim])
+    return {s for s in simplices if s.dim == dim}
