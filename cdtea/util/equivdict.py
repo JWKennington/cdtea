@@ -2,6 +2,7 @@
 
 """
 import collections
+from collections.abc import Iterable
 
 
 class EquivDict:
@@ -23,6 +24,7 @@ class EquivDict:
 
     def __setitem__(self, key, value):
         """Pass thru to dict and update equiv dict"""
+
         if key in self._dict:
             del self[key]
 

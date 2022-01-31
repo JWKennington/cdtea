@@ -179,6 +179,36 @@ class TestTriangulation(admin.CleanScope):
 
         assert tri.contains(v1, dim=0) == v1
 
+        tri.add_simplex(v1)
+        tri.add_simplex(v2)
+        tri.add_simplex(v3)
+        tri.add_simplex(e1)
+        tri.add_simplex(e2)
+        tri.add_simplex(e3)
+        tri.add_simplex(t1)
+
+        assert tri.contains(v1, dim=0) == v1
+        assert tri.contains(v1, dim=1) == {e1, e2}
+        assert tri.contains(v1, dim=2) == {t1, }
+        assert tri.contains(v2, dim=0) == v2
+        assert tri.contains(v2, dim=1) == {e1, e3}
+        assert tri.contains(v2, dim=2) == {t1, }
+        assert tri.contains(v3, dim=0) == v3
+        assert tri.contains(v3, dim=1) == {e2, e3}
+        assert tri.contains(v3, dim=2) == {t1, }
+
+        assert tri.contains(e1, dim=0) == {v1, v2}
+        assert tri.contains(e1, dim=1) == e1
+        assert tri.contains(e1, dim=2) == {t1, }
+        assert tri.contains(e2, dim=0) == {v1, v3}
+        assert tri.contains(e2, dim=1) == e2
+        assert tri.contains(e2, dim=2) == {t1, }
+        assert tri.contains(e3, dim=0) == {v2, v3}
+        assert tri.contains(e3, dim=1) == e3
+        assert tri.contains(e3, dim=2) == {t1, }
+
+        assert tri.contains(v1, dim=0) == v1
+
 
 class TestSimplexKey(admin.CleanScope):
     """Tests for the SimplexKey Classes"""

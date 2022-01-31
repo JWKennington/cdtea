@@ -95,36 +95,49 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
     return indexed
 
 
-def get_layer_parity(layer, past_left_vert, past_right_vert, st):
+def get_shared_future(v1, v2, st: Triangulation):
+    triangles_containg_v1 = st.contains(v1, dim=2)
+    triangles_containg_v2 = st.contains(v2, dim=2)
+    vt_0, vt_1 = st.flatten(triangles_containg_v1 & triangles_containg_v2) - {v1, v2}
+    dt = time_sep(st.simplex_meta['t'][vt_1], st.simplex_meta['t'][vt_0], st.time_size)
+    if dt > 0:
+        return vt_0
+    if dt < 0:
+        return vt_1
+
+
+def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
     """ Given the orientation of the previous layer gives an orientation for layer that is aligned.
 
     New Plan:
-    - find common future point of past left and past right
-    - find spacelike edges of common future point
-    - find two additional vertices of the spacelike edges (for a total of three vertices)
+    - find common future point of past left and past right (done)
+    - find spacelike edges of common future point (done)
+    - find two additional vertices of the spacelike edges (for a total of three vertices) (done)
     - check if new vertex in future(past_right), then (common, new) is the right order, else (new, common)
+    
     """
-    middle, left, right = None, None, None
-    for vert in layer:
+    # left, right = None, None
+    middle = get_shared_future(past_left_vert, past_right_vert, st)
+    space_like_edges_of_middle = [e for e in st.contains(middle, dim=1) if st.simplex_meta['s_type'][e] == (2, 0)]
+    new_verts = st.flatten(space_like_edges_of_middle) - {middle, }
+    past_leftmost, past_rightmost = past_left_vert, past_right_vert
+    past_leftmost_index, past_rightmost_index = past_layer.index(past_leftmost), past_layer.index(past_rightmost)
 
-        left_overlap, right_overlap = vert | past_left_vert, vert | past_right_vert
-        connected_left, connected_right = left_overlap in st.edges, right_overlap in st.edges
+    while past_leftmost in st.flatten(st.contains(middle, dim=1)):
+        past_leftmost_index = (past_leftmost_index - 1) % len(past_layer)
+        past_leftmost = past_layer[past_leftmost_index]
+    past_leftmost = past_layer[(past_leftmost_index + 1) % len(past_layer)]
+    while past_rightmost in st.flatten(st.contains(middle, dim=1)):
+        past_rightmost_index = (past_rightmost_index + 1) % len(past_layer)
+        past_rightmost = past_layer[past_rightmost_index]
+    past_rightmost = past_layer[(past_rightmost_index - 1) % len(past_layer)]
 
-        if connected_left and connected_right:
-            middle = vert
-    for vert in layer:
-
-        left_overlap, right_overlap = vert | past_left_vert, vert | past_right_vert
-        connected_left, connected_right = left_overlap in st.edges, right_overlap in st.edges
-
-        if vert | middle in st.edges:
-            if connected_right:
-                right = vert
-            elif connected_left:
-                left = vert
-    if left and middle and right:
-        return left, middle, right
-    raise ValueError("No parity found following the ordering of supplied past ordering")
+    for vert in new_verts:
+        if vert in st.flatten(st.contains(past_leftmost, dim=1)):
+            left = vert
+        if vert in st.flatten(st.contains(past_rightmost, dim=1)):
+            right = vert
+    return left, middle, right
 
 
 def total_ordering(st: Triangulation):
@@ -137,7 +150,7 @@ def total_ordering(st: Triangulation):
     total_order = [base_order]
     for t in range(1, st.time_size):
         past_left_vert, past_right_vert = prev_orientation[0:2]
-        left, middle, right = get_layer_parity(layers[t], past_left_vert, past_right_vert, st)
+        left, middle, right = get_layer_parity(total_order[t - 1], past_left_vert, past_right_vert, st)
 
         if t % 2 == 0:
             order = spatial_ordering(st, layers[t], indexed=[middle, right])
