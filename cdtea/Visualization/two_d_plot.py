@@ -38,7 +38,7 @@ def two_d_plot(st: Triangulation) -> type(plt.gca()):
     #
     plot_edges(ax, coordinates, meta, st)
     #
-    # plot_points(ax, coordinates, st)
+    plot_points(ax, coordinates, st)
 
     return ax
 
@@ -80,7 +80,16 @@ def plot_points(ax, coordinates, st):
         c_index = (edge_color[v] - 2.) / 100.
 
         pnt_colors.append((c_index, 0, 1 - c_index, 1))
-    ax.scatter(X, Y, c='k', s=10, zorder=2)
+        # ax.annotate(v.basis_list[0], (c[0], c[1]))
+        ax.annotate(
+            v.basis_list[0],
+            xy=(c[0], c[1]), xytext=(-0, 0), color='white', fontsize=7,
+
+            textcoords='offset points', ha='center', va='center',
+            bbox=dict(boxstyle='Circle,pad=.5', fc='Black', alpha=1))
+    # ax.scatter(X, Y, c='k', s=10, zorder=2)
+
+    # for i, txt in enumerate(n):
 
 
 def plot_edges(ax, coordinates, meta, st):
