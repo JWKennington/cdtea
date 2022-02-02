@@ -42,7 +42,7 @@ class SimplexKey:
     _COUNTS = collections.defaultdict(int)
     __slots__ = ('_basis', '_dim', '_sub_keys', '_count_id')
 
-    def __init__(self, basis: Union[frozenset, set], dim: int = None, multi: bool = False, count_id: int = None):
+    def __init__(self, basis: Union[frozenset, set], dim: int = None, count_id: int = 0):
         """Create a Simplex Key
 
         Args:
@@ -50,30 +50,19 @@ class SimplexKey:
                 frozenset or set, the basis 0simplices
             dim:
                 int, default None, the dimension of the new simplex
-            multi:
-                bool, default False, if True create a new copy of the simplex corresponding to the given basis. Example
-                usage is creating a multi edge, for the second edge set "multi=True".
             count_id:
-                int, default None, used to distinguish multisimplices. Must be passed if creating a reference to a multi
-                simplex (at which point the "multi" argument will be True)
+                int, default 0, used to distinguish multisimplices.
         """
         self._basis = frozenset(basis)
         self._dim = dim
         self._sub_keys = None
-
-        if multi:
-            self._COUNTS[self._basis] += 1
-            self._count_id = self._COUNTS[self._basis]
-        else:
-            if self._COUNTS[self._basis] > 0 and count_id is None:
-                raise ValueError('Cannot create reference to multi simplex without a count_id.')
-            self._count_id = count_id
+        self._count_id = count_id
 
     def __repr__(self):
         # TODO make easier access to int in Dim0 Simplex Key
         if self._dim == 0:
             return '<' + str(list(self._basis)[0]) + '>'
-        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>'
+        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>' + str(self._count_id) * (self._count_id > 0)
 
     def __hash__(self):
         return hash((self._count_id, self._basis))
@@ -132,11 +121,6 @@ class SimplexKey:
     def dim(self):
         return self._dim
 
-    @classmethod
-    def flush_counts(cls):
-        """Flush Counts"""
-        cls._COUNTS = collections.defaultdict(int)
-
     @property
     def sub_keys(self):
         """get all sub-simplices of self. (excluding self)"""
@@ -158,8 +142,8 @@ class Dim0SimplexKey(SimplexKey):
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
 
-    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], multi: bool = False, count_id: int = None):
-        super().__init__(basis=basis, dim=len(basis) - 1, multi=multi, count_id=count_id)
+    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], count_id: int = 0):
+        super().__init__(basis=basis, dim=len(basis) - 1, count_id=count_id)
 
 
 class Triangulation:
@@ -176,16 +160,37 @@ class Triangulation:
         """adds a simplex to the triangulation"""
         if key.dim == 0:
             self._max_index += 1
+        sub_keys = list(key.sub_keys)
+
+        # TODO make this not suck
+        # force sub edges of faces to be the correct edge. by checking for which
+        # if a face is being added
+        if key.dim == 2:
+            # loop through all of the constituent edges.
+            for i, k in enumerate(sub_keys):
+                if k.dim == 1:
+                    # loop through all edges in the space_time with the same basis
+                    for edge in self.edges:
+                        if edge.basis == k.basis:
+                            # If the selected edge with the same basis doesn't yet have two faces, that's the correct edge.
+                            if len(self.contains(edge, dim=2)) != 2:
+                                sub_keys[i] = edge
+                                break
 
         # if the key is not a node make sure all subkeys are already in the triangulation
         if key.dim != 0:
-            for sub_key in key.sub_keys:
+            for sub_key in sub_keys:
                 assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
+
+        # if the key is already in the space_time, then we are trying to add a multi simplex.
+        # loop until an unused _count_id is found
+        while key in self._simplices[key.dim]:
+            key._count_id += 1
 
         self._simplices[key.dim].add(key)
 
         if key.dim != 0:
-            meta['contains'] = key.sub_keys
+            meta['contains'] = set(sub_keys)
 
         # if a new edge is being added, update the order of all attached nodes.
         if key.dim == 1 and key not in self._simplices[key.dim]:

@@ -3,10 +3,9 @@
 import pytest
 
 from cdtea import simplicial
-from cdtea.tests import admin
 
 
-class TestTriangulation(admin.CleanScope):
+class TestTriangulation:
     """Tests for the Triangulation Class"""
 
     def test_create(self):
@@ -179,38 +178,8 @@ class TestTriangulation(admin.CleanScope):
 
         assert tri.contains(v1, dim=0) == v1
 
-        tri.add_simplex(v1)
-        tri.add_simplex(v2)
-        tri.add_simplex(v3)
-        tri.add_simplex(e1)
-        tri.add_simplex(e2)
-        tri.add_simplex(e3)
-        tri.add_simplex(t1)
 
-        assert tri.contains(v1, dim=0) == v1
-        assert tri.contains(v1, dim=1) == {e1, e2}
-        assert tri.contains(v1, dim=2) == {t1, }
-        assert tri.contains(v2, dim=0) == v2
-        assert tri.contains(v2, dim=1) == {e1, e3}
-        assert tri.contains(v2, dim=2) == {t1, }
-        assert tri.contains(v3, dim=0) == v3
-        assert tri.contains(v3, dim=1) == {e2, e3}
-        assert tri.contains(v3, dim=2) == {t1, }
-
-        assert tri.contains(e1, dim=0) == {v1, v2}
-        assert tri.contains(e1, dim=1) == e1
-        assert tri.contains(e1, dim=2) == {t1, }
-        assert tri.contains(e2, dim=0) == {v1, v3}
-        assert tri.contains(e2, dim=1) == e2
-        assert tri.contains(e2, dim=2) == {t1, }
-        assert tri.contains(e3, dim=0) == {v2, v3}
-        assert tri.contains(e3, dim=1) == e3
-        assert tri.contains(e3, dim=2) == {t1, }
-
-        assert tri.contains(v1, dim=0) == v1
-
-
-class TestSimplexKey(admin.CleanScope):
+class TestSimplexKey:
     """Tests for the SimplexKey Classes"""
 
     def test_create_dim_0_simplex_key(self):
@@ -340,28 +309,50 @@ class TestSimplexKey(admin.CleanScope):
         assert f.sub_keys == f.sub_keys
 
 
-class TestMultiSimplices(admin.CleanScope):
+class TestMultiSimplices:
     """Test group for multi simplices"""
 
     def test_multi_edge_equivalence(self):
         """test multi edge"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
-        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
-        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+        l1 = simplicial.DimDSimplexKey({v1, v2}, count_id=0)
+        l2 = simplicial.DimDSimplexKey({v1, v2}, count_id=1)
         assert l1 != l2
+        assert l1 == simplicial.DimDSimplexKey({v1, v2}, count_id=0)
 
-    def test_reference_multi(self):
-        """test union"""
-        v1 = simplicial.Dim0SimplexKey(3)
-        v2 = simplicial.Dim0SimplexKey(4)
-        simplicial.DimDSimplexKey({v1, v2}, multi=False)
-        simplicial.DimDSimplexKey({v1, v2}, multi=True)
+    def test_multi_edge_contains(self):
+        """test multi edge"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        v4 = simplicial.Dim0SimplexKey(4)
+        v5 = simplicial.Dim0SimplexKey(5)
 
-        # New reference to existing edge
-        with pytest.raises(ValueError):
-            simplicial.DimDSimplexKey({v1, v2})
+        l1 = simplicial.DimDSimplexKey({v1, v2})
+        l2 = simplicial.DimDSimplexKey({v3, v2})
+        l3 = simplicial.DimDSimplexKey({v1, v3})
 
-        # Properly reference to existing edge
-        l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
-        assert isinstance(l2_prime, simplicial.SimplexKey)
+        l4 = simplicial.DimDSimplexKey({v4, v2})
+        l5 = simplicial.DimDSimplexKey({v1, v4})
+
+        l6 = simplicial.DimDSimplexKey({v1, v5})
+        l7 = simplicial.DimDSimplexKey({v2, v5})
+
+        f1 = simplicial.DimDSimplexKey({v1, v2, v3})
+        f2 = simplicial.DimDSimplexKey({v1, v2, v4})
+
+        l_multi = simplicial.DimDSimplexKey({v1, v2})
+
+        t = simplicial.Triangulation(time_size=2)
+        for v in [v1, v2, v3, v4, v5]:
+            t.add_simplex(v)
+        for l in [l1, l2, l3, l4, l5, l6, l7]:
+            t.add_simplex(l)
+        for f in [f1, f2]:
+            t.add_simplex(f)
+        t.add_simplex(l_multi)
+        f_multi = simplicial.DimDSimplexKey({v1, v2, v5})
+        t.add_simplex(f_multi)
+        assert l_multi in t.contains(f_multi, dim=1)
+        assert l1 not in t.contains(f_multi, dim=1)

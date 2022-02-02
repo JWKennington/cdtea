@@ -1,7 +1,6 @@
 """Tests for the simplicial module"""
 
 from cdtea import metropolis
-from cdtea.tests import admin
 
 from cdtea.generate_flat import generate_flat_2d_space_time
 
@@ -14,7 +13,7 @@ Possible things to test for
 """
 
 
-class TestMoves2D(admin.CleanScope):
+class TestMoves2D:
     """Tests for the 2-Dimensional Moves"""
 
     def test_add_step(self):

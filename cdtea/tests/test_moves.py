@@ -1,10 +1,9 @@
 """Tests for the simplicial module"""
 
 from cdtea import simplicial, moves
-from cdtea.tests import admin
 
 
-class TestMoves2D(admin.CleanScope):
+class TestMoves2D:
     """Tests for the 2-Dimensional Moves"""
 
     def test_add_2d(self):
