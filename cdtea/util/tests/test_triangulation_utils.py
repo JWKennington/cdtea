@@ -4,7 +4,6 @@ from collections import defaultdict
 import numpy as np
 import pytest
 from cdtea.generate_flat import generate_flat_2d_space_time
-from cdtea.tests import admin
 from cdtea.util import triangulation_utils as Ordering
 from cdtea.simplicial import simplex_key
 from cdtea import simplicial
@@ -12,7 +11,7 @@ from cdtea import simplicial
 my_list = [1, 2, 3, 4]
 
 
-class TestOrdering(admin.CleanScope):
+class TestOrdering():
     "test methods for ordering nodes in a triangulation"
 
     def test_get_layer(self):
