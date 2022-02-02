@@ -107,7 +107,7 @@ class TestOrdering(admin.CleanScope):
     def test_get_shared_future(self):
         """tests get shared_future
         """
-        t = simplicial.Triangulation(time_size=2)
+        t = simplicial.Triangulation(time_size=5)
 
         # create some nodes
         n1 = simplicial.Dim0SimplexKey(1)
