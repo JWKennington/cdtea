@@ -7,6 +7,7 @@ from cdtea.generate_flat import generate_flat_2d_space_time
 from cdtea.tests import admin
 from cdtea.util import triangulation_utils as Ordering
 from cdtea.simplicial import simplex_key
+from cdtea import simplicial
 
 my_list = [1, 2, 3, 4]
 
@@ -102,3 +103,42 @@ class TestOrdering(admin.CleanScope):
         pnt = np.array([.9, .8]) * 2 * np.pi
         result = np.array([-.1, -.2]) * 2 * np.pi
         assert np.allclose(Ordering.nearest(ref, pnt), result)
+
+    def test_get_shared_future(self):
+        """tests get shared_future
+        """
+        t = simplicial.Triangulation(time_size=5)
+
+        # create some nodes
+        n1 = simplicial.Dim0SimplexKey(1)
+        n2 = simplicial.Dim0SimplexKey(2)
+        n3 = simplicial.Dim0SimplexKey(3)
+        n4 = simplicial.Dim0SimplexKey(4)
+
+        # create some edges
+        e12 = simplicial.DimDSimplexKey(basis={n1, n2})
+        e23 = simplicial.DimDSimplexKey(basis={n2, n3})
+        e31 = simplicial.DimDSimplexKey(basis={n3, n1})
+        e14 = simplicial.DimDSimplexKey(basis={n1, n4})
+        e42 = simplicial.DimDSimplexKey(basis={n4, n2})
+
+        # create some faces
+        f1 = simplicial.DimDSimplexKey(basis={n1, n2, n3})
+        f2 = simplicial.DimDSimplexKey(basis={n2, n1, n4})
+
+        # add simplices to triangulation
+        t.add_simplex(n1, t=2)
+        t.add_simplex(n2, t=2)
+        t.add_simplex(n3, t=3)
+        t.add_simplex(n4, t=1)
+
+        t.add_simplex(e12, edge_type='spatial')
+        t.add_simplex(e23, edge_type='spatial')
+        t.add_simplex(e14, edge_type='spatial')
+        t.add_simplex(e31, edge_type='temporal')
+        t.add_simplex(e42, edge_type='temporal')
+
+        t.add_simplex(f1, dilaton=0.5)
+        t.add_simplex(f2, dilaton=0.6)
+
+        assert Ordering.get_shared_future(n1, n2, t) == n3

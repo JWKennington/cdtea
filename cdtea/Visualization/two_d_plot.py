@@ -14,7 +14,7 @@ def relative_point(pnt_a, pnt_b):
     return pnt_a + torus_sep(pnt_a, pnt_b)
 
 
-def two_d_plot(st: Triangulation) -> type(plt.gca()):
+def two_d_plot(st: Triangulation, nodes: bool = False, edges: bool = True, faces: bool = False) -> type(plt.gca()):
     """create a matplotlib ax"""
     ax = plt.gca()
     meta = st.simplex_meta
@@ -32,13 +32,17 @@ def two_d_plot(st: Triangulation) -> type(plt.gca()):
 
     plt.xlim([0, 1])
     plt.ylim([0, 1])
-    # plt.axis('off')
+    plt.axis('off')
     ax.set_aspect(1)
-    # plot_faces(ax, coordinates, meta, st)
-    #
-    plot_edges(ax, coordinates, meta, st)
-    #
-    # plot_points(ax, coordinates, st)
+
+    if faces == True:
+        plot_faces(ax, coordinates, meta, st)
+
+    if edges == True:
+        plot_edges(ax, coordinates, meta, st)
+
+    if nodes == True:
+        plot_points(ax, coordinates, st)
 
     return ax
 
@@ -80,7 +84,16 @@ def plot_points(ax, coordinates, st):
         c_index = (edge_color[v] - 2.) / 100.
 
         pnt_colors.append((c_index, 0, 1 - c_index, 1))
-    ax.scatter(X, Y, c='k', s=10, zorder=2)
+        # ax.annotate(v.basis_list[0], (c[0], c[1]))
+        ax.annotate(
+            str(v.basis_list[0]).zfill(2),
+            xy=(c[0], c[1]), xytext=(-0, 0), color='white', fontsize=12,
+
+            textcoords='offset points', ha='center', va='center',
+            bbox=dict(boxstyle='Circle,pad=.3', fc='Black', alpha=1))
+    # ax.scatter(X, Y, c='k', s=10, zorder=2)
+
+    # for i, txt in enumerate(n):
 
 
 def plot_edges(ax, coordinates, meta, st):

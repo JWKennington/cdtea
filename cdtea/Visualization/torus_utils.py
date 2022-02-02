@@ -1,3 +1,8 @@
+"""Utilities for {0-1,0-1} torus coordinates"""
+
+import numpy as np
+
+
 def torus_sep(point1, point2):
     """
 
@@ -8,12 +13,12 @@ def torus_sep(point1, point2):
     Returns: the shortest vector pointing from point1 to point2 in toroidal space, normed so x and y max are 1.
 
     """
-    xdiff = abs(point1[0] - point2[0])
-    if xdiff > (1 / 2.):
-        xdiff = 1 - xdiff
+    xdiff = point2[0] - point1[0]
+    if abs(xdiff) > (1 / 2.):
+        xdiff = xdiff - np.sign(xdiff)
 
-    ydiff = abs(point1[1] - point2[1])
-    if ydiff > (1 / 2.):
-        ydiff = 1 - ydiff
+    ydiff = point2[1] - point1[1]
+    if abs(ydiff) > (1 / 2.):
+        ydiff = ydiff - np.sign(ydiff)
 
     return xdiff, ydiff
