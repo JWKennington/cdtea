@@ -61,8 +61,8 @@ class SimplexKey:
     def __repr__(self):
         # TODO make easier access to int in Dim0 Simplex Key
         if self._dim == 0:
-            return '<' + str(list(self._basis)[0]) + '>' + str(self._count_id) * (self._count_id > 0)
-        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>'
+            return '<' + str(list(self._basis)[0]) + '>'
+        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>' + str(self._count_id) * (self._count_id > 0)
 
     def __hash__(self):
         return hash((self._count_id, self._basis))
@@ -142,7 +142,7 @@ class Dim0SimplexKey(SimplexKey):
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
 
-    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], count_id: int = None):
+    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], count_id: int = 0):
         super().__init__(basis=basis, dim=len(basis) - 1, count_id=count_id)
 
 
@@ -160,23 +160,24 @@ class Triangulation:
         """adds a simplex to the triangulation"""
         if key.dim == 0:
             self._max_index += 1
-
+        sub_keys = list(key.sub_keys)
         # if a face is being added
         if key.dim == 2:
+
             # loop through all of the constituent edges.
-            for i in range(len(key.sub_keys)):
-                k = key.sub_keys[i]
+            for i in range(len(sub_keys)):
+                k = sub_keys[i]
                 if k.dim == 1:
                     # loop through all edges in the space_time with the same basis
                     for k in [e for e in self.edges if e.basis == k.basis]:
                         # If the selected edge with the same basis doesn't yet have two faces, thats the correct edge.
                         if len(self.contains(k, dim=2)) != 2:
-                            key.sub_keys[i] = k
+                            sub_keys[i] = k
                             break
 
         # if the key is not a node make sure all subkeys are already in the triangulation
         if key.dim != 0:
-            for sub_key in key.sub_keys:
+            for sub_key in sub_keys:
                 assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
 
         # if the key is already in the space_time, then we are trying to add a multi simplex.
@@ -187,9 +188,7 @@ class Triangulation:
         self._simplices[key.dim].add(key)
 
         if key.dim != 0:
-            meta['contains'] = key.sub_keys
-
-            pass
+            meta['contains'] = set(sub_keys)
 
         # if a new edge is being added, update the order of all attached nodes.
         if key.dim == 1 and key not in self._simplices[key.dim]:
