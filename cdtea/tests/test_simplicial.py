@@ -3,10 +3,9 @@
 import pytest
 
 from cdtea import simplicial
-from cdtea.tests import admin
 
 
-class TestTriangulation(admin.CleanScope):
+class TestTriangulation:
     """Tests for the Triangulation Class"""
 
     def test_create(self):
@@ -210,7 +209,7 @@ class TestTriangulation(admin.CleanScope):
         assert tri.contains(v1, dim=0) == v1
 
 
-class TestSimplexKey(admin.CleanScope):
+class TestSimplexKey:
     """Tests for the SimplexKey Classes"""
 
     def test_create_dim_0_simplex_key(self):
@@ -340,28 +339,14 @@ class TestSimplexKey(admin.CleanScope):
         assert f.sub_keys == f.sub_keys
 
 
-class TestMultiSimplices(admin.CleanScope):
+class TestMultiSimplices:
     """Test group for multi simplices"""
 
     def test_multi_edge_equivalence(self):
         """test multi edge"""
         v1 = simplicial.Dim0SimplexKey(1)
         v2 = simplicial.Dim0SimplexKey(2)
-        l1 = simplicial.DimDSimplexKey({v1, v2}, multi=False)
-        l2 = simplicial.DimDSimplexKey({v1, v2}, multi=True)
+        l1 = simplicial.DimDSimplexKey({v1, v2}, count_id=0)
+        l2 = simplicial.DimDSimplexKey({v1, v2}, count_id=1)
         assert l1 != l2
-
-    def test_reference_multi(self):
-        """test union"""
-        v1 = simplicial.Dim0SimplexKey(3)
-        v2 = simplicial.Dim0SimplexKey(4)
-        simplicial.DimDSimplexKey({v1, v2}, multi=False)
-        simplicial.DimDSimplexKey({v1, v2}, multi=True)
-
-        # New reference to existing edge
-        with pytest.raises(ValueError):
-            simplicial.DimDSimplexKey({v1, v2})
-
-        # Properly reference to existing edge
-        l2_prime = simplicial.DimDSimplexKey({v1, v2}, multi=False, count_id=1)
-        assert isinstance(l2_prime, simplicial.SimplexKey)
+        assert l1 == simplicial.DimDSimplexKey({v1, v2}, count_id=0)
