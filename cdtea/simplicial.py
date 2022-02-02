@@ -166,6 +166,11 @@ class Triangulation:
             for sub_key in key.sub_keys:
                 assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
 
+        # if the key is already in the space_time, then we are trying to add a multi simplex.
+        # loop until an unused _count_id is found
+        while key in self._simplices[key.dim]:
+            key._count_id += 1
+
         self._simplices[key.dim].add(key)
 
         if key.dim != 0:
