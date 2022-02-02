@@ -161,6 +161,19 @@ class Triangulation:
         if key.dim == 0:
             self._max_index += 1
 
+        # if a face is being added
+        if key.dim == 2:
+            # loop through all of the constituent edges.
+            for i in range(len(key.sub_keys)):
+                k = key.sub_keys[i]
+                if k.dim == 1:
+                    # loop through all edges in the space_time with the same basis
+                    for k in [e for e in self.edges if e.basis == k.basis]:
+                        # If the selected edge with the same basis doesn't yet have two faces, thats the correct edge.
+                        if len(self.contains(k, dim=2)) != 2:
+                            key.sub_keys[i] = k
+                            break
+
         # if the key is not a node make sure all subkeys are already in the triangulation
         if key.dim != 0:
             for sub_key in key.sub_keys:
@@ -175,6 +188,8 @@ class Triangulation:
 
         if key.dim != 0:
             meta['contains'] = key.sub_keys
+
+            pass
 
         # if a new edge is being added, update the order of all attached nodes.
         if key.dim == 1 and key not in self._simplices[key.dim]:
