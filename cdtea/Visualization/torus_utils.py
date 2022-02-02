@@ -1,3 +1,5 @@
+"""Utilities for {0-1,0-1} torus coordinates"""
+
 import numpy as np
 
 

@@ -265,7 +265,7 @@ class Triangulation:
 
     @property
     def mixed_face_temporal_edges(self):
-        return set([e for e in self.temporal_edges if self.is_mixed_face_edge(e)])
+        return {e for e in self.temporal_edges if self.is_mixed_face_edge(e)}
 
     def contains(self, simplex: SimplexKey, dim: int):
         """
@@ -286,10 +286,10 @@ class Triangulation:
 
         dual_contains = self.simplex_meta['contains'].dual[simplex]
         return filter_simplices(dual_contains, dim=dim)
-      
+
     def is_mixed_face_edge(self, edge):
         faces = self.contains(edge, dim=2)
-        face_types = set([self.simplex_meta['s_type'][f] for f in faces])
+        face_types = {self.simplex_meta['s_type'][f] for f in faces}
         return len(face_types) == 2
 
     def flatten(self, simplices: Iterable[SimplexKey]):

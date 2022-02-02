@@ -14,7 +14,7 @@ def relative_point(pnt_a, pnt_b):
     return pnt_a + torus_sep(pnt_a, pnt_b)
 
 
-def two_d_plot(st: Triangulation) -> type(plt.gca()):
+def two_d_plot(st: Triangulation, nodes: bool = False, edges: bool = True, faces: bool = False) -> type(plt.gca()):
     """create a matplotlib ax"""
     ax = plt.gca()
     meta = st.simplex_meta
@@ -32,13 +32,17 @@ def two_d_plot(st: Triangulation) -> type(plt.gca()):
 
     plt.xlim([0, 1])
     plt.ylim([0, 1])
-    # plt.axis('off')
+    plt.axis('off')
     ax.set_aspect(1)
-    # plot_faces(ax, coordinates, meta, st)
-    #
-    plot_edges(ax, coordinates, meta, st)
-    #
-    plot_points(ax, coordinates, st)
+
+    if faces == True:
+        plot_faces(ax, coordinates, meta, st)
+
+    if edges == True:
+        plot_edges(ax, coordinates, meta, st)
+
+    if nodes == True:
+        plot_points(ax, coordinates, st)
 
     return ax
 

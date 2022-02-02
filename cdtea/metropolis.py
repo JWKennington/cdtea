@@ -1,9 +1,14 @@
+"""Module for implementing the metropolis steps
+
+References:
+    Nonperturbative Quantum Gravity:  	arXiv:1203.3591
+    # pg 61,62
+"""
+
 from cdtea.moves import add_2d, rem_2d, parity_2d
 from cdtea import simplicial
 import numpy as np
 
-
-# pg 61,62
 
 def add_step(st: simplicial.Triangulation, lmbda: float) -> bool:
     """

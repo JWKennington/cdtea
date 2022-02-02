@@ -1,11 +1,10 @@
 """Tests for the simplicial module"""
 
-from cdtea import simplicial, metropolis
+from cdtea import metropolis
 from cdtea.tests import admin
 
 from cdtea.generate_flat import generate_flat_2d_space_time
 
-# TODO
 """
 Possible things to test for
 1. proper random selection

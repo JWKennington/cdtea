@@ -104,6 +104,7 @@ def get_shared_future(v1, v2, st: Triangulation):
         return vt_0
     if dt < 0:
         return vt_1
+    return None
 
 
 def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
@@ -123,8 +124,8 @@ def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
     past_leftmost, past_rightmost = past_left_vert, past_right_vert
     past_leftmost_index, past_rightmost_index = past_layer.index(past_leftmost), past_layer.index(past_rightmost)
 
-    #TODO this fails when time size is less than 5? wtf?
-    #This gets stuck in an infinite loop, past layer seems to only include two verts
+    # TODO this fails when time size is less than 5? wtf?
+    # This gets stuck in an infinite loop, past layer seems to only include two verts
     while past_leftmost in st.flatten(st.contains(middle, dim=1)):
         past_leftmost_index = (past_leftmost_index - 1) % len(past_layer)
         past_leftmost = past_layer[past_leftmost_index]
