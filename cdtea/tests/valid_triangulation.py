@@ -60,7 +60,7 @@ def faces_imply_edges(triangulation: simplicial.Triangulation):
     edges = triangulation.simplices[1]
     faces = triangulation.simplices[2]
     for f in faces:
-        edges_implied = {simplicial.simplex_key(b) for b in combinations(f, 2)}
+        edges_implied = triangulation.contains(f, dim=1)
         connections = connections.union(edges_implied)
     assert connections == edges, "the set of edges implied by faces is not the same as the given edges"
 
