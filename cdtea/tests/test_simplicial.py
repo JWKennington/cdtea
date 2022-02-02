@@ -320,3 +320,39 @@ class TestMultiSimplices:
         l2 = simplicial.DimDSimplexKey({v1, v2}, count_id=1)
         assert l1 != l2
         assert l1 == simplicial.DimDSimplexKey({v1, v2}, count_id=0)
+
+    def test_multi_edge_contains(self):
+        """test multi edge"""
+        v1 = simplicial.Dim0SimplexKey(1)
+        v2 = simplicial.Dim0SimplexKey(2)
+        v3 = simplicial.Dim0SimplexKey(3)
+        v4 = simplicial.Dim0SimplexKey(4)
+        v5 = simplicial.Dim0SimplexKey(5)
+
+        l1 = simplicial.DimDSimplexKey({v1, v2})
+        l2 = simplicial.DimDSimplexKey({v3, v2})
+        l3 = simplicial.DimDSimplexKey({v1, v3})
+
+        l4 = simplicial.DimDSimplexKey({v4, v2})
+        l5 = simplicial.DimDSimplexKey({v1, v4})
+
+        l6 = simplicial.DimDSimplexKey({v1, v5})
+        l7 = simplicial.DimDSimplexKey({v2, v5})
+
+        f1 = simplicial.DimDSimplexKey({v1, v2, v3})
+        f2 = simplicial.DimDSimplexKey({v1, v2, v4})
+
+        l_multi = simplicial.DimDSimplexKey({v1, v2})
+
+        t = simplicial.Triangulation(time_size=2)
+        for v in [v1, v2, v3, v4, v5]:
+            t.add_simplex(v)
+        for l in [l1, l2, l3, l4, l5, l6, l7]:
+            t.add_simplex(l)
+        for f in [f1, f2]:
+            t.add_simplex(f)
+        t.add_simplex(l_multi)
+        f_multi = simplicial.DimDSimplexKey({v1, v2, v5})
+        t.add_simplex(f_multi)
+        assert l_multi in t.contains(f_multi, dim=1)
+        assert l1 not in t.contains(f_multi, dim=1)
