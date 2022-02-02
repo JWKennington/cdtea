@@ -82,11 +82,11 @@ def plot_points(ax, coordinates, st):
         pnt_colors.append((c_index, 0, 1 - c_index, 1))
         # ax.annotate(v.basis_list[0], (c[0], c[1]))
         ax.annotate(
-            v.basis_list[0],
-            xy=(c[0], c[1]), xytext=(-0, 0), color='white', fontsize=7,
+            str(v.basis_list[0]).zfill(2),
+            xy=(c[0], c[1]), xytext=(-0, 0), color='white', fontsize=12,
 
             textcoords='offset points', ha='center', va='center',
-            bbox=dict(boxstyle='Circle,pad=.5', fc='Black', alpha=1))
+            bbox=dict(boxstyle='Circle,pad=.3', fc='Black', alpha=1))
     # ax.scatter(X, Y, c='k', s=10, zorder=2)
 
     # for i, txt in enumerate(n):
