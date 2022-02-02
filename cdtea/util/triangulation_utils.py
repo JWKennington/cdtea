@@ -66,6 +66,8 @@ def spatial_ordering(st: Triangulation, layer: list[Dim0SimplexKey], indexed: li
     an ordering is produced by starting at a particular vertex and finding the subsequent spatially adjacent vertex
     until all vertices are indexed.
     """
+    if len(layer) < 3:
+        return layer
 
     # if origin is unspecified chose a random origin
     if indexed is None:
@@ -121,6 +123,12 @@ def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
     middle = get_shared_future(past_left_vert, past_right_vert, st)
     space_like_edges_of_middle = [e for e in st.contains(middle, dim=1) if st.simplex_meta['s_type'][e] == (2, 0)]
     new_verts = st.flatten(space_like_edges_of_middle) - {middle, }
+    if len(new_verts) == 1:
+        new = list(new_verts)[0]
+        return new, middle, new
+    if len(new_verts) == 0:
+        new = list(new_verts)[0]
+        return middle, middle, middle
     past_leftmost, past_rightmost = past_left_vert, past_right_vert
     past_leftmost_index, past_rightmost_index = past_layer.index(past_leftmost), past_layer.index(past_rightmost)
 

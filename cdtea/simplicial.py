@@ -161,19 +161,21 @@ class Triangulation:
         if key.dim == 0:
             self._max_index += 1
         sub_keys = list(key.sub_keys)
+
+        # TODO make this not suck
+        # force sub edges of faces to be the correct edge. by checking for which
         # if a face is being added
         if key.dim == 2:
-
             # loop through all of the constituent edges.
-            for i in range(len(sub_keys)):
-                k = sub_keys[i]
+            for i, k in enumerate(sub_keys):
                 if k.dim == 1:
                     # loop through all edges in the space_time with the same basis
-                    for k in [e for e in self.edges if e.basis == k.basis]:
-                        # If the selected edge with the same basis doesn't yet have two faces, thats the correct edge.
-                        if len(self.contains(k, dim=2)) != 2:
-                            sub_keys[i] = k
-                            break
+                    for edge in self.edges:
+                        if edge.basis == k.basis:
+                            # If the selected edge with the same basis doesn't yet have two faces, that's the correct edge.
+                            if len(self.contains(edge, dim=2)) != 2:
+                                sub_keys[i] = edge
+                                break
 
         # if the key is not a node make sure all subkeys are already in the triangulation
         if key.dim != 0:
