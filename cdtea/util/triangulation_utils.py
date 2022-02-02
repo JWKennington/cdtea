@@ -99,7 +99,7 @@ def get_shared_future(v1, v2, st: Triangulation):
     triangles_containg_v1 = st.contains(v1, dim=2)
     triangles_containg_v2 = st.contains(v2, dim=2)
     vt_0, vt_1 = st.flatten(triangles_containg_v1 & triangles_containg_v2) - {v1, v2}
-    dt = time_sep(st.simplex_meta['t'][vt_1], st.simplex_meta['t'][vt_0], st.time_size)
+    dt = time_sep(st.simplex_meta['t'][v1], st.simplex_meta['t'][vt_0], st.time_size)
     if dt > 0:
         return vt_0
     if dt < 0:
@@ -123,6 +123,8 @@ def get_layer_parity(past_layer, past_left_vert, past_right_vert, st):
     past_leftmost, past_rightmost = past_left_vert, past_right_vert
     past_leftmost_index, past_rightmost_index = past_layer.index(past_leftmost), past_layer.index(past_rightmost)
 
+    #TODO this fails when time size is less than 5? wtf?
+    #This gets stuck in an infinite loop, past layer seems to only include two verts
     while past_leftmost in st.flatten(st.contains(middle, dim=1)):
         past_leftmost_index = (past_leftmost_index - 1) % len(past_layer)
         past_leftmost = past_layer[past_leftmost_index]
