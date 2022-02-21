@@ -45,7 +45,7 @@ def rem_step(st: simplicial.Triangulation, lmbda: float) -> bool:
     if len(st.rank_4_nodes) > 0:
         random_rank_4_node = np.random.choice(list(st.rank_4_nodes))
 
-        acceptance_rate_rem = 1 / (min(1, N / (N + 1) * np.exp(-2 * lmbda)))
+        acceptance_rate_rem = 1 / (min(1, (N + 1) / N * np.exp(2 * lmbda)))
         if acceptance_rate_rem > np.random.random():
             rem_2d(st, random_rank_4_node)
             return True
