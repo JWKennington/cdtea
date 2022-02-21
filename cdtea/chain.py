@@ -11,7 +11,7 @@ def take_measurements(st: Triangulation, measurements: list):
     return [measurement(st) for measurement in measurements]
 
 
-def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_period: int, verbose: bool = False):
+def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_period: int, verbose: bool = False, lmbda=np.log(2)):
     """
 
     Args:
@@ -23,18 +23,21 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
     Returns: a list of measurement values for each measurement at each sampled point on the chain.
 
     """
-
+    # this is where the measurements go
     samples = []
+
+    # this keeps track of how many of each type of move succeeded.
     success = np.zeros(3)
+
     try:
         for i in range(num_steps):
             if i % sample_period == 0:
                 samples.append(take_measurements(st, measurements))
 
                 if verbose:
-                    print((100 * i) // num_steps)
-                    print(success)
-            success += step(st)
+                    print(100 * i / num_steps)
+                    print(success/i)
+            success += step(st, lmbda=lmbda)
 
 
 
