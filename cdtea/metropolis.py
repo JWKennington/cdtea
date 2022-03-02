@@ -41,12 +41,8 @@ def rem_step(st: simplicial.Triangulation, node: simplicial.DimDSimplexKey, lmbd
     """
     N = st.num_nodes
 
-    acceptance_rate_rem = min(1, (N + 1) / N * np.exp(2 * lmbda))
-    print(acceptance_rate_rem)
-    if acceptance_rate_rem > np.random.random():
-        rem_2d(st, node)
-        return True
-    return False
+    rem_2d(st, node)
+    return True
 
 
 def parity_step(st: simplicial.Triangulation, edge: simplicial.DimDSimplexKey) -> bool:
