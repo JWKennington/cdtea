@@ -27,7 +27,8 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
     samples = []
 
     # this keeps track of how many of each type of move succeeded.
-    success = np.zeros(3)
+    # success = np.zeros(3)
+
 
     try:
         for i in range(num_steps):
@@ -36,15 +37,15 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
 
                 if verbose:
                     print(100 * i / num_steps)
-                    print(success/i)
-            success += step(st, lmbda=lmbda)
+                    # print(success/i)
+            step(st, lmbda=lmbda)
 
 
 
     # this is dangerous and bad. perhaps we should make a custom error class for expected failures (space_slice to small cant make a move)
     except Exception as e:
         print(e)
-        print()
+        print("nuggets")
         print(take_measurements(st, measurements))
 
     return samples
