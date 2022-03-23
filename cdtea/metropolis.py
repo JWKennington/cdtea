@@ -45,8 +45,8 @@ def rem_step(st: simplicial.Triangulation, lmbda: float) -> bool:
     if len(st.rank_4_nodes) > 0:
         random_rank_4_node = np.random.choice(list(st.rank_4_nodes))
 
-        acceptance_rate_add = 1 / (min(1, N / (N + 1) * np.exp(-2 * lmbda)))
-        if acceptance_rate_add > np.random.random():
+        acceptance_rate_rem = 1 / (min(1, (N + 1) / N * np.exp(2 * lmbda)))
+        if acceptance_rate_rem > np.random.random():
             rem_2d(st, random_rank_4_node)
             return True
     return False
@@ -63,8 +63,8 @@ def parity_step(st: simplicial.Triangulation) -> bool:
     """
     random_mixed_face_temporal_edge = np.random.choice(list(st.mixed_face_temporal_edges))
 
-    acceptance_rate_add = .5
-    if acceptance_rate_add > np.random.random():
+    acceptance_rate_parity = .5
+    if acceptance_rate_parity > np.random.random():
         parity_2d(st, random_mixed_face_temporal_edge)
         return True
     return False
