@@ -5,10 +5,9 @@ utilities for running chains on space_times
 from cdtea.metropolis import step
 from cdtea.simplicial import Triangulation
 import numpy as np
+from cdtea.measurments import take_measurements
 
 
-def take_measurements(st: Triangulation, measurements: list):
-    return [measurement(st) for measurement in measurements]
 
 
 def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_period: int, verbose: bool = False, lmbda=np.log(2)):
