@@ -1,58 +1,30 @@
+from cdtea.generate_flat import generate_flat_2d_space_time
+from cdtea.chain import run_chain
+from cdtea.measurments import volume_profile, volume
 import matplotlib.pyplot as plt
 import numpy as np
 
-from cdtea import generate_flat
-from cdtea import moves
-from cdtea.tests.valid_triangulation import is_valid
+all_data = []
+st = generate_flat_2d_space_time(space_size=16, time_size=16)
 
-np.random.seed(1)
+num_steps = 1000
+sample_period = 1
 
+lmbda_max = .2
+num_lmbda_samples = 6
+lmbdas = np.linspace(0, lmbda_max, num_lmbda_samples)
 
-def is_mixed_face_edge(e, trg):
-    faces = trg.contains(e, dim=2)
-    face_types = {trg.simplex_meta['s_type'][f] for f in faces}
-    return len(face_types) == 2
+# x = np.arange(0, num_steps, 10)
+datas = []
+for l in lmbdas:
+    print(l)
+    start = generate_flat_2d_space_time(space_size=16, time_size=16)
+    chain = run_chain(start, num_steps, [volume], sample_period, verbose=False, lmbda=l)
+    datas.append(chain)
 
+for i, data in enumerate(datas):
+    plt.plot(data, label=f"λ = {lmbdas[i]}")
 
-trg = generate_flat.generate_flat_2d_space_time(time_size=8, space_size=8)
-
-for _ in range(10):
-    # TODO make simplex key sortable directly and remove str coercion
-    edges = list(sorted(trg.simplex_meta['s_type'].dual[(2, 0)], key=lambda x: str(x)))
-
-    # edge = np.random.choice(edges)
-    idx = np.random.randint(0, len(edges))
-    edge = edges[idx]
-    print('Add', idx, edge)
-    moves.add_2d(trg, edge)
-
-for _ in range(10):
-    # TODO make simplex key sortable directly and remove str coercion
-    order_4_vertices = list(sorted(trg.simplex_meta['order'].dual[4], key=lambda x: str(x)))
-
-    # edge = np.random.choice(edges)
-    idx = np.random.randint(0, len(order_4_vertices))
-    vertex = order_4_vertices[idx]
-    print('Remove', idx, vertex)
-    moves.rem_2d(trg, vertex)
-
-for _ in range(10):
-    # TODO make simplex key sortable directly and remove str coercion
-    edges = list(sorted(trg.simplex_meta['s_type'].dual[(1, 1)], key=lambda x: str(x)))
-
-    mixed_face_edges = [e for e in edges if is_mixed_face_edge(e, trg)]
-
-    # edge = np.random.choice(edges)
-    idx = np.random.randint(0, len(mixed_face_edges))
-    edge = mixed_face_edges[idx]
-    print('Parity', idx, edge)
-    moves.parity_2d(trg, edge)
-
-is_valid(trg)
-print('valid')
-
-# print('valid')
-
-# two_d_plot(trg)
-
+plt.title("16x16 flat st, change in volume over 1000 iterations")
+plt.legend()
 plt.show()
