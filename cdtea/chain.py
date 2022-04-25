@@ -5,10 +5,9 @@ utilities for running chains on space_times
 from cdtea.metropolis import step
 from cdtea.simplicial import Triangulation
 import numpy as np
+from cdtea.measurments import take_measurements
 
 
-def take_measurements(st: Triangulation, measurements: list):
-    return [measurement(st) for measurement in measurements]
 
 
 def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_period: int, verbose: bool = False, lmbda=np.log(2)):
@@ -27,7 +26,8 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
     samples = []
 
     # this keeps track of how many of each type of move succeeded.
-    success = np.zeros(3)
+    # success = np.zeros(3)
+
 
     try:
         for i in range(num_steps):
@@ -36,15 +36,15 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
 
                 if verbose:
                     print(100 * i / num_steps)
-                    print(success/i)
-            success += step(st, lmbda=lmbda)
+                    # print(success/i)
+            step(st, lmbda=lmbda)
 
 
 
     # this is dangerous and bad. perhaps we should make a custom error class for expected failures (space_slice to small cant make a move)
     except Exception as e:
         print(e)
-        print()
+        print("nuggets")
         print(take_measurements(st, measurements))
 
     return samples

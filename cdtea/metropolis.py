@@ -10,7 +10,7 @@ from cdtea import simplicial
 import numpy as np
 
 
-def add_step(st: simplicial.Triangulation, lmbda: float) -> bool:
+def add_step(st: simplicial.Triangulation, spatial_edge: simplicial.SimplexKey, lmbda: float) -> bool:
     """
 
     Args:
@@ -21,17 +21,15 @@ def add_step(st: simplicial.Triangulation, lmbda: float) -> bool:
 
     """
     N = st.num_nodes
-
-    random_spatial_edge = np.random.choice(list(st.spatial_edges))
 
     acceptance_rate_add = min(1, N / (N + 1) * np.exp(-2 * lmbda))
     if acceptance_rate_add > np.random.random():
-        add_2d(st, random_spatial_edge)
+        add_2d(st, spatial_edge)
         return True
     return False
 
 
-def rem_step(st: simplicial.Triangulation, lmbda: float) -> bool:
+def rem_step(st: simplicial.Triangulation, node: simplicial.DimDSimplexKey, lmbda: float) -> bool:
     """
 
     Args:
@@ -42,17 +40,12 @@ def rem_step(st: simplicial.Triangulation, lmbda: float) -> bool:
 
     """
     N = st.num_nodes
-    if len(st.rank_4_nodes) > 0:
-        random_rank_4_node = np.random.choice(list(st.rank_4_nodes))
 
-        acceptance_rate_rem = 1 / (min(1, (N + 1) / N * np.exp(2 * lmbda)))
-        if acceptance_rate_rem > np.random.random():
-            rem_2d(st, random_rank_4_node)
-            return True
-    return False
+    rem_2d(st, node)
+    return True
 
 
-def parity_step(st: simplicial.Triangulation) -> bool:
+def parity_step(st: simplicial.Triangulation, edge: simplicial.DimDSimplexKey) -> bool:
     """
 
     Args:
@@ -61,16 +54,13 @@ def parity_step(st: simplicial.Triangulation) -> bool:
     Returns: a bool representing weather or not the move was accepted
 
     """
-    random_mixed_face_temporal_edge = np.random.choice(list(st.mixed_face_temporal_edges))
 
-    acceptance_rate_parity = .5
-    if acceptance_rate_parity > np.random.random():
-        parity_2d(st, random_mixed_face_temporal_edge)
-        return True
-    return False
+    parity_2d(st, edge)
+    return True
+    # return False
 
 
-def step(st: simplicial.Triangulation, lmbda=np.log(2)):
+def step(st: simplicial.Triangulation, alternation_frequency=.5, lmbda=np.log(2)):
     """
 
     Args:
@@ -80,7 +70,14 @@ def step(st: simplicial.Triangulation, lmbda=np.log(2)):
     Returns:
 
     """
-    accepted_add = add_step(st=st, lmbda=lmbda)
-    accepted_rem = rem_step(st=st, lmbda=lmbda)
-    accepted_parity = parity_step(st=st)
-    return accepted_add, accepted_rem, accepted_parity
+    if np.random.random() < alternation_frequency:
+
+        random_spatial_edge = np.random.choice(list(st.spatial_edges))
+        random_vert = random_spatial_edge.basis_list[0]
+        accepted_add = add_step(st=st, spatial_edge=random_spatial_edge, lmbda=lmbda)
+        if st.simplex_meta["order"][random_vert] == 4:
+            accepted_rem = rem_step(st=st, node=random_vert, lmbda=lmbda)
+    else:
+        random_mixed_face_temporal_edge = np.random.choice(list(st.mixed_face_temporal_edges))
+        accepted_parity = parity_step(st=st, edge=random_mixed_face_temporal_edge)
+    # return accepted_add, accepted_rem, accepted_parity
