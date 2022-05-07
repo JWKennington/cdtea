@@ -4,6 +4,7 @@ from cdtea.Visualization import two_d_plot
 import matplotlib.pyplot as plt
 import numpy as np
 import cdtea.measurments as mes
+import cdtea.simplicial as simplicial
 
 # results = []
 # mi,ma = .1,1
@@ -18,8 +19,26 @@ import cdtea.measurments as mes
 # plt.show()
 
 st = generate_flat_2d_space_time(space_size=8, time_size=8)
-chain.run_chain(st, 10000, [], 10000, verbose=False)
-data = chain.run_chain(st, 100000, [mes.volume_profile], 1000, verbose=True)
+
+
+def action_without_matter(st: simplicial.Triangulation):
+    N = 0
+    for n in st.nodes:
+        N += 1
+    return -np.log(2) * N
+
+def dilaton_action(st:simplicial.Triangulation):
+    total_field = 0.
+    for n in st.faces:
+        total_field+=st.simplex_meta["dilaton"][n]
+    return -np.log(2) * st.num_nodes
+
+
+# chain.run_chain(st, action, 1000, [], 1000, verbose=True)
+st, data = chain.run_chain(st, dilaton_action, 10000, [mes.volume_profile], 10, verbose=True)
 data = np.array(data).flatten()
 plt.hist(data)
 plt.show()
+two_d_plot.two_d_plot(st)
+plt.show()
+

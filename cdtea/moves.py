@@ -2,9 +2,9 @@
 
 """
 
-
 from cdtea import simplicial
 from cdtea.util import triangulation_utils
+import random
 
 
 def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
@@ -41,8 +41,8 @@ def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     new_simplices.extend(([(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (2, 0)}) for old in orig_nodes] +
                           [(simplicial.DimDSimplexKey({new_vertex, old}), {'s_type': (1, 1)}) for old in nodes.difference(orig_nodes)]))
 
-    new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, fut_orig}), {'s_type': (2, 1)}) for old in orig_nodes])
-    new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, past_orig}), {'s_type': (1, 2)}) for old in orig_nodes])
+    new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, fut_orig}), {'s_type': (2, 1), 'dilaton': random.random()}) for old in orig_nodes])
+    new_simplices.extend([(simplicial.DimDSimplexKey({new_vertex, old, past_orig}), {'s_type': (1, 2), 'dilaton': random.random()}) for old in orig_nodes])
 
     for new, kwargs in new_simplices:
         trg.add_simplex(new, **kwargs)
@@ -51,7 +51,6 @@ def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     trg.simplex_meta['order'][new_vertex] = 4
     trg.simplex_meta['order'][fut_orig] += 1
     trg.simplex_meta['order'][past_orig] += 1
-
 
 
 def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
@@ -86,8 +85,8 @@ def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
     # Add
     new_simplices = [
         (simplicial.DimDSimplexKey(spacelike_neighbors), {'s_type': (2, 0)}),
-        (simplicial.DimDSimplexKey(spacelike_neighbors.union({fut_orig})), {'s_type': (2, 1)}),
-        (simplicial.DimDSimplexKey(spacelike_neighbors.union({past_orig})), {'s_type': (1, 2)}),
+        (simplicial.DimDSimplexKey(spacelike_neighbors.union({fut_orig})), {'s_type': (2, 1), 'dilaton': random.random()}),
+        (simplicial.DimDSimplexKey(spacelike_neighbors.union({past_orig})), {'s_type': (1, 2), 'dilaton': random.random()}),
     ]
 
     for new, kwargs in new_simplices:
@@ -99,7 +98,6 @@ def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
 
 
 def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
-
     """
 
     Args:
@@ -130,8 +128,8 @@ def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
     # Add
     new_simplices = [
         (simplicial.DimDSimplexKey({fut_orig, past_orig}), {'s_type': (1, 1)}),
-        (simplicial.DimDSimplexKey({past_edge, past_orig, fut_orig}), {'s_type': (2, 1)}),
-        (simplicial.DimDSimplexKey({past_orig, fut_orig, fut_edge}), {'s_type': (1, 2)}),
+        (simplicial.DimDSimplexKey({past_edge, past_orig, fut_orig}), {'s_type': (2, 1), 'dilaton': random.random()}),
+        (simplicial.DimDSimplexKey({past_orig, fut_orig, fut_edge}), {'s_type': (1, 2), 'dilaton': random.random()}),
     ]
 
     for new, kwargs in new_simplices:

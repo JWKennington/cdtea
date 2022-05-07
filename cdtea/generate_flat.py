@@ -64,10 +64,10 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             # new triangles (two added per vertex)
             # each triangle is instantiated with a random dilaton value between zero and 1 using random.Random()
             up_triangle_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 0, t_idx=t + 1)}
-            add_simplex(up_triangle_basis, s_type=(2, 1), dilaton=random.Random())
+            add_simplex(up_triangle_basis, s_type=(2, 1), dilaton=random.random())
 
             down_triangle_basis = {idx(x_idx=x, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t)}
-            add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.Random())
+            add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.random())
     return space_time
 
 

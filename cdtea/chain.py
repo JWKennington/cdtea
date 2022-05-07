@@ -6,14 +6,14 @@ from cdtea.metropolis import step
 from cdtea.simplicial import Triangulation
 import numpy as np
 from cdtea.measurments import take_measurements
+from typing import Callable
 
 
-
-
-def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_period: int, verbose: bool = False, lmbda=np.log(2)):
+def run_chain(st: Triangulation, action: Callable, num_steps: int, measurements: list, sample_period: int, verbose: bool = False, lmbda=np.log(2)):
     """
 
     Args:
+        action: The action function that takes in a trinagulation and outputs a real scalar.
         num_steps: The number of steps to run the chain for
         sample_period: The number of steps between measurements.
         measurements: A list of functions that take in a triangulation and output a value to be added to a list
@@ -28,23 +28,20 @@ def run_chain(st: Triangulation, num_steps: int, measurements: list, sample_peri
     # this keeps track of how many of each type of move succeeded.
     # success = np.zeros(3)
 
+    # try:
+    for i in range(num_steps):
+        if i % sample_period == 0:
+            samples.append(take_measurements(st, measurements))
 
-    try:
-        for i in range(num_steps):
-            if i % sample_period == 0:
-                samples.append(take_measurements(st, measurements))
+            if verbose:
+                print(100 * i / num_steps)
 
-                if verbose:
-                    print(100 * i / num_steps)
-                    # print(success/i)
-            step(st, lmbda=lmbda)
-
-
+        st = step(st, action = action, lmbda=lmbda)
 
     # this is dangerous and bad. perhaps we should make a custom error class for expected failures (space_slice to small cant make a move)
-    except Exception as e:
-        print(e)
-        print("nuggets")
-        print(take_measurements(st, measurements))
+    # except Exception as e:
+    #     print(e)
+    #     print("nuggets")
+    #     print(take_measurements(st, measurements))
 
-    return samples
+    return st,samples
