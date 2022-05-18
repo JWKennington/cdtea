@@ -22,10 +22,7 @@ st = generate_flat_2d_space_time(space_size=8, time_size=8)
 
 
 def action_without_matter(st: simplicial.Triangulation):
-    N = 0
-    for n in st.nodes:
-        N += 1
-    return -np.log(2) * N
+    return -np.log(2) * st.num_nodes
 
 
 def einstein_hilbert(st: simplicial.Triangulation):
@@ -54,15 +51,14 @@ def dilaton(st: simplicial.Triangulation):
         return p
 
     for f in st.faces:
-        # the average deficit angle
+        # the total deficit angle
         epsilon = 0
         for n in f:
             Tri_Number = simplicial.filter_simplices(contains[n], dim=2)
 
             # The effective "deficit angle" for each face
-            # each node contributes angle inversely proportianal to the number of triangles its a part of
+            # each node contributes angle inversely proportianal to the number of triangles it's a part of
             epsilon += (2 * np.pi / 6 * (order[n] - 6)) / len(Tri_Number)
-        epsilon = epsilon / 3
         R = epsilon / ae
 
         edges = simplicial.filter_simplices(st.simplex_meta['contains'][f], dim=1)

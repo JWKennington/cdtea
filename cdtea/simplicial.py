@@ -303,6 +303,29 @@ class Triangulation:
             res = res.union(self.contains(s, dim=0))
         return res
 
+    def temporal_derivative(self, face: SimplexKey):
+        """
+        Args:
+            face:
+
+        Returns:
+
+        """
+
+        contains = self.simplex_meta['contains'].dual
+
+        # get all the edges in the given face
+        edges = filter_simplices(self.simplex_meta['contains'][face], dim=1)
+        for edge in edges:
+            nodes = edge.basis_list
+            t = self.simplex_meta['t']
+            if t[nodes[0]] == t[nodes[1]]:
+                spatial_edge = edge
+                break
+
+        temporal_face = contains[spatial_edge] - {face, }
+        pass
+
 
 def filter_simplices(simplices, dim: int = None):
     return {s for s in simplices if s.dim == dim}

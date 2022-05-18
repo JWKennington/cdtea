@@ -28,13 +28,17 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
     """
     space_time = simplicial.Triangulation(time_size=time_size)
 
-    def add_simplex(basis: Union[set, int], **meta):
+    def simplex(basis: Union[set, int], **meta):
         """shorthand for adding a simplex to the triangulation"""
         if isinstance(basis, int):
-            space_time.add_simplex(simplicial.Dim0SimplexKey(key=basis), **meta)
+            return simplicial.Dim0SimplexKey(key=basis)
         else:
             basis = {simplicial.Dim0SimplexKey(key=b) for b in basis}
-            space_time.add_simplex(simplicial.DimDSimplexKey(basis=basis), **meta)
+            return simplicial.DimDSimplexKey(basis=basis)
+
+    def add_simplex(basis: Union[set, int], **meta):
+        """shorthand for adding a simplex to the triangulation"""
+        space_time.add_simplex(simplex(basis=basis), **meta)
 
     def idx(x_idx: int, t_idx: int):
         """shorthand for returning a unique index for a given space-time position.
@@ -64,10 +68,14 @@ def generate_flat_2d_space_time(time_size: int, space_size: int) -> simplicial.T
             # new triangles (two added per vertex)
             # each triangle is instantiated with a random dilaton value between zero and 1 using random.Random()
             up_triangle_basis = {idx(x_idx=x, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 0, t_idx=t + 1)}
-            add_simplex(up_triangle_basis, s_type=(2, 1), dilaton=random.random())
+            right_of_up_triangle_basis = {idx(x_idx=x+1, t_idx=t), idx(x_idx=x +0, t_idx=t+1), idx(x_idx=x + 1, t_idx=t + 1)}
+            right_of_up_triangle = simplex(basis=right_of_up_triangle_basis)
+            add_simplex(up_triangle_basis, s_type=(2, 1), dilaton=random.random(), right=right_of_up_triangle)
 
             down_triangle_basis = {idx(x_idx=x, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t + 1), idx(x_idx=x + 1, t_idx=t)}
-            add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.random())
+            right_of_down_triangle_basis = {idx(x_idx=x+2, t_idx=t), idx(x_idx=x + 1, t_idx=t), idx(x_idx=x + 1, t_idx=t + 1)}
+            right_of_down_triangle = simplex(basis=right_of_down_triangle_basis)
+            add_simplex(down_triangle_basis, s_type=(1, 2), dilaton=random.random(), right=right_of_down_triangle)
     return space_time
 
 

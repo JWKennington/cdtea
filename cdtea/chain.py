@@ -36,7 +36,7 @@ def run_chain(st: Triangulation, action: Callable, num_steps: int, measurements:
             if verbose:
                 print(100 * i / num_steps)
 
-        st = step(st, action = action, lmbda=lmbda)
+        st = step(st, action=action, lmbda=lmbda)
 
     # this is dangerous and bad. perhaps we should make a custom error class for expected failures (space_slice to small cant make a move)
     # except Exception as e:
@@ -44,4 +44,4 @@ def run_chain(st: Triangulation, action: Callable, num_steps: int, measurements:
     #     print("nuggets")
     #     print(take_measurements(st, measurements))
 
-    return st,samples
+    return st, samples
