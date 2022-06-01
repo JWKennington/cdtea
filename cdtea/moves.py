@@ -11,10 +11,17 @@ def add_2d(trg: simplicial.Triangulation, edge: simplicial.SimplexKey):
     """
 
     Args:
-        trg:
-        edge:
+        trg: The triangulation on which to make the move
+        edge: a spatial edge that is a member of trg
 
-    Returns:
+     /\       -->      /|\
+    /__\      -->     /_|_\
+    \  /      -->     \ | /
+     \/       -->      \|/
+
+    modifies trg in place by performing a (2,4) type move which modifies a subcomplex of two temporaly adjacent triangles in to a subcomplex of 4 triangles.
+
+    This move is described in detail in section 6.3 of "non-perturbative quantum gravity"
 
     """
     # Discovery
@@ -57,10 +64,17 @@ def rem_2d(trg: simplicial.Triangulation, node: simplicial.DimDSimplexKey):
     """
 
     Args:
-        trg:
-        edge:
+        trg: The triangulation on which to make the move
+        node: a node of order 4 in the triangulation
 
-    Returns:
+       /|\   -->    /\
+      /_|_\  -->   /__\
+      \ | /  -->   \  /
+       \|/   -->    \/
+
+    modifies trg in place by performing a (4,2) type move which modifies a subcomplex of 4 adjacent triangles in to a subcomplex of 2 triangles.
+
+    This move is described in detail in section 6.3 of "non-perturbative quantum gravity"
 
     """
     # Discovery
@@ -101,10 +115,17 @@ def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
     """
 
     Args:
-        trg:
-        edge:
+        trg: The triangulation on which to make the move
+        edge: a temporal edge that is a member of trg and seperates an up facing from a down facing triangle.
 
-    Returns:
+     |\---|       -->     |---/|
+     | \  |       -->     |  / |
+     |  \ |       -->     | /  |
+     |___\|       -->     |/___|
+
+    modifies trg in place by performing a (2,2) type move which modifies a subcomplex of two spatially adjacent triangles in to a subcomplex of 2 triangles.
+
+    This move is described in detail in section 6.3 of "non-perturbative quantum gravity"
 
     """
     # Discovery
