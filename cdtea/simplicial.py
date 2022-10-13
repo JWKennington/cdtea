@@ -40,9 +40,9 @@ def simplex_key(basis: Union[int, Iterable]):
 class SimplexKey:
     """A reference to a simplex"""
     _COUNTS = collections.defaultdict(int)
-    __slots__ = ('_basis', '_dim', '_sub_keys', '_count_id')
+    __slots__ = ('_basis', '_dim', '_sub_keys')
 
-    def __init__(self, basis: Union[frozenset, set], dim: int = None, count_id: int = 0):
+    def __init__(self, basis: Union[frozenset, set], dim: int = None):
         """Create a Simplex Key
 
         Args:
@@ -56,20 +56,19 @@ class SimplexKey:
         self._basis = frozenset(basis)
         self._dim = dim
         self._sub_keys = None
-        self._count_id = count_id
 
     def __repr__(self):
         # TODO make easier access to int in Dim0 Simplex Key
         if self._dim == 0:
             return '<' + str(list(self._basis)[0]) + '>'
-        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>' + str(self._count_id) * (self._count_id > 0)
+        return '<' + ' '.join(sorted(str(list(b._basis)[0]) for b in self._basis)) + '>'
 
     def __hash__(self):
-        return hash((self._count_id, self._basis))
+        return hash(self._basis)
 
     def __eq__(self, other):
         if isinstance(other, SimplexKey):
-            return self._basis == other._basis and self._count_id == other._count_id
+            return self._basis == other._basis
         # print("Equality not defined between SimplexKey and " + str(isinstance(other,
         return False
 
@@ -142,8 +141,8 @@ class Dim0SimplexKey(SimplexKey):
 class DimDSimplexKey(SimplexKey):
     """A D dimensional simplex key"""
 
-    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]], count_id: int = 0):
-        super().__init__(basis=basis, dim=len(basis) - 1, count_id=count_id)
+    def __init__(self, basis: Union[set[SimplexKey], frozenset[SimplexKey]]):
+        super().__init__(basis=basis, dim=len(basis) - 1)
 
 
 class Triangulation:
@@ -181,11 +180,6 @@ class Triangulation:
         if key.dim != 0:
             for sub_key in sub_keys:
                 assert sub_key in self._simplices[sub_key.dim], f"Tried to add {key}, but {sub_key} was not yet added to the triangulation"
-
-        # if the key is already in the space_time, then we are trying to add a multi simplex.
-        # loop until an unused _count_id is found
-        while key in self._simplices[key.dim]:
-            key._count_id += 1
 
         self._simplices[key.dim].add(key)
 
