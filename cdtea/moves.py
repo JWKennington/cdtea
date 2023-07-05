@@ -116,7 +116,7 @@ def parity_2d(trg: simplicial.Triangulation, edge: simplicial.DimDSimplexKey):
 
     Args:
         trg: The triangulation on which to make the move
-        edge: a temporal edge that is a member of trg and seperates an up facing from a down facing triangle.
+        edge: a temporal edge that is a member of trg and separates an up facing from a down facing triangle.
 
      |\---|       -->     |---/|
      | \  |       -->     |  / |
